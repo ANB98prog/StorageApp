@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
+using Storage.Application.Images.Commands.UploadImage;
 using Storage.WebApi.Common.Validators;
 
 namespace Storage.WebApi.Controllers.Images
@@ -11,12 +12,16 @@ namespace Storage.WebApi.Controllers.Images
         
         public async Task<IActionResult> UploadImageAsync(IFormFile file)
         {
-            if(!file.IsValid())
+            var command = new UploadImageCommand
             {
+                Attributes = new List<string>() { "soldier" },
+                UserId = UserId,
+                ImageFile = file
+            };
 
-            }
+            var imageId = await Mediator.Send(command);
 
-            return Ok("Single image uploaded");
+            return Ok($"Image uploaded. Id : " + imageId);
         }
 
         /// <summary>

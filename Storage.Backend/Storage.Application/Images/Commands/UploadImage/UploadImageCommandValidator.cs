@@ -13,6 +13,10 @@ namespace Storage.Application.Images.Commands.UploadImage
             //    uploadImageCommand.UserId).NotEqual(Guid.Empty);
             RuleFor(uploadImageCommand =>
                 uploadImageCommand.ImageFile).NotNull().NotEmpty();
+            RuleFor(uploadImageCommand =>
+                uploadImageCommand.ImageFile.FileName).NotNull();
+            RuleFor(uploadImageCommand =>
+                uploadImageCommand.ImageFile.Length).GreaterThan(0);
         }
     }
 }
