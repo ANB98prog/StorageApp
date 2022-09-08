@@ -1,3 +1,4 @@
+using Storage.Application;
 using Storage.WebApi.Middleware;
 
 namespace Storage.WebApi
@@ -23,6 +24,7 @@ namespace Storage.WebApi
         private static void ConfigureAppServices(IServiceCollection services, IConfiguration configuration)
         {
             services.AddControllers();
+            services.AddApplication();
 
             //services.AddAutoMapper(config =>
             //{
