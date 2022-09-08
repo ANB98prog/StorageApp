@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Storage.Application;
+using Storage.WebApi.Common;
 using Storage.WebApi.Middleware;
 
 namespace Storage.WebApi
@@ -32,6 +34,11 @@ namespace Storage.WebApi
             //    config.AddProfile(new AssemblyMappingProfile(typeof(INotesDbContext).Assembly));
             //});
 
+            services.Configure<KestrelServerOptions>(options =>
+            {
+                // Application will receive whis amount of data per request
+                options.Limits.MaxRequestBodySize = Constants.ONE_GIGABYTE_IN_BYTES;
+            });
 
             services.AddCors(options =>
             {
