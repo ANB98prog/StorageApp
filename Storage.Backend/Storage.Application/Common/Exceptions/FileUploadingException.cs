@@ -1,13 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Storage.Application.Common.Exceptions
 {
-    public class FileUploadingException
+    /// <summary>
+    /// Exception describes error when uploading file
+    /// </summary>
+    public class FileUploadingException : Exception
     {
-
+        public FileUploadingException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
     }
 }

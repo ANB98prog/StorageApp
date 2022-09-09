@@ -1,5 +1,6 @@
 ﻿using Storage.Application.Common.Models;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Storage.Application.Interfaces
 {
@@ -9,32 +10,32 @@ namespace Storage.Application.Interfaces
     public interface IFileService
     {
         /// <summary>
-        /// Upload small file
+        /// Upload file
         /// </summary>
         /// <param name="file">Upload file model</param>
         /// <returns>
         /// </returns>
-        public System.Threading.Tasks.Task UploadSmallFileAsync(UploadFileModel file);
+        public Task<string> UploadFileAsync(FileModel file);
 
         /// <summary>
         /// Upload large file
         /// </summary>
         /// <param name="file">File to upload</param>
         /// <returns></returns>
-        public Storage.Domain.Task UploadLargeFileAsync(UploadFileModel file);
+        //public Task<Domain.Task> UploadLargeFileAsync(UploadFileModel file);
 
         /// <summary>
         /// Download file
         /// </summary>
         /// <param name="filePath">Path to file</param>
         /// <returns>File stream</returns>
-        public FileStream DownloadFileAsync(string filePath);
+        public Task<FileStream> DownloadFileAsync(string filePath);
 
         /// <summary>
         /// Prepares large file to download
         /// </summary>
         /// <param name="request">Preparing request</param>
         /// <returns>Preparing files</returns>
-        public PrepareFilesResponseModel PrepareLargeFileAsync(PrepareFilesRequestModel request);
+        //public Task<PrepareFilesResponseModel> PrepareLargeFileAsync(PrepareFilesRequestModel request);
     }
 }
