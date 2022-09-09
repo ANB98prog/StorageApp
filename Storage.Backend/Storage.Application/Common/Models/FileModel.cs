@@ -2,7 +2,7 @@
 
 namespace Storage.Application.Common.Models
 {
-    public class UploadFileModel
+    public class FileModel
     {
         public string FileName { get; set; }
 

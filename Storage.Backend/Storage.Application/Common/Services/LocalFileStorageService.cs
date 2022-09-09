@@ -1,8 +1,11 @@
 ﻿using Storage.Application.Common.Exceptions;
+using Storage.Application.Common.Helpers;
 using Storage.Application.Common.Models;
 using Storage.Application.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Storage.Application.Common.Services
@@ -10,16 +13,32 @@ namespace Storage.Application.Common.Services
     /// <summary>
     /// Local file storage service
     /// </summary>
-    public class LocalFileStorageService : IFileService
+    public class LocalFileStorageService : IFileService, IDisposable
     {
         /// <summary>
         /// Local storage directory path
         /// </summary>
         private readonly string _localStorageDir;
 
+        private readonly string _tempDir;
+
         public LocalFileStorageService(string localStorageDir)
         {
+            if (string.IsNullOrEmpty(localStorageDir))
+                throw new ArgumentNullException(nameof(localStorageDir));
+
+            if (!Directory.Exists(localStorageDir))
+            {
+                throw new DirectoryNotFoundException("Storage directory should exist!");
+            }
+
             _localStorageDir = localStorageDir;
+            _tempDir = Path.Combine(_localStorageDir, "temp");
+
+            if (!Directory.Exists(_tempDir))
+            {
+                Directory.CreateDirectory(_tempDir);
+            }
         }
 
         /// <summary>
@@ -28,28 +47,11 @@ namespace Storage.Application.Common.Services
         /// <param name="filePath">FIle to download</param>
         /// <returns>File stream result</returns>
         /// <exception cref="FileUploadingException"></exception>
-        public async Task<FileStream> DownloadFileAsync(string filePath)
+        public async Task<FileStream> DownloadFileAsync(string filePath, CancellationToken cancellationToken)
         {
             try
             {
-                if (string.IsNullOrEmpty(filePath))
-                {
-                    throw new ArgumentNullException(nameof(filePath));
-                }
-
-                if (!File.Exists(filePath))
-                {
-                    throw new FileNotFoundException("Couldn't found file!", filePath);
-                }
-
-                FileStream fileStream = null;
-
-                using (var file = File.OpenRead(filePath))
-                {
-                    await file.CopyToAsync(fileStream);
-                }
-
-                return fileStream;
+                return await FileHelper.LoadFileAsync(filePath);
             }
             catch (ArgumentNullException ex)
             {
@@ -66,23 +68,55 @@ namespace Storage.Application.Common.Services
         }
 
         /// <summary>
+        /// Downloads files from local storage
+        /// </summary>
+        /// <param name="filesPath">Files path</param>
+        /// <param name="cancellationToken">Cancellation tocken</param>
+        /// <returns>Zip file</returns>
+        public async Task<FileStream> DownloadManyFilesAsync(List<string> filesPath, CancellationToken cancellationToken)
+        {
+            var zipFilePath = await PrepareZipFileAsync(filesPath);
+
+            var fileStream = FileHelper.LoadFileAsync(zipFilePath);
+
+
+        }
+
+        private async Task<string> PrepareZipFileAsync(List<string> filesPath)
+        {
+            // Copy files to temporary directory
+            var randomName = Path.GetRandomFileName();
+            var tempDir = Path.Combine(_tempDir, randomName);
+
+            if (!Directory.Exists(tempDir))
+                Directory.CreateDirectory(tempDir);
+
+            await FileHelper.MoveFilesToAsync(filesPath, tempDir);
+
+            var archiveFilePath = Path.Combine(_tempDir, randomName);
+
+            archiveFilePath = FileHelper.ArchiveFolder(tempDir, archiveFilePath);
+
+            return archiveFilePath;
+        }
+
+        /// <summary>
         /// Upload file to local storage
         /// </summary>
         /// <param name="file">File to upload</param>
         /// <returns>Uploaded file path</returns>
         /// <exception cref="FileUploadingException"></exception>
-        public async Task<string> UploadFileAsync(FileModel file)
+        public async Task<string> UploadFileAsync(FileModel file, CancellationToken cancellationToken)
         {
             try
             {
                 ValidateFile(file);
 
-                var path = Path.Combine(_localStorageDir, string.Join(Path.DirectorySeparatorChar, file.Attributes), file.FileName);
+                var path = Path.Combine(_localStorageDir,
+                            string.Join(Path.DirectorySeparatorChar, file.Attributes),
+                                file.FileName);
 
-                using (var target = File.OpenWrite(path))
-                {
-                    await file.FileStream.CopyToAsync(target);
-                }
+                await FileHelper.SaveFileAsync(file.FileStream, path, cancellationToken);
 
                 return path;
             }
@@ -108,6 +142,11 @@ namespace Storage.Application.Common.Services
             {
                 throw new ArgumentNullException(nameof(file));
             }
+        }
+
+        public void Dispose()
+        {
+            
         }
     }
 }
