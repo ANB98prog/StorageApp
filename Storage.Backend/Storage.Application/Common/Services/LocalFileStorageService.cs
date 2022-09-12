@@ -5,6 +5,7 @@ using Storage.Application.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -44,7 +45,7 @@ namespace Storage.Application.Common.Services
         /// <summary>
         /// Downloads file from local storage
         /// </summary>
-        /// <param name="filePath">FIle to download</param>
+        /// <param name="filePath">File to download</param>
         /// <returns>File stream result</returns>
         /// <exception cref="FileUploadingException"></exception>
         public async Task<FileStream> DownloadFileAsync(string filePath, CancellationToken cancellationToken)
@@ -55,7 +56,7 @@ namespace Storage.Application.Common.Services
             }
             catch (ArgumentNullException ex)
             {
-                throw new FileUploadingException(ex.Message, ex.InnerException);
+                throw new ArgumentNullException(ex.Message, ex.InnerException);
             }
             catch(FileNotFoundException ex)
             {
@@ -75,11 +76,17 @@ namespace Storage.Application.Common.Services
         /// <returns>Zip file</returns>
         public async Task<FileStream> DownloadManyFilesAsync(List<string> filesPath, CancellationToken cancellationToken)
         {
+            if(filesPath == null
+                || !filesPath.Any())
+            {
+                throw new ArgumentNullException(nameof(filesPath));
+            }
+
             var zipFilePath = await PrepareZipFileAsync(filesPath);
 
             var fileStream = await FileHelper.LoadFileAsync(zipFilePath);
 
-            FileHelper.RemoveFile(zipFilePath);
+            //FileHelper.RemoveFile(zipFilePath);
 
             return fileStream;
         }
@@ -87,7 +94,7 @@ namespace Storage.Application.Common.Services
         private async Task<string> PrepareZipFileAsync(List<string> filesPath)
         {
             // Copy files to temporary directory
-            var randomName = Path.GetRandomFileName();
+            var randomName = Path.GetRandomFileName().Replace(".", string.Empty);
             var tempDir = Path.Combine(_tempDir, randomName);
 
             if (!Directory.Exists(tempDir))
@@ -95,10 +102,8 @@ namespace Storage.Application.Common.Services
 
             await FileHelper.CopyFilesToAsync(filesPath, tempDir);
 
-            var archiveFilePath = Path.Combine(_tempDir, randomName);
-
             // Archives files
-            archiveFilePath = FileHelper.ArchiveFolder(tempDir, archiveFilePath);
+            var archiveFilePath = FileHelper.ArchiveFolder(tempDir);
 
             FileHelper.RemoveDirectory(tempDir);
 
