@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Storage.Domain", "Storage.D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Storage.Application", "Storage.Application\Storage.Application.csproj", "{2C1B0BDF-D20C-4459-936D-61BD8BBD426B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Storage.WebApi", "Storage.WebApi\Storage.WebApi.csproj", "{A80AA89D-2DA3-4446-9509-F39D067DE103}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Storage.WebApi", "Storage.WebApi\Storage.WebApi.csproj", "{A80AA89D-2DA3-4446-9509-F39D067DE103}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Storage.Tests", "Storage.Tests\Storage.Tests.csproj", "{0D4CA757-9657-4F09-8AEC-AD3ECBAFA58D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +37,10 @@ Global
 		{A80AA89D-2DA3-4446-9509-F39D067DE103}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A80AA89D-2DA3-4446-9509-F39D067DE103}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A80AA89D-2DA3-4446-9509-F39D067DE103}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D4CA757-9657-4F09-8AEC-AD3ECBAFA58D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D4CA757-9657-4F09-8AEC-AD3ECBAFA58D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D4CA757-9657-4F09-8AEC-AD3ECBAFA58D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D4CA757-9657-4F09-8AEC-AD3ECBAFA58D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -43,6 +49,7 @@ Global
 		{AD8BC758-D0FB-4900-8CD6-6233AEC4EA3D} = {04B99D36-B01C-45E8-A018-C6DF5177EBBB}
 		{2C1B0BDF-D20C-4459-936D-61BD8BBD426B} = {04B99D36-B01C-45E8-A018-C6DF5177EBBB}
 		{A80AA89D-2DA3-4446-9509-F39D067DE103} = {5CFF1647-AE5A-40D9-A83A-B4F5BECB0050}
+		{0D4CA757-9657-4F09-8AEC-AD3ECBAFA58D} = {10D3AC0C-E5D8-46B6-BC08-37E8BCA28F97}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3887AB32-6DFA-42F6-B84F-B95C97B879BE}

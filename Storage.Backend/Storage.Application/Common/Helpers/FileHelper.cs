@@ -19,7 +19,7 @@ namespace Storage.Application.Common.Helpers
         /// <exception cref="FileNotFoundException"></exception>
         public static async Task<FileStream> LoadFileAsync(string filePath)
         {
-            if (string.IsNullOrEmpty(filePath))
+            if (string.IsNullOrWhiteSpace(filePath))
             {
                 throw new ArgumentNullException(nameof(filePath));
             }
@@ -49,15 +49,20 @@ namespace Storage.Application.Common.Helpers
                 throw new ArgumentNullException(nameof(stream), "File stream cannot be empty!");
             }
 
-            if (string.IsNullOrEmpty(filePath))
+            var saveStream = stream;
+
+            if (string.IsNullOrWhiteSpace(filePath)
+                || string.IsNullOrEmpty(Path.GetFileName(filePath)))
             {
                 throw new ArgumentNullException(nameof(filePath));
             }
 
             using (var file = File.OpenWrite(filePath))
             {
-                await stream.CopyToAsync(file, cancellationToken);
+                await saveStream.CopyToAsync(file, cancellationToken);
             }
+
+            await saveStream.DisposeAsync();
         }
 
         /// <summary>
@@ -65,11 +70,11 @@ namespace Storage.Application.Common.Helpers
         /// </summary>
         /// <param name="sourceFiles">Files to move</param>
         /// <param name="destinationPath">Destination path</param>
-        public static async Task MoveFilesToAsync(List<string> sourceFiles, string destinationPath)
+        public static async Task CopyFilesToAsync(List<string> sourceFiles, string destinationPath)
         {
             foreach (var source in sourceFiles)
             {
-                await MoveFileToAsync(source, destinationPath);
+                await CopyFileToAsync(source, destinationPath);
             }
         }
 
@@ -81,12 +86,12 @@ namespace Storage.Application.Common.Helpers
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="FileNotFoundException"></exception>
         /// <exception cref="DirectoryCreationException"></exception>
-        public static async Task MoveFileToAsync(string sourceFile, string destinationPath)
+        public static async Task CopyFileToAsync(string sourceFile, string destinationPath)
         {
 
-            if (string.IsNullOrEmpty(sourceFile))
+            if (string.IsNullOrWhiteSpace(sourceFile))
                 throw new ArgumentNullException(nameof(sourceFile));
-            if (string.IsNullOrEmpty(destinationPath))
+            if (string.IsNullOrWhiteSpace(destinationPath))
                 throw new ArgumentNullException(nameof(destinationPath));
 
             if (!File.Exists(sourceFile))
@@ -112,21 +117,62 @@ namespace Storage.Application.Common.Helpers
         }
 
         /// <summary>
+        /// Removes file
+        /// </summary>
+        /// <param name="filePath">File to remove</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static void RemoveFile(string filePath)
+        {
+            if (string.IsNullOrWhiteSpace(filePath))
+                throw new ArgumentNullException(nameof(filePath));
+
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+        }
+
+        /// <summary>
+        /// Removes directory
+        /// </summary>
+        /// <param name="dirPath">Directory to remove</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static void RemoveDirectory(string dirPath)
+        {
+            if (string.IsNullOrWhiteSpace(dirPath))
+                throw new ArgumentNullException(nameof(dirPath));
+
+            if (Directory.Exists(dirPath))
+            {
+                Directory.Delete(dirPath, true);
+            }
+        }
+
+        /// <summary>
         /// Archives files
         /// </summary>
         /// <param name="sourcePath">Source directory path</param>
         /// <param name="archivePath">Archive file path</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public static string ArchiveFolder(string sourcePath, string archivePath)
+        public static string ArchiveFolder(string sourcePath, string archivePath = null)
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(sourcePath))
+                    throw new ArgumentNullException(nameof(sourcePath));
+                if (string.IsNullOrWhiteSpace(archivePath))
+                    archivePath = Directory.GetParent(sourcePath)?.FullName;
+
                 var archiveName = Path.GetFileNameWithoutExtension(sourcePath);
                 archivePath = Path.Combine(Path.GetFullPath(archivePath), $"{archiveName}.zip");
                 ZipFile.CreateFromDirectory(sourcePath, archivePath);
 
                 return archivePath;
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw ex;
             }
             catch (Exception ex)
             {
@@ -140,11 +186,26 @@ namespace Storage.Application.Common.Helpers
         /// <param name="archivePath">Archive file</param>
         /// <param name="destinationPath">Unzipped files path</param>
         /// <exception cref="Exception"></exception>
-        public static void UnzipFolder(string archivePath, string destinationPath)
+        public static void UnzipFolder(string archivePath, string destinationPath = null)
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(archivePath))
+                    throw new ArgumentNullException(nameof(archivePath));
+                if (!File.Exists(archivePath))
+                    throw new FileNotFoundException("Couldn't found archive file", archivePath);
+                if (string.IsNullOrWhiteSpace(destinationPath))
+                    destinationPath = Directory.GetParent(archivePath)?.FullName;
+
                 ZipFile.ExtractToDirectory(archivePath, destinationPath);
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw ex;
+            }
+            catch (FileNotFoundException ex)
+            {
+                throw ex;
             }
             catch (Exception ex)
             {
