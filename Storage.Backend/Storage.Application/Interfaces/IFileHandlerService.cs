@@ -1,4 +1,5 @@
-﻿using Storage.Domain;
+﻿using Storage.Application.Common.Models;
+using Storage.Domain;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,12 +17,10 @@ namespace Storage.Application.Interfaces
         /// <summary>
         /// Uploads file
         /// </summary>
-        /// <typeparam name="T">File model type</typeparam>
         /// <param name="file">File to upload</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Uploaded file id</returns>
-        public Task<Guid> UploadFileAsync<T>(T file, CancellationToken cancellationToken) 
-            where T : BaseFile;
+        public Task<Guid> UploadFileAsync(UploadFileRequestModel file, CancellationToken cancellationToken);
 
         /// <summary>
         /// Downloads file
@@ -34,12 +33,18 @@ namespace Storage.Application.Interfaces
         /// <summary>
         /// Uploads large file
         /// </summary>
-        /// <typeparam name="T">File model type</typeparam>
         /// <param name="file">File to upload</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Uploading task</returns>
-        public Task UploadLargeFileAsync<T>(T file, CancellationToken cancellationToken)
-            where T : BaseFile;
+        public Task UploadManyFileAsync(List<UploadFileRequestModel> files, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Uploads archived file
+        /// </summary>
+        /// <param name="file">File to upload</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Uploading task</returns>
+        public Task UploadArchiveFileAsync(UploadFileRequestModel file, CancellationToken cancellationToken);
 
         /// <summary>
         /// Downloads large file

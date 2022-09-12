@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using AutoMapper;
+using Storage.Application.Common.Mappings;
+using System.IO;
 
 namespace Storage.Application.Common.Models
 {
@@ -9,5 +11,6 @@ namespace Storage.Application.Common.Models
         public string[] Attributes { get; set; }
 
         public Stream FileStream { get; set; }
+
     }
 }
