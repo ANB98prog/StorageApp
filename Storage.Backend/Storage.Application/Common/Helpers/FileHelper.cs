@@ -239,7 +239,7 @@ namespace Storage.Application.Common.Helpers
         /// <param name="archivePath">Archive file</param>
         /// <param name="destinationPath">Unzipped files path</param>
         /// <exception cref="Exception"></exception>
-        public static void UnzipFolder(string archivePath, string destinationPath = null)
+        public static string UnzipFolder(string archivePath, string destinationPath = null)
         {
             try
             {
@@ -251,6 +251,8 @@ namespace Storage.Application.Common.Helpers
                     destinationPath = Path.Combine(Directory.GetParent(archivePath)?.FullName, Path.GetFileNameWithoutExtension(archivePath));
 
                 ZipFile.ExtractToDirectory(archivePath, destinationPath);
+
+                return destinationPath;
             }
             catch (ArgumentNullException ex)
             {
