@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Storage.Domain
 {
@@ -59,5 +60,10 @@ namespace Storage.Domain
         /// Edited at
         /// </summary>
         public DateTime EditedAt { get; set; }
+
+        /// <summary>
+        /// Describes is file annotated
+        /// </summary>
+        public bool IsAnnotated { get; set; }
     }
 }

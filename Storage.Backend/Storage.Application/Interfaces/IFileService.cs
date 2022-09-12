@@ -12,10 +12,20 @@ namespace Storage.Application.Interfaces
     public interface IFileService
     {
         /// <summary>
+        /// Uploads many files
+        /// </summary>
+        /// <param name="files">Upload files model</param>
+        /// <returns>
+        /// Path to saved files
+        /// </returns>
+        public Task<List<string>> UploadManyFilesAsync(List<FileModel> files, CancellationToken cancellationToken);
+
+        /// <summary>
         /// Upload file
         /// </summary>
         /// <param name="file">Upload file model</param>
         /// <returns>
+        /// Path to saved file
         /// </returns>
         public Task<string> UploadFileAsync(FileModel file, CancellationToken cancellationToken);
 

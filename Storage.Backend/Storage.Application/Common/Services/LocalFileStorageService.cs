@@ -77,9 +77,11 @@ namespace Storage.Application.Common.Services
         {
             var zipFilePath = await PrepareZipFileAsync(filesPath);
 
-            var fileStream = FileHelper.LoadFileAsync(zipFilePath);
+            var fileStream = await FileHelper.LoadFileAsync(zipFilePath);
 
+            FileHelper.RemoveFile(zipFilePath);
 
+            return fileStream;
         }
 
         private async Task<string> PrepareZipFileAsync(List<string> filesPath)
@@ -91,20 +93,56 @@ namespace Storage.Application.Common.Services
             if (!Directory.Exists(tempDir))
                 Directory.CreateDirectory(tempDir);
 
-            await FileHelper.MoveFilesToAsync(filesPath, tempDir);
+            await FileHelper.CopyFilesToAsync(filesPath, tempDir);
 
             var archiveFilePath = Path.Combine(_tempDir, randomName);
 
+            // Archives files
             archiveFilePath = FileHelper.ArchiveFolder(tempDir, archiveFilePath);
+
+            FileHelper.RemoveDirectory(tempDir);
 
             return archiveFilePath;
         }
 
         /// <summary>
-        /// Upload file to local storage
+        /// Uploads many files to storage
+        /// </summary>
+        /// <param name="file">Files to upload</param>
+        /// <returns>Uploaded files path</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="FileUploadingException"></exception>
+        public async Task<List<string>> UploadManyFilesAsync(List<FileModel> files, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var filesPaths = new List<string>();
+
+                foreach (var file in files)
+                {
+                    filesPaths.Add(
+                        await UploadFileAsync(file, cancellationToken));
+                }
+
+                return filesPaths;
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new FileUploadingException("Unexpected error occured while many files uploading.", ex.InnerException);
+            }
+        }
+
+
+        /// <summary>
+        /// Upload file to storage
         /// </summary>
         /// <param name="file">File to upload</param>
         /// <returns>Uploaded file path</returns>
+        /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="FileUploadingException"></exception>
         public async Task<string> UploadFileAsync(FileModel file, CancellationToken cancellationToken)
         {
