@@ -57,6 +57,11 @@ namespace Storage.Application.Common.Helpers
                 throw new ArgumentNullException(nameof(filePath));
             }
 
+            var dir = Directory.GetParent(filePath);
+
+            if(!Directory.Exists(dir.FullName))
+                Directory.CreateDirectory(dir.FullName);
+
             using (var file = File.OpenWrite(filePath))
             {
                 await saveStream.CopyToAsync(file, cancellationToken);
