@@ -4,7 +4,7 @@ using Storage.Tests.Common;
 namespace Storage.Tests.FileHelperTests
 {
     [Collection("TestFilesCollection")]
-    public class RemoveFileTests : TestBase
+    public class RemoveFileTests : FileHelperFixture
     {
         [Fact]
         public async Task RemoveFile_Success()

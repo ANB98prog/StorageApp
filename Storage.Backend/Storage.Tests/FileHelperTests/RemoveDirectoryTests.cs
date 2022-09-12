@@ -10,7 +10,7 @@ namespace Storage.Tests.FileHelperTests
 {
 
     [Collection("TestFilesCollection")]
-    public class RemoveDirectoryTests : TestBase
+    public class RemoveDirectoryTests : FileHelperFixture
     {
         [Fact]
         public async Task RemoveDirectory_Success()

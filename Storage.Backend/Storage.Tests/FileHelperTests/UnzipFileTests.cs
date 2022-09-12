@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Storage.Tests.FileHelperTests
 {
     [Collection("TestFilesCollection")]
-    public class UnzipFileTests : TestBase
+    public class UnzipFileTests : FileHelperFixture
     {
         [Fact]
         public void UnzipFolder_Success()

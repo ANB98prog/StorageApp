@@ -4,7 +4,7 @@ using Storage.Tests.Common;
 namespace Storage.Tests.FileHelperTests
 {
     [Collection("TestFilesCollection")]
-    public class SaveFileTests : TestBase
+    public class SaveFileTests : FileHelperFixture
     {
         [Fact]
         public async Task SaveFile_Success()

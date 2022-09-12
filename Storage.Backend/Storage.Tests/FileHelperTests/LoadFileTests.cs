@@ -5,7 +5,7 @@ using System.Text;
 namespace Storage.Tests.FileHelperTests
 {
     [Collection("TestFilesCollection")]
-    public class LoadFileTests :TestBase
+    public class LoadFileTests :FileHelperFixture
     {
         [Fact]
         public async Task LoadFile_Success()

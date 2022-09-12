@@ -5,7 +5,7 @@ namespace Storage.Tests.FileHelperTests
 {
 
     [Collection("TestFilesCollection")]
-    public class CopyFileTests : TestBase
+    public class CopyFileTests : FileHelperFixture
     {
         #region Single file
         [Fact]

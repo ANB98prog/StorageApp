@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Storage.Tests.FileHelperTests
 {
     [Collection("TestFilesCollection")]
-    public class ArchiveDirectoryTest : TestBase
+    public class ArchiveDirectoryTest : FileHelperFixture
     {
         [Fact]
         public async Task ArchiveDir_Success()
