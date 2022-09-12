@@ -5,7 +5,7 @@ namespace Storage.Tests.FileHelperTests
 {
 
     [Collection("TestFilesCollection")]
-    public class MoveFileTests : TestBase
+    public class CopyFileTests : TestBase
     {
         #region Single file
         [Fact]
@@ -20,9 +20,9 @@ namespace Storage.Tests.FileHelperTests
             var moveToDir = Path.Combine(TestFilesDirectory, "Moved");
             Directory.CreateDirectory(moveToDir);
 
-            await FileHelper.MoveFileToAsync(origFilePath, moveToDir);
+            await FileHelper.CopyFileToAsync(origFilePath, moveToDir);
 
-            Assert.False(File.Exists(origFilePath));
+            Assert.True(File.Exists(origFilePath));
             Assert.True(File.Exists(Path.Combine(moveToDir, "orig.txt")));
         }
 
@@ -37,9 +37,9 @@ namespace Storage.Tests.FileHelperTests
 
             var moveToDir = Path.Combine(TestFilesDirectory, "MovedNotExt");
 
-            await FileHelper.MoveFileToAsync(origFilePath, moveToDir);
+            await FileHelper.CopyFileToAsync(origFilePath, moveToDir);
 
-            Assert.False(File.Exists(origFilePath));
+            Assert.True(File.Exists(origFilePath));
             Assert.True(File.Exists(Path.Combine(moveToDir, "orig.txt")));
         }
 
@@ -52,7 +52,7 @@ namespace Storage.Tests.FileHelperTests
             Directory.CreateDirectory(moveToDir);
 
             await Assert.ThrowsAsync<FileNotFoundException>(
-                async () => await FileHelper.MoveFileToAsync(origFilePath, moveToDir));
+                async () => await FileHelper.CopyFileToAsync(origFilePath, moveToDir));
         }
 
         [Theory]
@@ -65,7 +65,7 @@ namespace Storage.Tests.FileHelperTests
             var moveToDir = Path.Combine(TestFilesDirectory, "Moved");
 
             await Assert.ThrowsAsync<ArgumentNullException>(
-                async () => await FileHelper.MoveFileToAsync(sourceFile, moveToDir));
+                async () => await FileHelper.CopyFileToAsync(sourceFile, moveToDir));
         }
 
         [Theory]
@@ -78,7 +78,7 @@ namespace Storage.Tests.FileHelperTests
             var sourceFile = Path.Combine(TestFilesDirectory, "orig.txt");
 
             await Assert.ThrowsAsync<ArgumentNullException>(
-                async () => await FileHelper.MoveFileToAsync(sourceFile, destFilePath));
+                async () => await FileHelper.CopyFileToAsync(sourceFile, destFilePath));
         }
         #endregion
 
@@ -106,12 +106,12 @@ namespace Storage.Tests.FileHelperTests
             var moveToDir = Path.Combine(TestFilesDirectory, "MovedMany");
             Directory.CreateDirectory(moveToDir);
 
-            await FileHelper.MoveFilesToAsync(origFilesPath, moveToDir);
+            await FileHelper.CopyFilesToAsync(origFilesPath, moveToDir);
 
 
             foreach (var file in origFilesPath)
             {
-                Assert.False(File.Exists(file)); 
+                Assert.True(File.Exists(file)); 
             }
 
             foreach (var file in origFilesNames)
@@ -142,11 +142,11 @@ namespace Storage.Tests.FileHelperTests
 
             var moveToDir = Path.Combine(TestFilesDirectory, "MovedManyNotExt");
 
-            await FileHelper.MoveFilesToAsync(origFilesPath, moveToDir);
+            await FileHelper.CopyFilesToAsync(origFilesPath, moveToDir);
 
             foreach (var file in origFilesPath)
             {
-                Assert.False(File.Exists(file));
+                Assert.True(File.Exists(file));
             }
 
             foreach (var file in origFilesNames)
@@ -169,7 +169,7 @@ namespace Storage.Tests.FileHelperTests
             Directory.CreateDirectory(moveToDir);
 
             await Assert.ThrowsAsync<FileNotFoundException>(
-                async () => await FileHelper.MoveFilesToAsync(origFilesPath, moveToDir));
+                async () => await FileHelper.CopyFilesToAsync(origFilesPath, moveToDir));
         }
 
         [Fact]
@@ -178,7 +178,7 @@ namespace Storage.Tests.FileHelperTests
             var moveToDir = Path.Combine(TestFilesDirectory, "Moved");
 
             await Assert.ThrowsAsync<ArgumentNullException>(
-                async () => await FileHelper.MoveFilesToAsync(new List<string> { null }, moveToDir));
+                async () => await FileHelper.CopyFilesToAsync(new List<string> { null }, moveToDir));
         }
 
         [Theory]
@@ -196,7 +196,7 @@ namespace Storage.Tests.FileHelperTests
             };
 
             await Assert.ThrowsAsync<ArgumentNullException>(
-                async () => await FileHelper.MoveFilesToAsync(origFilesPath, destFilePath));
+                async () => await FileHelper.CopyFilesToAsync(origFilesPath, destFilePath));
         }
         #endregion
     }

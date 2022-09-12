@@ -66,7 +66,7 @@ namespace Storage.Application.Common.Helpers
         }
 
         /// <summary>
-        /// Moves several files to another directory
+        /// Copies several files to another directory
         /// </summary>
         /// <param name="sourceFiles">Files to move</param>
         /// <param name="destinationPath">Destination path</param>
@@ -79,7 +79,7 @@ namespace Storage.Application.Common.Helpers
         }
 
         /// <summary>
-        /// Moves file to another directory
+        /// Copies file to another directory
         /// </summary>
         /// <param name="sourceFile">File to move</param>
         /// <param name="destinationPath">Destination path</param>
@@ -114,6 +114,59 @@ namespace Storage.Application.Common.Helpers
             {
                 await source.CopyToAsync(dest);
             }
+        }
+
+        /// <summary>
+        /// Moves several files to another directory
+        /// </summary>
+        /// <param name="sourceFiles">Files to move</param>
+        /// <param name="destinationPath">Destination path</param>
+        public static async Task MoveFilesToAsync(List<string> sourceFiles, string destinationPath)
+        {
+            foreach (var source in sourceFiles)
+            {
+                await MoveFileToAsync(source, destinationPath);
+            }
+        }
+
+        /// <summary>
+        /// Moves file to another directory
+        /// </summary>
+        /// <param name="sourceFile">File to move</param>
+        /// <param name="destinationPath">Destination path</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="FileNotFoundException"></exception>
+        /// <exception cref="DirectoryCreationException"></exception>
+        public static async Task MoveFileToAsync(string sourceFile, string destinationPath)
+        {
+
+            if (string.IsNullOrWhiteSpace(sourceFile))
+                throw new ArgumentNullException(nameof(sourceFile));
+            if (string.IsNullOrWhiteSpace(destinationPath))
+                throw new ArgumentNullException(nameof(destinationPath));
+
+            if (!File.Exists(sourceFile))
+                throw new FileNotFoundException("Cannot find file.", sourceFile);
+
+            if (!Directory.Exists(destinationPath))
+            {
+                try
+                {
+                    Directory.CreateDirectory(destinationPath);
+                }
+                catch (Exception ex)
+                {
+                    throw new DirectoryCreationException($"Couldn't create '{destinationPath}' directory!", ex);
+                }
+            }
+
+            using (var dest = File.OpenWrite(Path.Combine(destinationPath, Path.GetFileName(sourceFile))))
+            using (var source = File.OpenRead(sourceFile))
+            {
+                await source.CopyToAsync(dest);
+            }
+
+            File.Delete(sourceFile);
         }
 
         /// <summary>
@@ -195,7 +248,7 @@ namespace Storage.Application.Common.Helpers
                 if (!File.Exists(archivePath))
                     throw new FileNotFoundException("Couldn't found archive file", archivePath);
                 if (string.IsNullOrWhiteSpace(destinationPath))
-                    destinationPath = Directory.GetParent(archivePath)?.FullName;
+                    destinationPath = Path.Combine(Directory.GetParent(archivePath)?.FullName, Path.GetFileNameWithoutExtension(archivePath));
 
                 ZipFile.ExtractToDirectory(archivePath, destinationPath);
             }

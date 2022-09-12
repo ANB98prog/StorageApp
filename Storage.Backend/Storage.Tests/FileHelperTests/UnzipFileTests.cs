@@ -61,7 +61,7 @@ namespace Storage.Tests.FileHelperTests
 
             FileHelper.UnzipFolder(archive, extractPath);
 
-            var unzipFilePath = Path.Combine(TestFilesDirectory, "test.txt");
+            var unzipFilePath = Path.Combine(archivePath, "test.txt");
 
             Assert.True(File.Exists(unzipFilePath));
         }
