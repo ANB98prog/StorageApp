@@ -165,7 +165,7 @@ namespace Storage.Application.Common.Services
             }
             catch (ArgumentNullException ex)
             {
-                throw new FileUploadingException(ex.Message, ex.InnerException);
+                throw ex;
             }
             catch (Exception ex)
             {
