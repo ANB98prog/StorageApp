@@ -35,16 +35,16 @@ namespace Storage.Application.Interfaces
         /// </summary>
         /// <param name="file">File to upload</param>
         /// <param name="cancellationToken">Cancellation token</param>
-        /// <returns>Uploading task</returns>
-        public Task UploadManyFileAsync(List<UploadFileRequestModel> files, CancellationToken cancellationToken);
+        /// <returns>Uploaded files ids</returns>
+        public Task<List<Guid>> UploadManyFileAsync(List<UploadFileRequestModel> files, CancellationToken cancellationToken);
 
         /// <summary>
         /// Uploads archived file
         /// </summary>
         /// <param name="file">File to upload</param>
         /// <param name="cancellationToken">Cancellation token</param>
-        /// <returns>Uploaded files</returns>
-        public Task<List<string>> UploadArchiveFileAsync(UploadFileRequestModel file, CancellationToken cancellationToken);
+        /// <returns>Uploaded files ids</returns>
+        public Task<List<Guid>> UploadArchiveFileAsync(UploadFileRequestModel file, CancellationToken cancellationToken);
 
         /// <summary>
         /// Downloads large file

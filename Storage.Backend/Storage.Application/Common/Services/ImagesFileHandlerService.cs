@@ -9,20 +9,31 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FileAttributes = Storage.Application.Common.Models.FileAttributes;
-using Task = System.Threading.Tasks.Task;
 
 namespace Storage.Application.Common.Services
 {
     public class ImagesFileHandlerService : IFileHandlerService
     {
-
+        /// <summary>
+        /// Contract mapper
+        /// </summary>
         private readonly IMapper _mapper;
 
+        /// <summary>
+        /// Files service
+        /// </summary>
         private readonly IFileService _fileService;
 
+        /// <summary>
+        /// Directory for temporary files
+        /// </summary>
         private readonly string TEMP_DIR = Path.Combine(Environment.CurrentDirectory, "temp");
 
-
+        /// <summary>
+        /// Initializes class instance of <see cref="ImagesFileHandlerService"/>
+        /// </summary>
+        /// <param name="mapper">Contract mapper</param>
+        /// <param name="fileService">Files service</param>
         public ImagesFileHandlerService(IMapper mapper, IFileService fileService)
         {
             _mapper = mapper;
@@ -51,7 +62,7 @@ namespace Storage.Application.Common.Services
             return await _fileService.DownloadManyFilesAsync(filesPath, cancellationToken);
         }
 
-        public async Task<List<string>> UploadArchiveFileAsync(UploadFileRequestModel file, CancellationToken cancellationToken)
+        public async Task<List<Guid>> UploadArchiveFileAsync(UploadFileRequestModel file, CancellationToken cancellationToken)
         {
             if (file == null)
                 throw new ArgumentNullException(nameof(file));
@@ -80,7 +91,7 @@ namespace Storage.Application.Common.Services
              TO DO
              */
 
-            return savedFilesPath;
+            return files.Select(s => s.Id).ToList();
 
         }
 
@@ -145,12 +156,15 @@ namespace Storage.Application.Common.Services
             return result;
         }
 
-        public async Task UploadManyFileAsync(List<UploadFileRequestModel> files, CancellationToken cancellationToken)
+        public async Task<List<Guid>> UploadManyFileAsync(List<UploadFileRequestModel> files, CancellationToken cancellationToken)
         {
+            var ids = new List<Guid>();
             foreach (var file in files)
             {
-                await UploadFileToStorageAsync(file, cancellationToken);
+                ids.Add(await UploadFileToStorageAsync(file, cancellationToken));
             }
+
+            return ids;
         }
 
         private async Task<Guid> UploadFileToStorageAsync(UploadFileRequestModel upload, CancellationToken cancellationToken)
@@ -171,7 +185,7 @@ namespace Storage.Application.Common.Services
 
             // Index file in db
 
-            return Guid.NewGuid();
+            return upload.Id;
             
         }
     }
