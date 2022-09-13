@@ -46,7 +46,7 @@ namespace Storage.Tests.ImagesFileHandlerServiceTests
                                 SystemName = $"{Guid.NewGuid().Trunc()}.txt"
                             }, CancellationToken.None));
 
-            Assert.Equal("stream", error.ParamName);
+            Assert.Equal("file", error.ParamName);
         }
     }
 }
