@@ -56,16 +56,11 @@ namespace Storage.Application.Common.Helpers
 
             var saveStream = stream;
 
-            if (string.IsNullOrWhiteSpace(filePath)
-                || string.IsNullOrEmpty(Path.GetFileName(filePath)))
-            {
+            if (string.IsNullOrWhiteSpace(filePath))
                 throw new ArgumentNullException(nameof(filePath));
-            }
 
-            var dir = Directory.GetParent(filePath);
-
-            if(!Directory.Exists(dir.FullName))
-                Directory.CreateDirectory(dir.FullName);
+            if (string.IsNullOrEmpty(Path.GetExtension(filePath)))
+                throw new ArgumentException("Path does not contains file name!", nameof(filePath));
 
             using (var file = File.OpenWrite(filePath))
             {
@@ -105,7 +100,7 @@ namespace Storage.Application.Common.Helpers
                 throw new ArgumentNullException(nameof(destinationPath));
 
             if (!File.Exists(sourceFile))
-                throw new FileNotFoundException("Cannot find file.", sourceFile);
+                throw new FileNotFoundException("Cannot find file.", Path.GetFileName(sourceFile));
 
             if (!Directory.Exists(destinationPath))
             {
