@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 
 namespace Storage.Tests.LocalFileStorageServiceTests
 {
-    [Collection("LocalFileStorageCollection")]
-    public class UploadManyFiles : LocalFileStorageServiceFixture
+    [Collection("TestServicesCollection")]
+    public class UploadManyFiles : TestServicesFixture
     {
         [Fact]
         public async Task UploadManyFiles_Success()

@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Storage.Tests.LocalFileStorageServiceTests
 {
-    [Collection("LocalFileStorageCollection")]
-    public class DownloadFileTests : LocalFileStorageServiceFixture
+    [Collection("TestServicesCollection")]
+    public class DownloadFileTests : TestServicesFixture
     {
         [Fact]
         public async Task DownloadFile_Success()
@@ -52,7 +52,7 @@ namespace Storage.Tests.LocalFileStorageServiceTests
         {
             var filePath = Path.Combine(TestFilesDirectory, "Download");
 
-            await Assert.ThrowsAsync<FileNotFoundException>(async () =>
+            await Assert.ThrowsAsync<ArgumentException>(async () =>
                 await FileService.DownloadFileAsync(filePath, CancellationToken.None));
 
         }

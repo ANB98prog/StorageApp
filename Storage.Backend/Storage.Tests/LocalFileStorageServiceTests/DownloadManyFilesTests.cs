@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace Storage.Tests.LocalFileStorageServiceTests
 {
-    [Collection("LocalFileStorageCollection")]
-    public class DownloadManyFilesTests : LocalFileStorageServiceFixture
+    [Collection("TestServicesCollection")]
+    public class DownloadManyFilesTests : TestServicesFixture
     {
         [Fact]
         public async Task DownloadManyFiles_Success()
@@ -35,7 +35,7 @@ namespace Storage.Tests.LocalFileStorageServiceTests
             Assert.NotNull(result);
             Assert.Equal(".zip", Path.GetExtension(result.Name));
 
-            var unzippedPath = FileHelper.UnzipFolder(Path.Combine(Factory.StorageDirectory, result.Name));
+            var unzippedPath = FileHelper.UnzipFolder(Path.Combine(StorageDirectory, result.Name));
 
             var unzippedFilesCount = Directory.GetFiles(unzippedPath).Length;
 

@@ -5,8 +5,8 @@ using FileAttributes = Storage.Application.Common.Models.FileAttributes;
 
 namespace Storage.Tests.LocalFileStorageServiceTests
 {
-    [Collection("LocalFileStorageCollection")]
-    public class UploadFileTests : LocalFileStorageServiceFixture
+    [Collection("TestServicesCollection")]
+    public class UploadFileTests : TestServicesFixture
     {
         [Fact]
         public async Task UploadFile_Success()
