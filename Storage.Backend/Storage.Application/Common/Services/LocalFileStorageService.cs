@@ -21,6 +21,9 @@ namespace Storage.Application.Common.Services
         /// </summary>
         private readonly string _localStorageDir;
 
+        /// <summary>
+        /// Temporary files directory
+        /// </summary>
         private readonly string _tempDir;
 
         public LocalFileStorageService(string localStorageDir)
