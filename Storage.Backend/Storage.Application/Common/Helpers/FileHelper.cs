@@ -48,8 +48,7 @@ namespace Storage.Application.Common.Helpers
         /// <exception cref="ArgumentNullException"></exception>
         public static async Task SaveFileAsync(Stream stream, string filePath, CancellationToken cancellationToken)
         {
-            if (stream == null
-                || stream.Length == 0)
+            if (stream == null)
             {
                 throw new ArgumentNullException(nameof(stream), "File stream cannot be empty!");
             }
