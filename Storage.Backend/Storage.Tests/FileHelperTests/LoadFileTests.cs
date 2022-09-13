@@ -45,6 +45,15 @@ namespace Storage.Tests.FileHelperTests
                     async () => await FileHelper.LoadFileAsync(filePath));
         }
 
+        [Fact]
+        public async Task LoadFile_Error_IfPathDoesNotContainFileName()
+        {
+            var filePath = Path.Combine(TestFilesDirectory);
+
+            await Assert.ThrowsAsync<ArgumentException>(
+                    async () => await FileHelper.LoadFileAsync(filePath));
+        }
+
         [Theory]
         [InlineData("")]
         [InlineData(null)]

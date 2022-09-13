@@ -24,6 +24,11 @@ namespace Storage.Application.Common.Helpers
                 throw new ArgumentNullException(nameof(filePath));
             }
 
+            if (string.IsNullOrEmpty(Path.GetExtension(filePath)))
+            {
+                throw new ArgumentException("Path does not contain file name!", nameof(filePath));
+            }
+
             if (!File.Exists(filePath))
             {
                 throw new FileNotFoundException();
