@@ -63,7 +63,7 @@ namespace Storage.Application.Common.Helpers
                 throw new ArgumentException("Path does not contains file name!", nameof(filePath));
 
             var directory = Directory.GetParent(filePath);
-
+            
             if (directory != null
                 && !Directory.Exists(directory.FullName))
                 Directory.CreateDirectory(directory.FullName);

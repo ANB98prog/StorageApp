@@ -43,8 +43,8 @@ namespace Storage.Application.Interfaces
         /// </summary>
         /// <param name="file">File to upload</param>
         /// <param name="cancellationToken">Cancellation token</param>
-        /// <returns>Uploading task</returns>
-        public Task UploadArchiveFileAsync(UploadFileRequestModel file, CancellationToken cancellationToken);
+        /// <returns>Uploaded files</returns>
+        public Task<List<string>> UploadArchiveFileAsync(UploadFileRequestModel file, CancellationToken cancellationToken);
 
         /// <summary>
         /// Downloads large file

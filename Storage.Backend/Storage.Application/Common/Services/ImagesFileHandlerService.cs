@@ -51,7 +51,7 @@ namespace Storage.Application.Common.Services
             return await _fileService.DownloadManyFilesAsync(filesPath, cancellationToken);
         }
 
-        public async Task UploadArchiveFileAsync(UploadFileRequestModel file, CancellationToken cancellationToken)
+        public async Task<List<string>> UploadArchiveFileAsync(UploadFileRequestModel file, CancellationToken cancellationToken)
         {
             if (file == null)
                 throw new ArgumentNullException(nameof(file));
@@ -80,6 +80,8 @@ namespace Storage.Application.Common.Services
              TO DO
              */
 
+            return savedFilesPath;
+
         }
 
         /// <summary>
@@ -98,12 +100,7 @@ namespace Storage.Application.Common.Services
             await FileHelper.SaveFileAsync(archive.Stream, tempPath, cancellationToken);
 
             /*Unzip*/
-            FileHelper.UnzipFolder(tempPath);
-
-            var unzipPath = // Get path to folder
-                            Path.Combine(Path.GetFullPath(tempPath),
-                                // Add folder name
-                                Path.GetFileNameWithoutExtension(tempPath));
+            var unzipPath = FileHelper.UnzipFolder(tempPath);
 
             var files = Directory.GetFiles(unzipPath);
 
@@ -132,9 +129,8 @@ namespace Storage.Application.Common.Services
                 }
             }
 
-            /*Need to remove archive and unzipped files*/
+            /*Need to remove archive*/
             FileHelper.RemoveFile(tempPath);
-            FileHelper.RemoveDirectory(unzipPath);
 
             return filesData;
         }
