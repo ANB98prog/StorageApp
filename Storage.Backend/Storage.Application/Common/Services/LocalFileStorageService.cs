@@ -121,6 +121,9 @@ namespace Storage.Application.Common.Services
         {
             try
             {
+                if (files == null)
+                    throw new ArgumentNullException(nameof(files));
+
                 var filesPaths = new List<string>();
 
                 foreach (var file in files)
