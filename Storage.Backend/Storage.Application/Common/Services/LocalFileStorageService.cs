@@ -50,6 +50,8 @@ namespace Storage.Application.Common.Services
         /// </summary>
         /// <param name="filePath">File to download</param>
         /// <returns>File stream result</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
         /// <exception cref="FileUploadingException"></exception>
         public async Task<FileStream> DownloadFileAsync(string filePath, CancellationToken cancellationToken)
         {
@@ -59,7 +61,11 @@ namespace Storage.Application.Common.Services
             }
             catch (ArgumentNullException ex)
             {
-                throw new ArgumentNullException(ex.Message, ex.InnerException);
+                throw ex;
+            }
+            catch (ArgumentException ex)
+            {
+                throw ex;
             }
             catch(FileNotFoundException ex)
             {
