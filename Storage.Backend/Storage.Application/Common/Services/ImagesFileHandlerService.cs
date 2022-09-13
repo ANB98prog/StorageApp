@@ -158,6 +158,11 @@ namespace Storage.Application.Common.Services
 
         public async Task<List<Guid>> UploadManyFileAsync(List<UploadFileRequestModel> files, CancellationToken cancellationToken)
         {
+            if (files == null)
+            {
+                throw new ArgumentNullException(nameof(files));
+            }
+
             var ids = new List<Guid>();
             foreach (var file in files)
             {

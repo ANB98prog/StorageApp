@@ -193,7 +193,7 @@ namespace Storage.Application.Common.Services
         private void ValidateFile(FileModel file)
         {
             if (file == null
-                    || file.FileStream?.Length == 0)
+                    || file.FileStream == null)
             {
                 throw new ArgumentNullException(nameof(file));
             }
