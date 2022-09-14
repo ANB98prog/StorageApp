@@ -10,7 +10,7 @@ namespace Storage.Application.Common.Models
         /// <summary>
         /// File stream
         /// </summary>
-        public FileStream Stream { get; set; }
+        public Stream Stream { get; set; }
 
         public void Mapping(Profile profile)
         {
