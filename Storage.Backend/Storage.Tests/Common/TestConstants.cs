@@ -6,5 +6,7 @@
 
         public static readonly string StorageDirectory = Path.Combine(Directory.GetCurrentDirectory(), "temp");
 
+        public static readonly string CommandsFilesDirectory = Path.Combine(Environment.CurrentDirectory, "CommandsTest");
+
     }
 }
