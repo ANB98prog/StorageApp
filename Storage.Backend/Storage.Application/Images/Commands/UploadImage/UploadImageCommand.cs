@@ -11,6 +11,8 @@ namespace Storage.Application.Images.Commands.UploadImage
 
         public List<string> Attributes { get; set; } = new List<string>();
 
+        public bool IsAnnotated { get; set; } = false;
+
         public IFormFile ImageFile { get; set; }
     }
 }
