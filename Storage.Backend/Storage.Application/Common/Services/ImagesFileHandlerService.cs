@@ -146,6 +146,13 @@ namespace Storage.Application.Common.Services
             return filesData;
         }
 
+        /// <summary>
+        /// Uploads file to server
+        /// </summary>
+        /// <param name="file">File to upload</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Uploaded file id</returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public async Task<Guid> UploadFileAsync(UploadFileRequestModel file, CancellationToken cancellationToken)
         {
             if (file == null)
