@@ -1,18 +1,14 @@
 ﻿using AutoMapper;
-using Storage.Application.Common.Mappings;
-using Storage.Application.Common.Services;
+using Ninject;
 using Storage.Application.Interfaces;
 
 namespace Storage.Tests.Common
 {
     public class TestServicesFixture : IDisposable
     {
+        protected readonly IKernel Kernel;
 
         protected readonly IFileService FileService;
-
-        protected readonly string TestFilesDirectory = Path.Combine(Environment.CurrentDirectory, "localStorageTest");
-
-        protected readonly string StorageDirectory = Path.Combine(Directory.GetCurrentDirectory(), "temp");
 
         protected readonly IMapper Mapper;
 
@@ -20,26 +16,24 @@ namespace Storage.Tests.Common
 
         public TestServicesFixture()
         {
-            if (!Directory.Exists(TestFilesDirectory))
-                Directory.CreateDirectory(TestFilesDirectory);
+            var ioCModule = new IoCModule();
 
-            FileService = new LocalFileStorageService(StorageDirectory);
+            Kernel = new StandardKernel(ioCModule);
 
-            var configurationProvider = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new AssemblyMappingProfile(
-                    typeof(IFileHandlerService).Assembly));
-            });
+            if (!Directory.Exists(TestConstants.TestFilesDirectory))
+                Directory.CreateDirectory(TestConstants.TestFilesDirectory);
 
-            Mapper = configurationProvider.CreateMapper();
+            FileService = Kernel.Get<IFileService>();
+           
+            FileHandlerService = Kernel.Get<IFileHandlerService>();
 
-            FileHandlerService = new ImagesFileHandlerService(Mapper, FileService);
+            Mapper = Kernel.Get<IMapper>();
         }
 
         public void Dispose()
         {
-            TestHelper.RemoveTestData(TestFilesDirectory);
-            TestHelper.RemoveTestData(StorageDirectory);
+            TestHelper.RemoveTestData(TestConstants.TestFilesDirectory);
+            TestHelper.RemoveTestData(TestConstants.StorageDirectory);
         }
 
         [CollectionDefinition("TestServicesCollection")]
