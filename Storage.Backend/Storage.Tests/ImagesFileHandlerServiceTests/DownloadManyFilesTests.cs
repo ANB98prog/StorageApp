@@ -15,7 +15,7 @@ namespace Storage.Tests.ImagesFileHandlerServiceTests
         [Fact]
         public async Task DownloadManyFiles_Success()
         {
-            var dir = Path.Combine(TestFilesDirectory, "HandleManyDownload");
+            var dir = Path.Combine(TestConstants.TestFilesDirectory, "HandleManyDownload");
 
             Directory.CreateDirectory(dir);
 
@@ -34,7 +34,7 @@ namespace Storage.Tests.ImagesFileHandlerServiceTests
             Assert.NotNull(result);
             Assert.Equal(".zip", Path.GetExtension(result.Name));
 
-            var unzippedPath = Path.Combine(TestFilesDirectory, "UnzippedMany");
+            var unzippedPath = Path.Combine(TestConstants.TestFilesDirectory, "UnzippedMany");
 
             Directory.CreateDirectory(unzippedPath);
 
@@ -68,7 +68,7 @@ namespace Storage.Tests.ImagesFileHandlerServiceTests
         [Fact]
         public async Task DownloadManyFiles_Error_IfFilesNotFound()
         {
-            var filePath = Path.Combine(TestFilesDirectory, "notExisted.txt");
+            var filePath = Path.Combine(TestConstants.TestFilesDirectory, "notExisted.txt");
             var message = await Assert.ThrowsAsync<FileNotFoundException>(async () =>
                 await FileHandlerService.DownloadManyFilesAsync(new List<string>() { filePath }, CancellationToken.None));
 

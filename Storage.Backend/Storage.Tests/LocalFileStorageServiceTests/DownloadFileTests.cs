@@ -13,7 +13,7 @@ namespace Storage.Tests.LocalFileStorageServiceTests
         [Fact]
         public async Task DownloadFile_Success()
         {
-            var filePath = Path.Combine(TestFilesDirectory, "Download", "download.txt");
+            var filePath = Path.Combine(TestConstants.TestFilesDirectory, "Download", "download.txt");
 
             var fileText = "some text from downloaded file";
 
@@ -40,7 +40,7 @@ namespace Storage.Tests.LocalFileStorageServiceTests
         [Fact]
         public async Task DownloadFile_Error_IfFileNotExists()
         {
-            var filePath = Path.Combine(TestFilesDirectory, "Download", "download.txt");
+            var filePath = Path.Combine(TestConstants.TestFilesDirectory, "Download", "download.txt");
 
             await Assert.ThrowsAsync<FileNotFoundException>(async () => 
                 await FileService.DownloadFileAsync(filePath, CancellationToken.None));
@@ -50,7 +50,7 @@ namespace Storage.Tests.LocalFileStorageServiceTests
         [Fact]
         public async Task DownloadFile_Error_IfFileIsADirectory()
         {
-            var filePath = Path.Combine(TestFilesDirectory, "Download");
+            var filePath = Path.Combine(TestConstants.TestFilesDirectory, "Download");
 
             await Assert.ThrowsAsync<ArgumentException>(async () =>
                 await FileService.DownloadFileAsync(filePath, CancellationToken.None));

@@ -14,7 +14,7 @@ namespace Storage.Tests.LocalFileStorageServiceTests
         [Fact]
         public async Task DownloadManyFiles_Success()
         {
-            var path = Path.Combine(TestFilesDirectory, "DownloadMany");
+            var path = Path.Combine(TestConstants.TestFilesDirectory, "DownloadMany");
 
             Directory.CreateDirectory(path);
 
@@ -35,7 +35,7 @@ namespace Storage.Tests.LocalFileStorageServiceTests
             Assert.NotNull(result);
             Assert.Equal(".zip", Path.GetExtension(result.Name));
 
-            var unzippedPath = FileHelper.UnzipFolder(Path.Combine(StorageDirectory, result.Name));
+            var unzippedPath = FileHelper.UnzipFolder(Path.Combine(TestConstants.StorageDirectory, result.Name));
 
             var unzippedFilesCount = Directory.GetFiles(unzippedPath).Length;
 
@@ -61,7 +61,7 @@ namespace Storage.Tests.LocalFileStorageServiceTests
         [Fact]
         public async Task DownloadManyFiles_Error_IfFilesAreNotExists()
         {
-            var path = Path.Combine(TestFilesDirectory, "DownloadMany");
+            var path = Path.Combine(TestConstants.TestFilesDirectory, "DownloadMany");
 
             Directory.CreateDirectory(path);
 

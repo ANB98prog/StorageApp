@@ -11,7 +11,7 @@ namespace Storage.Tests.LocalFileStorageServiceTests
         [Fact]
         public async Task UploadFile_Success()
         {
-            var file = Path.Combine(TestFilesDirectory, "upload.txt");
+            var file = Path.Combine(TestConstants.TestFilesDirectory, "upload.txt");
 
             string resultPath = "";
 

@@ -11,7 +11,7 @@ namespace Storage.Tests.ImagesFileHandlerServiceTests
         public async Task UploadManyFiles_Success()
         {
             var ids = new List<Guid>();
-            var dir = Path.Combine(TestFilesDirectory, "UploadMany");
+            var dir = Path.Combine(TestConstants.TestFilesDirectory, "UploadMany");
 
             Directory.CreateDirectory(dir);
 

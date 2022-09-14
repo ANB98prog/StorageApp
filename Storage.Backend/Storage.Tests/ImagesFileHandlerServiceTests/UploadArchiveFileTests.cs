@@ -10,7 +10,7 @@ namespace Storage.Tests.ImagesFileHandlerServiceTests
         [Fact]
         public async Task UploadArchiveFile_Success()
         {
-            var dir = Path.Combine(TestFilesDirectory, "UploadArchive");
+            var dir = Path.Combine(TestConstants.TestFilesDirectory, "UploadArchive");
             Directory.CreateDirectory(dir);
 
             var files = new List<string>();

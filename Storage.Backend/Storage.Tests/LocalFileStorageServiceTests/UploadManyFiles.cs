@@ -18,7 +18,7 @@ namespace Storage.Tests.LocalFileStorageServiceTests
             var files = new List<FileModel>();
             var filesNames = new List<string>();
 
-            var path = Path.Combine(TestFilesDirectory, "UploadMany");
+            var path = Path.Combine(TestConstants.TestFilesDirectory, "UploadMany");
 
             Directory.CreateDirectory(path);
 
@@ -73,7 +73,7 @@ namespace Storage.Tests.LocalFileStorageServiceTests
 
             for (int i = 0; i < 3; i++)
             {
-                var fileName = Path.Combine(TestFilesDirectory, $"file_{i}.txt");
+                var fileName = Path.Combine(TestConstants.TestFilesDirectory, $"file_{i}.txt");
 
                 files.Add(new FileModel
                 {

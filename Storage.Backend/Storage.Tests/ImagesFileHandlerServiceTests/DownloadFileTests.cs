@@ -14,7 +14,7 @@ namespace Storage.Tests.ImagesFileHandlerServiceTests
         [Fact]
         public async Task DownloadFile_Success()
         {
-            var dir = Path.Combine(TestFilesDirectory, "HandlerDownload");
+            var dir = Path.Combine(TestConstants.TestFilesDirectory, "HandlerDownload");
 
             Directory.CreateDirectory(dir);
 
@@ -53,14 +53,14 @@ namespace Storage.Tests.ImagesFileHandlerServiceTests
         public async Task DownloadFile_Error_IfFilePathNotContainsFileName()
         {
             await Assert.ThrowsAsync<ArgumentException>(async () =>
-                await FileHandlerService.DownloadFileAsync(TestFilesDirectory, CancellationToken.None));
+                await FileHandlerService.DownloadFileAsync(TestConstants.TestFilesDirectory, CancellationToken.None));
         }
 
         [Fact]
         public async Task DownloadFile_Error_IfFileNotFound()
         {
             await Assert.ThrowsAsync<FileNotFoundException>(async () =>
-                await FileHandlerService.DownloadFileAsync(Path.Combine(TestFilesDirectory, "test.txt"), CancellationToken.None));
+                await FileHandlerService.DownloadFileAsync(Path.Combine(TestConstants.TestFilesDirectory, "test.txt"), CancellationToken.None));
         }
     }
 }
