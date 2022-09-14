@@ -24,6 +24,8 @@ namespace Storage.Application.Images.Commands.UploadImage
         {
             try
             {
+                ValidateRequest(request);
+
                 var id = Guid.NewGuid();
                 var fileSystemName = $"{id.Trunc()}{Path.GetExtension(request.ImageFile.FileName)}";
 
@@ -46,7 +48,7 @@ namespace Storage.Application.Images.Commands.UploadImage
             }
             catch (ArgumentNullException ex)
             {
-                throw new FileUploadingException(ex.Message, $"Parameter '{ex.ParamName}' is not set!");
+                throw new FileUploadingException(ex.Message, ErrorMessages.ArgumentNullExeptionMessage(ex.ParamName));
             }
             catch (FileUploadingException ex)
             {
@@ -54,8 +56,16 @@ namespace Storage.Application.Images.Commands.UploadImage
             }
             catch (Exception ex)
             {
-                throw new FileUploadingException(ex.Message, $"Unexpected error occured while file uploading.");
+                throw new FileUploadingException(ex.Message, ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_FILE_MESSAGE);
             }
+        }
+
+        private void ValidateRequest(UploadImageCommand request)
+        {
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+            if(request.ImageFile == null)
+                throw new ArgumentNullException(nameof(request.ImageFile));
         }
     }
 }
