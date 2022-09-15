@@ -16,15 +16,11 @@ namespace Storage.Tests.Common
 
         public TestCommandsFixture()
         {
-            if (!Directory.Exists(TestConstants.TestFilesDirectory))
-                Directory.CreateDirectory(TestConstants.TestFilesDirectory);
-
             FileHandlerServiceMock = new Mock<IFileHandlerService>();
         }
 
         public void Dispose()
         {
-            TestHelper.RemoveTestData(TestConstants.TestFilesDirectory);
             TestHelper.RemoveTestData(TestConstants.CommandsFilesDirectory);
             TestHelper.RemoveTestData(TestConstants.StorageDirectory);
         }

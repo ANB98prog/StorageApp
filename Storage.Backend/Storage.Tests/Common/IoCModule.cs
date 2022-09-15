@@ -4,11 +4,6 @@ using Ninject.Modules;
 using Storage.Application.Common.Mappings;
 using Storage.Application.Common.Services;
 using Storage.Application.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Storage.Tests.Common
 {
@@ -18,6 +13,12 @@ namespace Storage.Tests.Common
         {
             if(!Directory.Exists(TestConstants.StorageDirectory))
                 Directory.CreateDirectory(TestConstants.StorageDirectory);
+
+            if (!Directory.Exists(TestConstants.CommandsFilesDirectory))
+                Directory.CreateDirectory(TestConstants.CommandsFilesDirectory);
+
+            if (!Directory.Exists(TestConstants.TestFilesDirectory))
+                Directory.CreateDirectory(TestConstants.TestFilesDirectory);
 
             Bind<IFileService>()
                 .ToMethod(ctx => new LocalFileStorageService(TestConstants.StorageDirectory));
