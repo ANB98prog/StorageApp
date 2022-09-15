@@ -22,7 +22,6 @@ namespace Storage.Tests.Common
         public void Dispose()
         {
             TestHelper.RemoveTestData(TestConstants.CommandsFilesDirectory);
-            TestHelper.RemoveTestData(TestConstants.StorageDirectory);
         }
 
         [CollectionDefinition("TestCommandsCollection")]
