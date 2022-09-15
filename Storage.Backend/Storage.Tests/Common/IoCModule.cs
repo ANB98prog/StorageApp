@@ -16,6 +16,9 @@ namespace Storage.Tests.Common
     {
         public override void Load()
         {
+            if(!Directory.Exists(TestConstants.StorageDirectory))
+                Directory.CreateDirectory(TestConstants.StorageDirectory);
+
             Bind<IFileService>()
                 .ToMethod(ctx => new LocalFileStorageService(TestConstants.StorageDirectory));
 
