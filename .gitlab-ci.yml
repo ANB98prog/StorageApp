@@ -1,0 +1,29 @@
+image: localhost:5000/mcr.microsoft.com/dotnet/sdk
+
+default:
+  tags:
+    - ubuntu
+    - linux
+variables:
+  NUGET_PACKAGES_DIRECTORY: '.nuget'
+
+before_script:
+  - 'dotnet restore --packages $NUGET_PACKAGES_DIRECTORY'
+  - 'cd Storage.Backend/'  
+
+build:
+  stage: build
+  script:
+    - 'dotnet build --no-restore'
+
+tests:
+  stage: test
+  script:
+    - 'dotnet test --no-restore'
+  after_script:
+    - 'tar -cf $CI_COMMIT_BRANCH.tar Storage.Backend/'
+  artifacts:
+    paths:
+      - $CI_COMMIT_BRANCH.tar
+    when: on_failure
+    expire_in: 3 hrs
