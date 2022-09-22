@@ -1,14 +1,26 @@
-﻿using Moq;
+﻿using Elasticsearch.Net;
+using Elasticsearch.Tests.ElasticSearchCommon;
+using Moq;
+using Nest;
+using Ninject;
 
 namespace Elasticsearch.Tests.Common
 {
     public class CreateIndexTestsFixture
     {
-        public Mock<IElasticClient> ElasticClientMock;
+        internal Mock<IElasticFakeResponse> ElasticFakeResponseMock;
+
+        internal IElasticsearchClient ElasticClient;
+
+        internal IKernel Kernel;
 
         public CreateIndexTestsFixture()
         {
-            ElasticClientMock = new Mock<IElasticClient>();
+            var iocModule = new IoCModule();
+            Kernel = new StandardKernel(iocModule);
+
+            ElasticFakeResponseMock = iocModule.ElasticFakeResponseMock;
+            ElasticClient = Kernel.Get<IElasticsearchClient>();
         }
     }
 
