@@ -3,3 +3,4 @@ obj/
 bin/
 wwwroot/
 /.nuget
+/Storage.Backend/Storage.Domain/Properties/launchSettings.json
