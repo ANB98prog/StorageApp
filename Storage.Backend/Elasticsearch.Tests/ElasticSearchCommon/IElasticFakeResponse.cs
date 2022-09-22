@@ -4,6 +4,6 @@ namespace Elasticsearch.Tests.ElasticSearchCommon
 {
     public interface IElasticFakeResponse
     {
-        public byte[] GetResponseData(string url, HttpMethod method);
+        public FakeResponse GetResponseData(string url, HttpMethod method);
     }
 }

@@ -1,12 +1,17 @@
 ﻿using Elasticsearch.Net;
+using System;
+using System.Collections.Generic;
 using System.IO.Compression;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using HttpMethod = Elasticsearch.Net.HttpMethod;
 
 namespace Elasticsearch.Tests.ElasticSearchCommon
 {
-    public class TestConnection : IConnection
+    public class ElasticTestConnection : IConnection, IDisposable
     {
+        private const string DefaultProductName = "Elasticsearch";
 
         private static readonly byte[] EmptyBody = Encoding.UTF8.GetBytes("");
 
@@ -20,15 +25,28 @@ namespace Elasticsearch.Tests.ElasticSearchCommon
 
         private readonly string _productHeader;
 
+        private readonly byte[] _responseBody;
+
         private readonly int _statusCode;
 
-        private IElasticFakeResponse _fakeResponse;
+        private readonly IElasticFakeResponse _elasticFake;
 
-        public TestConnection(IElasticFakeResponse fakeResponse)
+        //
+        // Сводка:
+        //     Every request will succeed with this overload, note that it won't actually return
+        //     mocked responses so using this overload might fail if you are using it to test
+        //     high level bits that need to deserialize the response.
+        public ElasticTestConnection()
         {
             _statusCode = 200;
             _productCheckResponse = ValidProductCheckResponse();
-            _fakeResponse = fakeResponse;
+        }
+
+        public ElasticTestConnection(IElasticFakeResponse elasticFake)
+        {
+            _statusCode = 200;
+            _productCheckResponse = ValidProductCheckResponse();
+            _elasticFake = elasticFake;
         }
 
         public virtual TResponse Request<TResponse>(RequestData requestData) where TResponse : class, IElasticsearchResponse, new()
@@ -85,7 +103,7 @@ namespace Elasticsearch.Tests.ElasticSearchCommon
                 return ReturnProductCheckResponse<TResponse>(requestData, statusCode, productCheckResponse);
             }
 
-            byte[] body = _fakeResponse.GetResponseData(requestData.Uri.AbsolutePath, requestData.Method);
+            var response = _elasticFake.GetResponseData(requestData.Uri.AbsoluteUri, requestData.Method);
 
             PostData postData = requestData.PostData;
             if (postData != null)
@@ -106,11 +124,11 @@ namespace Elasticsearch.Tests.ElasticSearchCommon
             int valueOrDefault = statusCode.GetValueOrDefault();
             if (!statusCode.HasValue)
             {
-                valueOrDefault = _statusCode;
+                valueOrDefault = response.StatusCode ?? _statusCode;
                 statusCode = valueOrDefault;
             }
 
-            Stream responseStream = ((body != null) ? requestData.MemoryStreamFactory.Create(body) : requestData.MemoryStreamFactory.Create(EmptyBody));
+            Stream responseStream = ((response.Body != null) ? requestData.MemoryStreamFactory.Create(response.Body) : requestData.MemoryStreamFactory.Create(EmptyBody));
             return ResponseBuilder.ToResponse<TResponse>(requestData, _exception, statusCode, null, responseStream, _productHeader, contentType ?? _contentType ?? RequestData.DefaultJsonMimeType);
         }
 
@@ -121,38 +139,7 @@ namespace Elasticsearch.Tests.ElasticSearchCommon
 
         protected async Task<TResponse> ReturnConnectionStatusAsync<TResponse>(RequestData requestData, InMemoryHttpResponse productCheckResponse, CancellationToken cancellationToken, byte[] responseBody = null, int? statusCode = null, string contentType = null) where TResponse : class, IElasticsearchResponse, new()
         {
-            if (_basePath.Equals(requestData.Uri.AbsolutePath, StringComparison.Ordinal) && requestData.Method == HttpMethod.GET)
-            {
-                return ReturnProductCheckResponse<TResponse>(requestData, statusCode, productCheckResponse);
-            }
-
-            byte[] body = _fakeResponse.GetResponseData(requestData.Uri.AbsolutePath, requestData.Method);
-
-            PostData postData = requestData.PostData;
-            if (postData != null)
-            {
-                using MemoryStream stream = requestData.MemoryStreamFactory.Create();
-                if (!requestData.HttpCompression)
-                {
-                    await postData.WriteAsync(stream, requestData.ConnectionSettings, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
-                }
-                else
-                {
-                    using GZipStream zipStream = new GZipStream(stream, CompressionMode.Compress);
-                    await postData.WriteAsync(zipStream, requestData.ConnectionSettings, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
-                }
-            }
-
-            requestData.MadeItToResponse = true;
-            statusCode.GetValueOrDefault();
-            if (!statusCode.HasValue)
-            {
-                int statusCode2 = _statusCode;
-                statusCode = statusCode2;
-            }
-
-            Stream responseStream = ((body != null) ? requestData.MemoryStreamFactory.Create(body) : requestData.MemoryStreamFactory.Create(EmptyBody));
-            return await ResponseBuilder.ToResponseAsync<TResponse>(requestData, _exception, statusCode, null, responseStream, _productHeader, contentType ?? _contentType, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+            return await Task.FromResult(ReturnConnectionStatus<TResponse>(requestData, null, responseBody, statusCode, contentType));
         }
 
         private TResponse ReturnProductCheckResponse<TResponse>(RequestData requestData, int? statusCode, InMemoryHttpResponse productCheckResponse) where TResponse : class, IElasticsearchResponse, new()
@@ -169,9 +156,6 @@ namespace Elasticsearch.Tests.ElasticSearchCommon
         }
 
         protected virtual void DisposeManagedResources()
-        {
-        }
-        public void Dispose()
         {
         }
     }

@@ -1,26 +1,21 @@
 ﻿using Elasticsearch.Net;
 using Elasticsearch.Tests.ElasticSearchCommon;
 using Moq;
-using Nest;
-using Ninject;
 
 namespace Elasticsearch.Tests.Common
 {
     public class CreateIndexTestsFixture
     {
-        internal Mock<IElasticFakeResponse> ElasticFakeResponseMock;
+        public readonly string ElasticBasePath = "http://localhost:9200";
 
-        internal IElasticsearchClient ElasticClient;
-
-        internal IKernel Kernel;
-
-        public CreateIndexTestsFixture()
+        public IElasticsearchClient GetElasticsearchClient(Mock<IElasticFakeResponse> elasticResponseMock)
         {
-            var iocModule = new IoCModule();
-            Kernel = new StandardKernel(iocModule);
+            var connection = new ElasticTestConnection(elasticResponseMock.Object);
+            var connectionPool = new SingleNodeConnectionPool(new Uri(ElasticBasePath));
+            var settings = new ConnectionSettings(connectionPool, connection).DefaultIndex("project");
+            var nestClient = new Nest.ElasticClient(settings);
 
-            ElasticFakeResponseMock = iocModule.ElasticFakeResponseMock;
-            ElasticClient = Kernel.Get<IElasticsearchClient>();
+            return new ElasticClient(nestClient);
         }
     }
 
