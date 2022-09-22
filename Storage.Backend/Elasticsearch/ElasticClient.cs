@@ -38,7 +38,7 @@ namespace Elasticsearch
                 if (exists.IsValid
 					&& exists.Exists)
 				{
-					throw new IndexCreationException(indexName, ErrorMessages.INDEX_ALREADY_EXISTS);
+					throw new IndexCreationException(indexName, ErrorMessages.INDEX_ALREADY_EXISTS(indexName));
 				}
 
 				var result = await _client.Indices.CreateAsync(indexName, descriptor);
@@ -76,7 +76,7 @@ namespace Elasticsearch
                 if (exists.IsValid
                     && exists.Exists)
                 {
-                    throw new IndexCreationException(indexName, ErrorMessages.INDEX_ALREADY_EXISTS);
+                    throw new IndexCreationException(indexName, ErrorMessages.INDEX_ALREADY_EXISTS(indexName));
                 }
 
                 var result = await _client.Indices.CreateAsync(indexName);
