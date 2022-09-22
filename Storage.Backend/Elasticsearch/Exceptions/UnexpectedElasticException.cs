@@ -7,16 +7,20 @@ namespace Elasticsearch.Exceptions
     /// </summary>
     public class UnexpectedElasticException : Exception
     {
+        public string UserfriendlyMessage { get; private set; }
+
         public UnexpectedElasticException()
         {
         }
 
         public UnexpectedElasticException(string? message) : base(message)
         {
+            UserfriendlyMessage = message;
         }
 
         public UnexpectedElasticException(string? message, Exception? innerException) : base(message, innerException)
         {
+            UserfriendlyMessage = message;
         }
 
         protected UnexpectedElasticException(SerializationInfo info, StreamingContext context) : base(info, context)
