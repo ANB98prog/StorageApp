@@ -25,11 +25,6 @@ namespace Elasticsearch.Tests.Common
         {
             var response = new
             {
-                //ApiCall = new
-                //{
-                //    HttpStatusCode = (int)HttpStatusCode.NotFound,
-                //    Success = false
-                //},
                 Exists = false,
             };
 
