@@ -33,7 +33,10 @@ namespace Elasticsearch
         {
 			try
 			{
-				var exists = await _client.Indices.ExistsAsync(indexName);
+                if (string.IsNullOrWhiteSpace(indexName))
+                    throw new ArgumentNullException(nameof(indexName));
+
+                var exists = await _client.Indices.ExistsAsync(indexName);
 
                 if (exists.IsValid
 					&& exists.Exists)
@@ -48,7 +51,11 @@ namespace Elasticsearch
 					throw new IndexCreationException(indexName, result.OriginalException);
 				}
 			}
-			catch (IndexCreationException ex)
+            catch (ArgumentNullException ex)
+            {
+                throw ex;
+            }
+            catch (IndexCreationException ex)
 			{
 				throw ex;
 			}
