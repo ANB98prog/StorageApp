@@ -157,6 +157,6 @@ namespace Elasticsearch
 
                 throw new UnexpectedElasticException(ErrorMessages.ERROR_REMOVING_INDEX(index), ex);
             }
-        }      
+        }
     }
 }

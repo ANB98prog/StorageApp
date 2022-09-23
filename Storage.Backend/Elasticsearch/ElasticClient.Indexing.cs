@@ -1,51 +1,160 @@
-﻿using Elasticsearch.Interfaces;
+﻿using Elasticsearch.Exceptions;
+using Elasticsearch.Models;
 using Nest;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Elasticsearch
 {
     public partial class ElasticClient
     {
         /// <summary>
-        /// Indexes document
+        /// Adds document to index
         /// </summary>
         /// <typeparam name="TDocument">Document type</typeparam>
+        /// <param name="index">Index</param>
         /// <param name="document">Document to index</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns></returns>
-        public Task<Guid> IndexDocumentAsync<TDocument>(TDocument document, CancellationToken cancellationToken = default) where TDocument : class
+        public async Task<string> AddDocumentAsync<TDocument>(string index, TDocument document, CancellationToken cancellationToken = default) where TDocument : class
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (string.IsNullOrWhiteSpace(index))
+                    throw new ArgumentNullException(nameof(index));
+
+                var exists = await _client.Indices.ExistsAsync(index, ct: cancellationToken);
+
+                if (!exists.IsValid
+                    || !exists.Exists)
+                {
+                    throw new IndexNotFoundException(index);
+                }
+
+                var result = await _client.IndexAsync(document, 
+                                        i => i.Index(index), cancellationToken);
+
+                if (!result.IsValid)
+                {
+                    throw new UnexpectedElasticException();
+                }
+
+                return result.Id;
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw ex;
+            }
+            catch (IndexNotFoundException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                var indexName = string.IsNullOrWhiteSpace(index)
+                                        ? string.Empty : $"'{index}'";
+
+                throw new UnexpectedElasticException(ErrorMessages.ERROR_ADDITION_DOCUMENT(index), ex);
+            }
         }
 
         //// <summary>
-        /// Indexes document
+        /// Adds document to index
         /// </summary>
         /// <typeparam name="TDocument">Document type</typeparam>
         /// <param name="document">Document to index</param>
         /// <param name="selector">Index selector</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns></returns>
-        public Task<Guid> IndexDocumentAsync<TDocument>(TDocument document, Func<IndexDescriptor<TDocument>, IIndexRequest<TDocument>> selector, CancellationToken cancellationToken = default) where TDocument : class
+        public async Task<string> AddDocumentAsync<TDocument>(TDocument document, Func<IndexDescriptor<TDocument>, IIndexRequest<TDocument>> selector, CancellationToken cancellationToken = default) where TDocument : class
         {
-            throw new NotImplementedException();
+            try
+            {
+                if(selector == null)
+                    throw new ArgumentNullException(nameof(selector));
+
+                var result = await _client.IndexAsync(document, selector, cancellationToken);
+
+                if (!result.IsValid)
+                {
+                    throw new UnexpectedElasticException();
+                }
+
+                return result.Id;
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new UnexpectedElasticException(ErrorMessages.ERROR_ADDITION_DOCUMENT(string.Empty), ex);
+            }
         }
 
         /// <summary>
-        /// Indexes many documents
+        /// Adds many documents
         /// </summary>
         /// <typeparam name="TDocument">Document type</typeparam>
         /// <param name="documents">Documents to index</param>
         /// <param name="index">Index to add to</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>List of ids</returns>
-        public Task<IEnumerable<Guid>> IndexManyAsync<TDocument>(IEnumerable<TDocument> documents, string index = null, CancellationToken cancellationToken = default) where TDocument : class
+        public async Task<AddManyResponseModel> AddManyAsync<TDocument>(string index, IEnumerable<TDocument> documents, CancellationToken cancellationToken = default) where TDocument : class
         {
-            throw new NotImplementedException();
+            try
+            {
+                var ids = new AddManyResponseModel();
+
+                if (string.IsNullOrWhiteSpace(index))
+                    throw new ArgumentNullException(nameof(index));
+
+                if (documents.Any())
+                {
+                    var exists = await _client.Indices.ExistsAsync(index, ct: cancellationToken);
+
+                    if (!exists.IsValid
+                        || !exists.Exists)
+                    {
+                        throw new IndexNotFoundException(index);
+                    }
+
+                    var result = await _client.IndexManyAsync(documents, index, cancellationToken);
+
+                    if (!result.IsValid)
+                    {
+                        throw new UnexpectedElasticException();
+                    }
+
+                    ids.Ids = new List<string>(result.Items.Select(s => s.Id).ToList());
+
+                    if (result.Errors)
+                    {
+                        ids.ItemsWithErrors = new List<AddDocumentError>(
+                                                result.ItemsWithErrors.Select(s => 
+                                                    new AddDocumentError 
+                                                    {
+                                                        Id = s.Id,
+                                                        Error = s.Error.Reason 
+                                                    }));
+                    }
+                }
+
+                return ids;
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw ex;
+            }
+            catch (IndexNotFoundException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                var indexName = string.IsNullOrWhiteSpace(index)
+                                        ? string.Empty : $"'{index}'";
+
+                throw new UnexpectedElasticException(ErrorMessages.ERROR_ADDITION_DOCUMENT(index), ex);
+            }
         }
 
         /// <summary>
@@ -56,9 +165,66 @@ namespace Elasticsearch
         /// <param name="index">Index to add to</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>List of ids</returns>
-        public Task<IEnumerable<Guid>> BulkDocuments<TDocument>(IEnumerable<TDocument> documents, string index, CancellationToken cancellationToken = default) where TDocument : class
+        public async Task<AddManyResponseModel> AddBulkDocuments<TDocument>(string index, IEnumerable<TDocument> documents, CancellationToken cancellationToken = default) where TDocument : class
         {
-            throw new NotImplementedException();
+            try
+            {
+                var ids = new AddManyResponseModel();
+
+                if (string.IsNullOrWhiteSpace(index))
+                    throw new ArgumentNullException(nameof(index));
+
+                if (documents.Any())
+                {
+                    var exists = await _client.Indices.ExistsAsync(index, ct: cancellationToken);
+
+                    if (!exists.IsValid
+                        || !exists.Exists)
+                    {
+                        throw new IndexNotFoundException(index);
+                    }
+
+                    var result = await _client.BulkAsync(b => 
+                                        b.Index(index)
+                                            .IndexMany<TDocument>(documents)
+                                            .Timeout(ElasticConstants.REQUEST_TIMEOUT));
+
+                    if (!result.IsValid)
+                    {
+                        throw new UnexpectedElasticException();
+                    }
+
+                    ids.Ids = new List<string>(result.Items.Select(s => s.Id).ToList());
+
+                    if (result.Errors)
+                    {
+                        ids.ItemsWithErrors = new List<AddDocumentError>(
+                                                result.ItemsWithErrors.Select(s =>
+                                                    new AddDocumentError
+                                                    {
+                                                        Id = s.Id,
+                                                        Error = s.Error.Reason
+                                                    }));
+                    }
+                }
+
+                return ids;
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw ex;
+            }
+            catch (IndexNotFoundException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                var indexName = string.IsNullOrWhiteSpace(index)
+                                        ? string.Empty : $"'{index}'";
+
+                throw new UnexpectedElasticException(ErrorMessages.ERROR_ADDITION_DOCUMENT(index), ex);
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Nest;
+﻿using Elasticsearch.Models;
+using Nest;
 
 namespace Elasticsearch.Interfaces
 {
@@ -34,20 +35,22 @@ namespace Elasticsearch.Interfaces
         /// Indexes document
         /// </summary>
         /// <typeparam name="TDocument">Document type</typeparam>
+        /// <param name="index">Index</param>
         /// <param name="document">Document to index</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns></returns>
-        public Task<Guid> IndexDocumentAsync<TDocument>(TDocument document, CancellationToken cancellationToken = default) where TDocument : class;
+        public Task<string> AddDocumentAsync<TDocument>(string index, TDocument document, CancellationToken cancellationToken = default) where TDocument : class;
 
         //// <summary>
         /// Indexes document
         /// </summary>
         /// <typeparam name="TDocument">Document type</typeparam>
+        /// <param name="index">Index</param>
         /// <param name="document">Document to index</param>
         /// <param name="selector">Index selector</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns></returns>
-        public Task<Guid> IndexDocumentAsync<TDocument>(TDocument document, Func<IndexDescriptor<TDocument>, IIndexRequest<TDocument>> selector, CancellationToken cancellationToken = default) where TDocument : class;
+        public Task<string> AddDocumentAsync<TDocument>(TDocument document, Func<IndexDescriptor<TDocument>, IIndexRequest<TDocument>> selector, CancellationToken cancellationToken = default) where TDocument : class;
 
         /// <summary>
         /// Indexes many documents
@@ -57,7 +60,7 @@ namespace Elasticsearch.Interfaces
         /// <param name="index">Index to add to</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>List of ids</returns>
-        public Task<IEnumerable<Guid>> IndexManyAsync<TDocument>(IEnumerable<TDocument> documents, string index = null, CancellationToken cancellationToken = default) where TDocument : class;
+        public Task<AddManyResponseModel> AddManyAsync<TDocument>(string index, IEnumerable<TDocument> documents, CancellationToken cancellationToken = default) where TDocument : class;
 
         /// <summary>
         /// Indexes bulk of documents
@@ -67,7 +70,7 @@ namespace Elasticsearch.Interfaces
         /// <param name="index">Index to add to</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>List of ids</returns>
-        public Task<IEnumerable<Guid>> BulkDocuments<TDocument>(IEnumerable<TDocument> documents, string index, CancellationToken cancellationToken = default) where TDocument : class;
+        public Task<AddManyResponseModel> AddBulkDocuments<TDocument>(string index, IEnumerable<TDocument> documents, CancellationToken cancellationToken = default) where TDocument : class;
         #endregion
 
         #region Search

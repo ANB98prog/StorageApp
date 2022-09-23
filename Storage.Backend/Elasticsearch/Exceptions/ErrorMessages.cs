@@ -11,5 +11,6 @@
 
         public static string ERROR_CREATING_INDEX(string indexName) => $"Error occured while index creating. Index name '{indexName}'";
         public static string ERROR_REMOVING_INDEX(string indexName) => $"Error occured while index delete. Index name '{indexName}'";
+        public static string ERROR_ADDITION_DOCUMENT(string indexName) => $"Error occured while add document to {indexName} index.";
     }
 }
