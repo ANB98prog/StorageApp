@@ -4,6 +4,7 @@ namespace Elasticsearch
 {
     public interface IElasticsearchClient
     {
+        #region Indexing
         /// <summary>
         /// Creates index
         /// </summary>
@@ -56,7 +57,7 @@ namespace Elasticsearch
         /// <param name="index">Index to add to</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>List of ids</returns>
-        public Task<IEnumerable<Guid>> IndexManyAsync<TDocument>(IEnumerable<TDocument> documents, IndexName index = null, CancellationToken cancellationToken = default(CancellationToken)) where TDocument : class;
+        public Task<IEnumerable<Guid>> IndexManyAsync<TDocument>(IEnumerable<TDocument> documents, string index = null, CancellationToken cancellationToken = default(CancellationToken)) where TDocument : class;
 
         /// <summary>
         /// Indexes bulk of documents
@@ -67,5 +68,21 @@ namespace Elasticsearch
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>List of ids</returns>
         public Task<IEnumerable<Guid>> BulkDocuments<TDocument>(IEnumerable<TDocument> documents, string index, CancellationToken cancellationToken = default(CancellationToken)) where TDocument : class;
+        #endregion
+
+        #region Search
+
+        /// <summary>
+        /// Searches documents
+        /// </summary>
+        /// <typeparam name="TDocument">Documents types</typeparam>
+        /// <param name="index">Index to search in</param>
+        /// <param name="request">Search request</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Documents</returns>
+        public Task<Models.SearchResponse<TDocument>> SearchAsync<TDocument>(string index, SearchRequest<TDocument> request, CancellationToken cancellationToken = default(CancellationToken)) where TDocument : class;
+
+        #endregion
+
     }
 }
