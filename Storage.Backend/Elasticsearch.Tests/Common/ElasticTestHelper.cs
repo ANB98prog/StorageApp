@@ -50,5 +50,28 @@ namespace Elasticsearch.Tests.Common
                 StatusCode = (int)HttpStatusCode.OK,
             };
         }
+
+        public static FakeResponse GetInvalidResponse()
+        {
+            return new FakeResponse
+            {
+                Body = null,
+                StatusCode = (int)HttpStatusCode.InternalServerError,
+            };
+        }
+
+        public static FakeResponse GetIndexDeletedSuccessResponse()
+        {
+            var response = new
+            {
+                acknowledged = true
+            };
+
+            return new FakeResponse
+            {
+                Body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(response)),
+                StatusCode = (int)HttpStatusCode.OK,
+            };
+        }
     }
 }
