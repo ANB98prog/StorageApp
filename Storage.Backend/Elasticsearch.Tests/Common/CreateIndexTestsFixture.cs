@@ -1,4 +1,5 @@
-﻿using Elasticsearch.Net;
+﻿using Elasticsearch.Interfaces;
+using Elasticsearch.Net;
 using Elasticsearch.Tests.ElasticSearchCommon;
 using Moq;
 

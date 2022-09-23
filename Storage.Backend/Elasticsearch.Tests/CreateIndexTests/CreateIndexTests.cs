@@ -35,7 +35,7 @@ namespace Elasticsearch.Tests.CreateIndexTests.CreateIndexTests
                 .Returns(ElasticTestHelper.GetIndexCreateSuccessResponse(indexName));
             #endregion
 
-            await client.CreateIndexAsync(indexName);
+            await client.CreateIndexAsync(indexName, CancellationToken.None);
 
             responseMock.Verify(v => v.GetResponseData(It.Is<string>(m => m.Equals($"{_fixture.ElasticBasePath}/{indexName}")), Net.HttpMethod.HEAD), Times.Once);
             responseMock.Verify(v => v.GetResponseData(It.Is<string>(m => m.Equals($"{_fixture.ElasticBasePath}/{indexName}")), Net.HttpMethod.PUT), Times.Once);
@@ -53,7 +53,7 @@ namespace Elasticsearch.Tests.CreateIndexTests.CreateIndexTests
                 .Setup(s => s.GetResponseData(It.Is<string>(m => m.Equals($"{_fixture.ElasticBasePath}/{indexName}")), Net.HttpMethod.HEAD))
                 .Returns(ElasticTestHelper.GetIndexExistsResponse());
 
-            var error = await Assert.ThrowsAsync<IndexCreationException>(async () => await client.CreateIndexAsync(indexName));
+            var error = await Assert.ThrowsAsync<IndexCreationException>(async () => await client.CreateIndexAsync(indexName, CancellationToken.None));
 
             Assert.Equal(ErrorMessages.INDEX_ALREADY_EXISTS(indexName), error.UserfriendlyMessage);
 
@@ -67,7 +67,7 @@ namespace Elasticsearch.Tests.CreateIndexTests.CreateIndexTests
             var responseMock = new Mock<IElasticFakeResponse>();
             var client = _fixture.GetElasticsearchClient(responseMock);
             
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await client.CreateIndexAsync(null));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await client.CreateIndexAsync(null, CancellationToken.None));
 
             responseMock.Verify(v => v.GetResponseData(It.IsAny<string>(), Net.HttpMethod.HEAD), Times.Never);
             responseMock.Verify(v => v.GetResponseData(It.IsAny<string>(), Net.HttpMethod.PUT), Times.Never);
@@ -93,7 +93,7 @@ namespace Elasticsearch.Tests.CreateIndexTests.CreateIndexTests
                 .Throws(new Exception());
             #endregion
 
-            var error = await Assert.ThrowsAsync<UnexpectedElasticException>(async () => await client.CreateIndexAsync(indexName));
+            var error = await Assert.ThrowsAsync<UnexpectedElasticException>(async () => await client.CreateIndexAsync(indexName, CancellationToken.None));
 
             Assert.Equal(ErrorMessages.ERROR_CREATING_INDEX(indexName), error.UserfriendlyMessage);
 
