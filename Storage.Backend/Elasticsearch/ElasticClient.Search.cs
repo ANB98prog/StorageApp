@@ -81,8 +81,16 @@ namespace Elasticsearch
                     if((result.ServerError?.Error?.Reason ?? string.Empty)
                         .StartsWith(ElasticConstants.INDEX_NOT_EXISTS_SERVER_MESSAGE))
                     {
-                        var index = Regex.Match(result.ServerError.Error.Reason, @"\[\w*\]");
-                        throw new IndexNotFoundException(index.Value);
+                        var indexNameReg = Regex.Match(result.ServerError.Error.Reason, @"\[\w*\]");
+
+                        var index = "";
+                        if (indexNameReg != null
+                            && indexNameReg.Success)
+                        {
+                            index = Regex.Replace(indexNameReg.Value, @"[\[\]]", string.Empty);
+                        }
+
+                        throw new IndexNotFoundException(index);
                     }
 
                     return null;
