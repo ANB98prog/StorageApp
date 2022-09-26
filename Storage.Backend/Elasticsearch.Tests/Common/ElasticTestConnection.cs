@@ -1,13 +1,9 @@
 ﻿using Elasticsearch.Net;
-using System;
-using System.Collections.Generic;
 using System.IO.Compression;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using HttpMethod = Elasticsearch.Net.HttpMethod;
 
-namespace Elasticsearch.Tests.ElasticSearchCommon
+namespace Elasticsearch.Tests.Common
 {
     public class ElasticTestConnection : IConnection, IDisposable
     {
@@ -128,7 +124,7 @@ namespace Elasticsearch.Tests.ElasticSearchCommon
                 statusCode = valueOrDefault;
             }
 
-            Stream responseStream = ((response.Body != null) ? requestData.MemoryStreamFactory.Create(response.Body) : requestData.MemoryStreamFactory.Create(EmptyBody));
+            Stream responseStream = response.Body != null ? requestData.MemoryStreamFactory.Create(response.Body) : requestData.MemoryStreamFactory.Create(EmptyBody);
             return ResponseBuilder.ToResponse<TResponse>(requestData, _exception, statusCode, null, responseStream, _productHeader, contentType ?? _contentType ?? RequestData.DefaultJsonMimeType);
         }
 

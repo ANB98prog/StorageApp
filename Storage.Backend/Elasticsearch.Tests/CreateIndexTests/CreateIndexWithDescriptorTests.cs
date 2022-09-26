@@ -1,6 +1,5 @@
 ﻿using Elasticsearch.Exceptions;
 using Elasticsearch.Tests.Common;
-using Elasticsearch.Tests.ElasticSearchCommon;
 using Moq;
 
 namespace Elasticsearch.Tests.CreateIndexTests

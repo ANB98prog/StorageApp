@@ -1,4 +1,4 @@
-﻿namespace Elasticsearch.Tests.ElasticSearchCommon
+﻿namespace Elasticsearch.Tests.Common
 {
     public class FakeResponse
     {

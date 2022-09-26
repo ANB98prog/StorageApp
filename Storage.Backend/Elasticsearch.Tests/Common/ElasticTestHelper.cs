@@ -1,5 +1,4 @@
-﻿using Elasticsearch.Tests.ElasticSearchCommon;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Net;
 using System.Text;
 

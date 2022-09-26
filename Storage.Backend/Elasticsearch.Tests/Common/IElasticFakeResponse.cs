@@ -1,6 +1,6 @@
 ﻿using HttpMethod = Elasticsearch.Net.HttpMethod;
 
-namespace Elasticsearch.Tests.ElasticSearchCommon
+namespace Elasticsearch.Tests.Common
 {
     public interface IElasticFakeResponse
     {

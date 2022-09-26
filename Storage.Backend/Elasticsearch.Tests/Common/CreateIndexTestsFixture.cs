@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Elasticsearch.Interfaces;
 using Elasticsearch.Net;
-using Elasticsearch.Tests.ElasticSearchCommon;
 using Mapper;
 using Moq;
 

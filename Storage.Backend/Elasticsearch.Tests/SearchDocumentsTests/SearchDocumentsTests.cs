@@ -1,6 +1,5 @@
 ﻿using Elasticsearch.Exceptions;
 using Elasticsearch.Tests.Common;
-using Elasticsearch.Tests.ElasticSearchCommon;
 using Moq;
 using Nest;
 using System;
@@ -23,6 +22,36 @@ namespace Elasticsearch.Tests.SearchDocumentsTests
             _fixture = fixture;
         }
 
+        #region By id
+        [Fact]
+        public async Task GetDocById_Success()
+        {
+            var indexName = "test";
+            var id = "id";
+
+            var responseMock = new Mock<IElasticFakeResponse>();
+            var client = _fixture.GetElasticsearchClient(responseMock);
+
+            responseMock
+                .Setup(s => s.GetResponseData(It.Is<string>(m => m.StartsWith($"{_fixture.ElasticBasePath}/{indexName}/_search")), Net.HttpMethod.POST))
+                .Returns(ElasticTestHelper.SearchSuccessfulResponse());
+
+            var request = new SearchRequest<TestModel>(indexName)
+            {
+                Query = new MatchAllQuery()
+            };
+
+            var result = await client.GetByIdAsync<TestModel>(indexName, id);
+
+            
+
+            responseMock.Verify(v => v.GetResponseData(It.Is<string>(m => m.StartsWith($"{_fixture.ElasticBasePath}/{indexName}/_search")), Net.HttpMethod.POST), Times.Once);
+        }
+
+
+        #endregion
+
+        #region By Query
         [Fact]
         public async Task SearchDocuments_Success()
         {
@@ -121,5 +150,6 @@ namespace Elasticsearch.Tests.SearchDocumentsTests
 
             responseMock.Verify(v => v.GetResponseData(It.Is<string>(m => m.StartsWith($"{_fixture.ElasticBasePath}/{indexName}/_search")), Net.HttpMethod.POST), Times.Once);
         }
+        #endregion
     }
 }
