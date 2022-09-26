@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-namespace Storage.Application.Common.Mappings
+namespace Mapper
 {
     /// <summary>
     /// Interface of mapping configuration

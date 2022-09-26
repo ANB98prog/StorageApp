@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-namespace Storage.Application.Common.Mappings
+namespace Mapper
 {
     /// <summary>
     /// Assebles mapping profiles

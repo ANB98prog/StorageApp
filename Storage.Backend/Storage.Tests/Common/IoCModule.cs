@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
+using Mapper;
 using Ninject;
 using Ninject.Modules;
-using Storage.Application.Common.Mappings;
 using Storage.Application.Common.Services;
 using Storage.Application.Interfaces;
 

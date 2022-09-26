@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using Storage.Application.Common.Mappings;
-using System.IO;
+﻿using System.IO;
 
 namespace Storage.Application.Common.Models
 {

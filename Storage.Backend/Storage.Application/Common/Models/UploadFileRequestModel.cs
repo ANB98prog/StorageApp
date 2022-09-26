@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Storage.Application.Common.Mappings;
+using Mapper;
 using Storage.Domain;
 using System.IO;
 
