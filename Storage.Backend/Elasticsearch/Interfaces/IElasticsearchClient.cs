@@ -89,11 +89,10 @@ namespace Elasticsearch.Interfaces
         /// Searches documents
         /// </summary>
         /// <typeparam name="TDocument">Documents types</typeparam>
-        /// <param name="index">Index to search in</param>
         /// <param name="request">Search request</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Documents</returns>
-        public Task<Models.SearchResponse<TDocument>> SearchAsync<TDocument>(string index, SearchRequest<TDocument> request, CancellationToken cancellationToken = default) where TDocument : class;
+        public Task<Models.SearchResponse<TDocument>> SearchAsync<TDocument>(SearchRequest<TDocument> request, CancellationToken cancellationToken = default) where TDocument : class;
 
         #endregion
 
@@ -122,11 +121,10 @@ namespace Elasticsearch.Interfaces
         /// Deletes document
         /// </summary>
         /// <typeparam name="TDocument">Document type</typeparam>
-        /// <param name="index">Index to delete in</param>
         /// <param name="selector">Documents selector</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns></returns>
-        public Task DeleteBulkAsync<TDocument>(string index, Func<DeleteDescriptor<TDocument>, IDeleteRequest> selector, CancellationToken cancellationToken = default) where TDocument : class;
+        public Task DeleteBulkAsync<TDocument>(Func<DeleteByQueryDescriptor<TDocument>, IDeleteByQueryRequest> selector, CancellationToken cancellationToken = default) where TDocument : class;
 
         #endregion
 
