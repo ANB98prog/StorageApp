@@ -74,6 +74,16 @@ namespace Elasticsearch.Interfaces
         #endregion
 
         #region Search
+        /// <summary>
+        /// Gets document by id
+        /// </summary>
+        /// <typeparam name="TDocument">Document type</typeparam>
+        /// <param name="index">Documents' index</param>
+        /// <param name="id">Document id</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Found document</returns>
+        public Task<TDocument?> GetByIdAsync<TDocument>(string index, string id, CancellationToken cancellationToken = default) where TDocument : class;
+
 
         /// <summary>
         /// Searches documents
