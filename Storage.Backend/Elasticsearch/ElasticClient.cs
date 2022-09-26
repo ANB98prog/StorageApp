@@ -1,4 +1,5 @@
-﻿using Elasticsearch.Exceptions;
+﻿using AutoMapper;
+using Elasticsearch.Exceptions;
 using Elasticsearch.Interfaces;
 using Nest;
 
@@ -15,12 +16,19 @@ namespace Elasticsearch
 		private readonly IElasticClient _client;
 
         /// <summary>
+        /// Contract mapper
+        /// </summary>
+        private readonly IMapper _mapper;
+
+        /// <summary>
         /// Initializes class instance of <see cref="ElasticClient"/>
         /// </summary>
         /// <param name="client">Elastic client</param>
-		public ElasticClient(IElasticClient client)
+        /// <param name="mapper">Contract mapper</param>
+		public ElasticClient(IElasticClient client, IMapper mapper)
 		{
 			_client = client;
+            _mapper = mapper;
 		}
 
         /// <summary>

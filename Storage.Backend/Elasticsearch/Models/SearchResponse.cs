@@ -1,4 +1,7 @@
-﻿namespace Elasticsearch.Models
+﻿using Mapper;
+using Nest;
+
+namespace Elasticsearch.Models
 {
     /// <summary>
     /// Elastic search response
@@ -9,12 +12,12 @@
         /// <summary>
         /// Total count
         /// </summary>
-        public int Total { get; set; }
+        public long Total { get; set; }
 
         /// <summary>
         /// Found documents count
         /// </summary>
-        public int Count { get; set; }
+        public long Count { get; set; }
 
         /// <summary>
         /// Documents
