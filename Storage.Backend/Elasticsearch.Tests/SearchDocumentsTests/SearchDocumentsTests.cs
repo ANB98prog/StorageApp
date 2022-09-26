@@ -1,14 +1,6 @@
 ﻿using Elasticsearch.Exceptions;
 using Elasticsearch.Tests.Common;
 using Moq;
-using Nest;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.WebSockets;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Elasticsearch.Tests.SearchDocumentsTests
 {
@@ -33,21 +25,88 @@ namespace Elasticsearch.Tests.SearchDocumentsTests
             var client = _fixture.GetElasticsearchClient(responseMock);
 
             responseMock
-                .Setup(s => s.GetResponseData(It.Is<string>(m => m.StartsWith($"{_fixture.ElasticBasePath}/{indexName}/_search")), Net.HttpMethod.POST))
-                .Returns(ElasticTestHelper.SearchSuccessfulResponse());
+                .Setup(s => s.GetResponseData(It.Is<string>(m => m.Equals($"{_fixture.ElasticBasePath}/{indexName}")), Net.HttpMethod.HEAD))
+                .Returns(ElasticTestHelper.GetIndexExistsResponse());
 
-            var request = new SearchRequest<TestModel>(indexName)
-            {
-                Query = new MatchAllQuery()
-            };
+            responseMock
+                .Setup(s => s.GetResponseData(It.Is<string>(m => m.StartsWith($"{_fixture.ElasticBasePath}/{indexName}/_doc/{id}")), Net.HttpMethod.GET))
+                .Returns(ElasticTestHelper.GetByIdSuccessResponse(id, indexName));
+
 
             var result = await client.GetByIdAsync<TestModel>(indexName, id);
 
-            
+            Assert.NotNull(result);
+            Assert.Equal(id, result.Id);
+            Assert.Equal("title", result.Title);
+            Assert.Equal(10.0f, result.Rating);
 
-            responseMock.Verify(v => v.GetResponseData(It.Is<string>(m => m.StartsWith($"{_fixture.ElasticBasePath}/{indexName}/_search")), Net.HttpMethod.POST), Times.Once);
+            responseMock.Verify(v => v.GetResponseData(It.Is<string>(m => m.Equals($"{_fixture.ElasticBasePath}/{indexName}")), Net.HttpMethod.HEAD), Times.Once);
+            responseMock.Verify(v => v.GetResponseData(It.Is<string>(m => m.StartsWith($"{_fixture.ElasticBasePath}/{indexName}/_doc/{id}")), Net.HttpMethod.GET), Times.Once);
         }
 
+        [Fact]
+        public async Task GetDocById_Error_NotFound()
+        {
+            var indexName = "test";
+            var id = "id";
+
+            var responseMock = new Mock<IElasticFakeResponse>();
+            var client = _fixture.GetElasticsearchClient(responseMock);
+
+            responseMock
+                .Setup(s => s.GetResponseData(It.Is<string>(m => m.Equals($"{_fixture.ElasticBasePath}/{indexName}")), Net.HttpMethod.HEAD))
+                .Returns(ElasticTestHelper.GetIndexExistsResponse());
+
+            responseMock
+                .Setup(s => s.GetResponseData(It.Is<string>(m => m.StartsWith($"{_fixture.ElasticBasePath}/{indexName}/_doc/{id}")), Net.HttpMethod.GET))
+                .Returns(ElasticTestHelper.GetByIdNotFoundResponse(id, indexName));
+
+
+            var result = await client.GetByIdAsync<TestModel>(indexName, id);
+
+            Assert.Null(result);
+
+            responseMock.Verify(v => v.GetResponseData(It.Is<string>(m => m.Equals($"{_fixture.ElasticBasePath}/{indexName}")), Net.HttpMethod.HEAD), Times.Once);
+            responseMock.Verify(v => v.GetResponseData(It.Is<string>(m => m.StartsWith($"{_fixture.ElasticBasePath}/{indexName}/_doc/{id}")), Net.HttpMethod.GET), Times.Once);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("   ")]
+        public async Task GetDocById_Error_EmptyId(string id)
+        {
+            var indexName = "test";
+
+            var responseMock = new Mock<IElasticFakeResponse>();
+            var client = _fixture.GetElasticsearchClient(responseMock);
+
+            var result = await Assert.ThrowsAsync<ArgumentNullException>( async () => await client.GetByIdAsync<TestModel>(indexName, id));
+
+            Assert.Equal("id", result.ParamName);
+
+            responseMock.Verify(v => v.GetResponseData(It.Is<string>(m => m.Equals($"{_fixture.ElasticBasePath}/{indexName}")), Net.HttpMethod.HEAD), Times.Never);
+            responseMock.Verify(v => v.GetResponseData(It.Is<string>(m => m.StartsWith($"{_fixture.ElasticBasePath}/{indexName}/_doc/{id}")), Net.HttpMethod.GET), Times.Never);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("   ")]
+        public async Task GetDocById_Error_EmptyIndex(string indexName)
+        {
+            var id = "test";
+
+            var responseMock = new Mock<IElasticFakeResponse>();
+            var client = _fixture.GetElasticsearchClient(responseMock);
+
+            var result = await Assert.ThrowsAsync<ArgumentNullException>(async () => await client.GetByIdAsync<TestModel>(indexName, id));
+
+            Assert.Equal("index", result.ParamName);
+
+            responseMock.Verify(v => v.GetResponseData(It.Is<string>(m => m.Equals($"{_fixture.ElasticBasePath}/{indexName}")), Net.HttpMethod.HEAD), Times.Never);
+            responseMock.Verify(v => v.GetResponseData(It.Is<string>(m => m.StartsWith($"{_fixture.ElasticBasePath}/{indexName}/_doc/{id}")), Net.HttpMethod.GET), Times.Never);
+        }
 
         #endregion
 

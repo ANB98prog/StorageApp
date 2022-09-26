@@ -236,5 +236,43 @@ namespace Elasticsearch.Tests.Common
                 StatusCode = (int)HttpStatusCode.NotFound,
             };
         }
+
+        public static FakeResponse GetByIdSuccessResponse(string id, string index)
+        {
+            var response = new
+            {
+                _index = index,
+                _id = id,
+                found = true,
+                _source = new
+                {
+                    id = id,
+                    title = "title",
+                    rating = 10.0f
+                }
+            };
+
+            return new FakeResponse
+            {
+                Body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(response)),
+                StatusCode = (int)HttpStatusCode.OK,
+            };
+        }
+
+        public static FakeResponse GetByIdNotFoundResponse(string id, string index)
+        {
+            var response = new
+            {
+                _index = index,
+                _id = id,
+                found = false
+            };
+
+            return new FakeResponse
+            {
+                Body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(response)),
+                StatusCode = (int)HttpStatusCode.NotFound,
+            };
+        }
     }
 }
