@@ -1,4 +1,5 @@
-﻿using Elasticsearch.Exceptions;
+﻿using Elasticsearch.Common;
+using Elasticsearch.Exceptions;
 using Elasticsearch.Models;
 using Nest;
 using System.Text.RegularExpressions;
@@ -87,11 +88,7 @@ namespace Elasticsearch
                     return null;
                 }
 
-                return new Models.SearchResponse<TDocument>
-                {
-                    Count = result.Total,
-                    Documents = _mapper.Map<List<IHit<TDocument>>, List<HitModel<TDocument>>>(result.Hits.ToList())
-                };
+                return result.MapHits();
             }
             catch (ArgumentNullException ex)
             {

@@ -25,10 +25,10 @@ namespace Elasticsearch
         /// </summary>
         /// <param name="client">Elastic client</param>
         /// <param name="mapper">Contract mapper</param>
-		public ElasticClient(IElasticClient client, IMapper mapper)
+		public ElasticClient(IElasticClient client/*, IMapper mapper*/)
 		{
 			_client = client;
-            _mapper = mapper;
+            //_mapper = mapper;
 		}
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace Elasticsearch
 
                 if (!result.IsValid)
                 {
-                    throw new IndexCreationException(indexName, result.OriginalException);
+                    throw new IndexCreationException(indexName, result.ServerError?.Error?.Reason, result.OriginalException);
                 }
             }
             catch(ArgumentNullException ex)
