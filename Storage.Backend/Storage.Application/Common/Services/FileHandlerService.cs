@@ -74,10 +74,25 @@ namespace Storage.Application.Common.Services
 
                 return file;
             }
+            catch (ArgumentNullException ex)
+            {
+                _logger.Error(ex, ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName));
+                throw new FileHandlerServiceException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.Error(ex, ErrorMessages.InvalidRequiredParameterErrorMessage(ex.Message));
+                throw new FileHandlerServiceException(ErrorMessages.InvalidRequiredParameterErrorMessage(ex.Message), ex);
+            }
+            catch (FileNotFoundException ex)
+            {
+                _logger.Error(ex, ErrorMessages.FileNotFoundErrorMessage(ex.FileName));
+                throw new FileHandlerServiceException(ErrorMessages.FileNotFoundErrorMessage(ex.FileName), ex);
+            }
             catch (Exception ex)
             {
                 _logger.Error(ex, ErrorMessages.UNEXPECTED_ERROR_WHILE_DOWNLOAD_FILE_MESSAGE);
-                throw new FileUploadingException(ErrorMessages.UNEXPECTED_ERROR_WHILE_DOWNLOAD_FILE_MESSAGE, ex);
+                throw new FileHandlerServiceException(ErrorMessages.UNEXPECTED_ERROR_WHILE_DOWNLOAD_FILE_MESSAGE, ex);
             }
         }
 
@@ -99,10 +114,20 @@ namespace Storage.Application.Common.Services
 
                 return files;
             }
+            catch (ArgumentNullException ex)
+            {
+                _logger.Error(ex, ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName));
+                throw new FileHandlerServiceException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
+            }
+            catch (FileNotFoundException ex)
+            {
+                _logger.Error(ex, ErrorMessages.FileNotFoundErrorMessage(ex.FileName));
+                throw new FileHandlerServiceException(ErrorMessages.FileNotFoundErrorMessage(ex.FileName), ex);
+            }
             catch (Exception ex)
             {
                 _logger.Error(ex, ErrorMessages.UNEXPECTED_ERROR_WHILE_DOWNLOAD_FILES_MESSAGE);
-                throw new FileUploadingException(ErrorMessages.UNEXPECTED_ERROR_WHILE_DOWNLOAD_FILES_MESSAGE, ex);
+                throw new FileHandlerServiceException(ErrorMessages.UNEXPECTED_ERROR_WHILE_DOWNLOAD_FILES_MESSAGE, ex);
             }
         }
 
@@ -129,10 +154,20 @@ namespace Storage.Application.Common.Services
                 return filesIds;
 
             }
+            catch (ArgumentNullException ex)
+            {
+                _logger.Error(ex, ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName));
+                throw new FileHandlerServiceException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
+            }
+            catch (FileNotFoundException ex)
+            {
+                _logger.Error(ex, ErrorMessages.FileNotFoundErrorMessage(ex.FileName));
+                throw new FileHandlerServiceException(ErrorMessages.FileNotFoundErrorMessage(ex.FileName), ex);
+            }
             catch (Exception ex)
             {
                 _logger.Error(ex, ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_ARCHIVE_FILE_MESSAGE);
-                throw new FileUploadingException(ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_ARCHIVE_FILE_MESSAGE, ex);
+                throw new FileHandlerServiceException(ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_ARCHIVE_FILE_MESSAGE, ex);
             }
         }
 
@@ -226,10 +261,15 @@ namespace Storage.Application.Common.Services
 
                 return result;
             }
+            catch (ArgumentNullException ex)
+            {
+                _logger.Error(ex, ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName));
+                throw new FileHandlerServiceException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
+            }
             catch (Exception ex)
             {
                 _logger.Error(ex, ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_FILE_MESSAGE);
-                throw new FileUploadingException(ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_FILE_MESSAGE, ex);
+                throw new FileHandlerServiceException(ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_FILE_MESSAGE, ex);
             }
         }
 
@@ -254,10 +294,15 @@ namespace Storage.Application.Common.Services
 
                 return ids;
             }
+            catch (ArgumentNullException ex)
+            {
+                _logger.Error(ex, ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName));
+                throw new FileHandlerServiceException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
+            }
             catch (Exception ex)
             {
                 _logger.Error(ex, ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_FILES_MESSAGE);
-                throw new FileUploadingException(ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_FILES_MESSAGE, ex);
+                throw new FileHandlerServiceException(ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_FILES_MESSAGE, ex);
             }
         }
 
@@ -266,7 +311,6 @@ namespace Storage.Application.Common.Services
         /// </summary>
         /// <param name="upload">Data to upload</param>
         /// <param name="cancellationToken">Cancellation token</param>
-        /// <exception cref="NotSupportedFileTypeException"></exception>
         /// <returns>File id</returns>
         private async Task<Guid> UploadFileToStorageAsync(UploadFileRequestModel upload, CancellationToken cancellationToken)
         {
