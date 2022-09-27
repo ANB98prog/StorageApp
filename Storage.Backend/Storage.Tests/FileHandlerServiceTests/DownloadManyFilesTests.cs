@@ -1,4 +1,5 @@
-﻿using Storage.Application.Common.Helpers;
+﻿using Storage.Application.Common.Exceptions;
+using Storage.Application.Common.Helpers;
 using Storage.Tests.Common;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Storage.Tests.ImagesFileHandlerServiceTests
+namespace Storage.Tests.FileHandlerServiceTests
 {
     [Collection("TestServicesCollection")]
     public class DownloadManyFilesTests : TestServicesFixture
@@ -54,25 +55,29 @@ namespace Storage.Tests.ImagesFileHandlerServiceTests
         [Fact]
         public async Task DownloadManyFiles_Error_IfFilesPathNull()
         {
-            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            var error = await Assert.ThrowsAsync<FileHandlerServiceException>(async () =>
                 await FileHandlerService.DownloadManyFilesAsync(null, CancellationToken.None));
+
+            Assert.Equal(ErrorMessages.EmptyRequiredParameterErrorMessage("filesPath"), error.UserFriendlyMessage);
         }
 
         [Fact]
         public async Task DownloadManyFiles_Error_IfFilesPathEmpty()
         {
-            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            var error = await Assert.ThrowsAsync<FileHandlerServiceException>(async () =>
                 await FileHandlerService.DownloadManyFilesAsync(new List<string>(), CancellationToken.None));
+
+            Assert.Equal(ErrorMessages.EmptyRequiredParameterErrorMessage("filesPath"), error.UserFriendlyMessage);
         }
 
         [Fact]
         public async Task DownloadManyFiles_Error_IfFilesNotFound()
         {
             var filePath = Path.Combine(TestConstants.TestFilesDirectory, "notExisted.txt");
-            var message = await Assert.ThrowsAsync<FileNotFoundException>(async () =>
+            var error = await Assert.ThrowsAsync<FileHandlerServiceException>(async () =>
                 await FileHandlerService.DownloadManyFilesAsync(new List<string>() { filePath }, CancellationToken.None));
 
-            Assert.Equal(Path.GetFileName(filePath), message.FileName);
+            Assert.Equal(ErrorMessages.FileNotFoundErrorMessage(Path.GetFileName(filePath)), error.UserFriendlyMessage);
         }
     }
 }

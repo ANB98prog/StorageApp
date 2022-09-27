@@ -1,7 +1,8 @@
-﻿using Storage.Application.Common.Models;
+﻿using Storage.Application.Common.Exceptions;
+using Storage.Application.Common.Models;
 using Storage.Tests.Common;
 
-namespace Storage.Tests.ImagesFileHandlerServiceTests
+namespace Storage.Tests.FileHandlerServiceTests
 {
     [Collection("TestServicesCollection")]
     public class DownloadFileTests : TestServicesFixture
@@ -40,22 +41,28 @@ namespace Storage.Tests.ImagesFileHandlerServiceTests
         [InlineData("   ")]
         public async Task DownloadFile_Error_IfFilePathNullOrEmpty(string filePath)
         {
-            await Assert.ThrowsAsync<ArgumentNullException>( async () =>
+            var error = await Assert.ThrowsAsync<FileHandlerServiceException>( async () =>
                 await FileHandlerService.DownloadFileAsync(filePath, CancellationToken.None));
+
+            Assert.Equal(ErrorMessages.EmptyRequiredParameterErrorMessage("filePath"), error.Message);
         }
 
         [Fact]
         public async Task DownloadFile_Error_IfFilePathNotContainsFileName()
         {
-            await Assert.ThrowsAsync<ArgumentException>(async () =>
+            var error = await Assert.ThrowsAsync<FileHandlerServiceException>(async () =>
                 await FileHandlerService.DownloadFileAsync(TestConstants.TestFilesDirectory, CancellationToken.None));
+
+            Assert.Equal(ErrorMessages.InvalidRequiredParameterErrorMessage("Path does not contain file name! (Parameter 'filePath')"), error.Message);
         }
 
         [Fact]
         public async Task DownloadFile_Error_IfFileNotFound()
         {
-            await Assert.ThrowsAsync<FileNotFoundException>(async () =>
+            var error = await Assert.ThrowsAsync<FileHandlerServiceException>(async () =>
                 await FileHandlerService.DownloadFileAsync(Path.Combine(TestConstants.TestFilesDirectory, "test.txt"), CancellationToken.None));
+
+            Assert.Equal(ErrorMessages.FileNotFoundErrorMessage("test.txt"), error.Message);
         }
     }
 }

@@ -52,7 +52,7 @@ namespace Storage.Tests.Commands.FileUploadCommand
         {
             var handler = new UploadImageCommandHandler(FileHandlerServiceMock.Object);
 
-            var error = await Assert.ThrowsAsync<FileUploadingException>(async () =>
+            var error = await Assert.ThrowsAsync<FileHandlerServiceException>(async () =>
                             await handler.Handle(null, CancellationToken.None));
 
             Assert.Equal(ErrorMessages.ArgumentNullExeptionMessage("request"), error.UserFriendlyMessage);
@@ -63,7 +63,7 @@ namespace Storage.Tests.Commands.FileUploadCommand
         {
             var handler = new UploadImageCommandHandler(FileHandlerServiceMock.Object);
 
-            var error = await Assert.ThrowsAsync<FileUploadingException>(async () =>
+            var error = await Assert.ThrowsAsync<FileHandlerServiceException>(async () =>
                             await handler.Handle(new UploadImageCommand(), CancellationToken.None));
 
             Assert.Equal(ErrorMessages.ArgumentNullExeptionMessage("ImageFile"), error.UserFriendlyMessage);
@@ -96,7 +96,7 @@ namespace Storage.Tests.Commands.FileUploadCommand
                 mock.UploadFileAsync(It.IsAny<UploadFileRequestModel>(), CancellationToken.None))
                 .ThrowsAsync(new Exception());
 
-            var error = await Assert.ThrowsAsync<FileUploadingException>(async () =>
+            var error = await Assert.ThrowsAsync<FileHandlerServiceException>(async () =>
                             await handler.Handle(request, CancellationToken.None));
 
             stream.Dispose();

@@ -1,4 +1,5 @@
-﻿using Storage.Tests.Common;
+﻿using Storage.Application.Common.Exceptions;
+using Storage.Tests.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,8 +43,10 @@ namespace Storage.Tests.LocalFileStorageServiceTests
         {
             var filePath = Path.Combine(TestConstants.TestFilesDirectory, "Download", "download.txt");
 
-            await Assert.ThrowsAsync<FileNotFoundException>(async () => 
+            var error = await Assert.ThrowsAsync<FileNotFoundException>(async () => 
                 await FileService.DownloadFileAsync(filePath, CancellationToken.None));
+
+            Assert.Equal($"Could not find file: '{filePath}'", error.Message);
 
         }
 

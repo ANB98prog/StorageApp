@@ -1,8 +1,9 @@
 ﻿using Storage.Application.Common.Models;
 using Storage.Application.Common.Helpers;
 using Storage.Tests.Common;
+using Storage.Application.Common.Exceptions;
 
-namespace Storage.Tests.ImagesFileHandlerServiceTests
+namespace Storage.Tests.FileHandlerServiceTests
 {
     [Collection("TestServicesCollection")]
     public class UploadFileTests : TestServicesFixture
@@ -21,6 +22,7 @@ namespace Storage.Tests.ImagesFileHandlerServiceTests
             var request = new UploadFileRequestModel
             {
                 Id = id,
+                OriginalName = "name.txt",
                 SystemName = $"{id.Trunc()}.txt",
                 Stream = file,
             };
@@ -33,20 +35,23 @@ namespace Storage.Tests.ImagesFileHandlerServiceTests
         [Fact]
         public async Task UploadFile_Error_IfRequestIsNull()
         {
-            await Assert.ThrowsAsync<ArgumentNullException>( async () =>
+            var error = await Assert.ThrowsAsync<FileHandlerServiceException>( async () =>
                 await FileHandlerService.UploadFileAsync(null, CancellationToken.None));
+
+            Assert.Equal(ErrorMessages.EmptyRequiredParameterErrorMessage("file"), error.UserFriendlyMessage);
         }
 
         [Fact]
         public async Task UploadFile_Error_IfFileStreamIsNull()
         {
-            var error = await Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            var error = await Assert.ThrowsAsync<FileHandlerServiceException>(async () =>
                             await FileHandlerService.UploadFileAsync(new UploadFileRequestModel
                             {
+                                OriginalName = "name.txt",
                                 SystemName = $"{Guid.NewGuid().Trunc()}.txt"
                             }, CancellationToken.None));
 
-            Assert.Equal("file", error.ParamName);
+            Assert.Equal(ErrorMessages.EmptyRequiredParameterErrorMessage("file"), error.UserFriendlyMessage);
         }
     }
 }
