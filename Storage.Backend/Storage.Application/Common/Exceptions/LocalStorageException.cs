@@ -2,29 +2,18 @@
 
 namespace Storage.Application.Common.Exceptions
 {
-    public class LocalStorageException : Exception
+    public class LocalStorageException : BaseServiceException
     {
-        /// <summary>
-        /// User friendly error message
-        /// </summary>
-        public string UserFriendlyMessage { get; set; }
-
-        public LocalStorageException(string message, Exception innerException)
-            : base(message, innerException)
+        public LocalStorageException(string message, Exception innerException) : base(message, innerException)
         {
-            UserFriendlyMessage = message;
         }
 
-        public LocalStorageException(string message, string userFriendlyMessage)
-            : base(message)
+        public LocalStorageException(string message, string userFriendlyMessage) : base(message, userFriendlyMessage)
         {
-            UserFriendlyMessage = userFriendlyMessage;
         }
 
-        public LocalStorageException(string message, string userFriendlyMessage, Exception innerException)
-            : base(message, innerException)
+        public LocalStorageException(string message, string userFriendlyMessage, Exception innerException) : base(message, userFriendlyMessage, innerException)
         {
-            UserFriendlyMessage = userFriendlyMessage;
         }
     }
 }
