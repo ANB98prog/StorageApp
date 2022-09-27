@@ -34,7 +34,8 @@ namespace Storage.Application.Common.Helpers
 
             if (!File.Exists(filePath))
             {
-                throw new FileNotFoundException();
+                var fileName = Path.GetFileName(filePath);
+                throw new FileNotFoundException($"Could not find file: '{filePath}'", fileName);
             }
 
             return new FileStream(filePath, FileMode.Open, FileAccess.Read);
@@ -293,6 +294,11 @@ namespace Storage.Application.Common.Helpers
 
             try
             {
+                if (string.IsNullOrWhiteSpace(filePath))
+                {
+                    throw new ArgumentNullException(nameof(filePath));
+                }
+
                 return types.FirstOrDefault(t => 
                         t.Value.Contains(Path.GetExtension(filePath).ToLowerInvariant()))
                             .Key;
