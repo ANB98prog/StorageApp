@@ -50,6 +50,22 @@ namespace Elasticsearch.Tests.Common
             };
         }
 
+        public static FakeResponse AddDocumentSuccessResponse(string index, string id)
+        {
+            var response = new
+            {
+                _index = index,
+                _id = id,
+                result = "created"
+            };
+
+            return new FakeResponse
+            {
+                Body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(response)),
+                StatusCode = (int)HttpStatusCode.Created,
+            };
+        }
+
         public static FakeResponse GetInvalidResponse()
         {
             return new FakeResponse
