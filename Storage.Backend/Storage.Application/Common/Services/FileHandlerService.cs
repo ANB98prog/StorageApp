@@ -145,7 +145,7 @@ namespace Storage.Application.Common.Services
                 if (file == null)
                     throw new ArgumentNullException(nameof(file));
 
-                var files = await LoadArchiveFilesAsync(file, cancellationToken);
+                var files = await UploadArchiveFilesAsync(file, cancellationToken);
 
                 var filesIds = await UploadManyFileAsync(files, cancellationToken);
 
@@ -172,12 +172,12 @@ namespace Storage.Application.Common.Services
         }
 
         /// <summary>
-        /// Loads archive files
+        /// Uploads archive files
         /// </summary>
         /// <param name="archive">Archive to load</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Loaded files</returns>
-        private async Task<List<UploadFileRequestModel>> LoadArchiveFilesAsync(UploadFileRequestModel archive, CancellationToken cancellationToken)
+        private async Task<List<UploadFileRequestModel>> UploadArchiveFilesAsync(UploadFileRequestModel archive, CancellationToken cancellationToken)
         {
             var filesData = new List<UploadFileRequestModel>();
 
