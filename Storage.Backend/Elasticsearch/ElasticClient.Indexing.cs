@@ -20,6 +20,7 @@ namespace Elasticsearch
         /// <param name="cancellationToken">Cancellation token</param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="IndexNotFoundException"></exception>
+        /// <exception cref="IndexCreationException"></exception>
         /// <exception cref="UnexpectedElasticException"></exception>
         /// <returns>Document id</returns>
         public async Task<string> AddDocumentAsync<TDocument>(string index, TDocument document, CancellationToken cancellationToken = default) where TDocument : class
