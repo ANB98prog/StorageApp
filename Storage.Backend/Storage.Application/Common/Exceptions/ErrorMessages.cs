@@ -13,5 +13,12 @@
         /// Unexpected error message while file uploading
         /// </summary>
         public const string UNEXPECTED_ERROR_WHILE_UPLOAD_FILE_MESSAGE = "Unexpected error occured while file uploading.";
+
+        /// <summary>
+        /// Error message if uploaded not supported file type
+        /// </summary>
+        /// <param name="fileExt">File extension</param>
+        /// <returns>Error message</returns>
+        public static string NotSupportedFileExtension(string fileExt) => $"Not supported file extension {fileExt}";
     }
 }

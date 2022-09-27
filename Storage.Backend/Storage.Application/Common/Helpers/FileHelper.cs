@@ -1,10 +1,13 @@
 ﻿using Storage.Application.Common.Exceptions;
+using Storage.Domain;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Task = System.Threading.Tasks.Task;
 
 namespace Storage.Application.Common.Helpers
 {
@@ -275,6 +278,44 @@ namespace Storage.Application.Common.Helpers
             catch (Exception ex)
             {
                 throw new Exception("Unexpected error occured while unzip file", ex);
+            }
+        }
+
+        public static FileType GetFileType(string filePath)
+        {
+            var types = new Dictionary<FileType, List<string>>
+            {
+                { FileType.Text, new List<string> { ".txt", ".docx"} },
+                { FileType.Image, new List<string> { ".jpg", ".png", ".jpeg", ".bmp", ".tif", ".tiff", ".gif" } },
+                { FileType.Video, new List<string> { ".mp4", ".avi", ".mpg", ".mpeg", ".wmv" } },
+                { FileType.Audio, new List<string> { ".mp3", ".wav", ".wma", ".mid", ".midi", ".aiff", ".au" } },
+            };
+
+            try
+            {
+                var ext = Path.GetExtension(filePath).ToLowerInvariant();
+
+                var type = types.FirstOrDefault(t => t.Value.Contains(ext));
+
+                if (type.Value == null
+                    || !type.Value.Any())
+                {
+                    throw new NotSupportedFileTypeException(ext, ErrorMessages.NotSupportedFileExtension(ext));
+                }
+
+                return type.Key;
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw ex;
+            }
+            catch (NotSupportedFileTypeException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Unexpected error occured while get file type", ex);
             }
         }
     }

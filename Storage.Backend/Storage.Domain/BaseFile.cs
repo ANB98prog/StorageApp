@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace Storage.Domain
 {
@@ -37,9 +36,9 @@ namespace Storage.Domain
         public string FileExtension { get; set; }
 
         /// <summary>
-        /// Content type
+        /// File type
         /// </summary>
-        public string ContentType { get; set; }
+        public FileType FileType { get; set; }
 
         /// <summary>
         /// Original file path
@@ -65,5 +64,16 @@ namespace Storage.Domain
         /// Describes is file annotated
         /// </summary>
         public bool IsAnnotated { get; set; }
+    }
+
+    /// <summary>
+    /// File types
+    /// </summary>
+    public enum FileType
+    {
+        Text,
+        Image,
+        Video,
+        Audio
     }
 }
