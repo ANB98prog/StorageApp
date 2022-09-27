@@ -40,5 +40,20 @@
         /// <param name="fileExt">File extension</param>
         /// <returns>Error message</returns>
         public static string NotSupportedFileExtension(string fileExt) => $"Not supported file extension {fileExt}";
+
+        /// <summary>
+        /// Error message while download file if it not found
+        /// </summary>
+        public static string FileNotFoundErrorMessage(string fileName) => $"Could not find file '{fileName}'";
+
+        /// <summary>
+        /// Error message if required parameter are empty
+        /// </summary>
+        public static string EmptyRequiredParameterErrorMessage(string paramName) => $"Required paramenter cannot be empty. Parameter name: '{paramName}'";
+
+        /// <summary>
+        /// Error message if invalid required parameter
+        /// </summary>
+        public static string InvalidRequiredParameterErrorMessage(string validationMessage) => $"Invalid required paramenter. Validation message: '{validationMessage}'";
     }
 }
