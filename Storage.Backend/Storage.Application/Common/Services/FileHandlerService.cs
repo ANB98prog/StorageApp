@@ -12,7 +12,7 @@ using FileAttributes = Storage.Application.Common.Models.FileAttributes;
 
 namespace Storage.Application.Common.Services
 {
-    public class ImagesFileHandlerService : IFileHandlerService
+    public class FileHandlerService : IFileHandlerService
     {
         /// <summary>
         /// Contract mapper
@@ -30,11 +30,11 @@ namespace Storage.Application.Common.Services
         private readonly string TEMP_DIR = Path.Combine(Environment.CurrentDirectory, "temp");
 
         /// <summary>
-        /// Initializes class instance of <see cref="ImagesFileHandlerService"/>
+        /// Initializes class instance of <see cref="FileHandlerService"/>
         /// </summary>
         /// <param name="mapper">Contract mapper</param>
         /// <param name="fileService">Files service</param>
-        public ImagesFileHandlerService(IMapper mapper, IFileService fileService)
+        public FileHandlerService(IMapper mapper, IFileService fileService)
         {
             _mapper = mapper;
             _fileService = fileService;

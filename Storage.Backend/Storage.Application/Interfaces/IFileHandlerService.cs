@@ -1,11 +1,9 @@
 ﻿using Storage.Application.Common.Models;
-using Storage.Domain;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Task = System.Threading.Tasks.Task;
 
 namespace Storage.Application.Interfaces
 {

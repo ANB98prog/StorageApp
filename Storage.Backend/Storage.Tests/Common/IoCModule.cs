@@ -31,7 +31,7 @@ namespace Storage.Tests.Common
             Bind<IMapper>()
                 .ToMethod(ctx => configurationProvider.CreateMapper());
             Bind<IFileHandlerService>()
-                .ToMethod(ctx => new ImagesFileHandlerService(ctx.Kernel.Get<IMapper>(), ctx.Kernel.Get<IFileService>()));
+                .ToMethod(ctx => new FileHandlerService(ctx.Kernel.Get<IMapper>(), ctx.Kernel.Get<IFileService>()));
         }
     }
 }
