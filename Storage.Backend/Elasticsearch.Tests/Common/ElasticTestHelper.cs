@@ -73,6 +73,8 @@ namespace Elasticsearch.Tests.Common
             };
         }
 
+        #region Delete document
+
         public static FakeResponse GetDocumentDeletedSuccessResponse(string index, string id)
         {
             var response = new
@@ -95,6 +97,31 @@ namespace Elasticsearch.Tests.Common
             {
                 Body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(response)),
                 StatusCode = (int)HttpStatusCode.OK,
+            };
+        }
+
+        public static FakeResponse GetDocumentDeletedNotFoundResponse(string index, string id)
+        {
+            var response = new
+            {
+                _index = index,
+                _id = id,
+                _version = 2,
+                result = "not_found",
+                _shards = new
+                {
+                    total = 2,
+                    successful = 1,
+                    failed = 0
+                },
+                _seq_no = 11,
+                _primary_term = 2
+            };
+
+            return new FakeResponse
+            {
+                Body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(response)),
+                StatusCode = (int)HttpStatusCode.NotFound,
             };
         }
 
@@ -136,6 +163,8 @@ namespace Elasticsearch.Tests.Common
                 StatusCode = (int)HttpStatusCode.OK,
             };
         }
+
+        #endregion
 
         public static FakeResponse SearchSuccessfulResponse()
         {
