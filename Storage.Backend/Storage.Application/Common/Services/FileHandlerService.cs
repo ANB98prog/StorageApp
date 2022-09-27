@@ -68,7 +68,9 @@ namespace Storage.Application.Common.Services
                 if (string.IsNullOrEmpty(filePath))
                     throw new ArgumentNullException(nameof(filePath));
 
-                return await _fileService.DownloadFileAsync(filePath, cancellationToken);
+                var file = await _fileService.DownloadFileAsync(filePath, cancellationToken);
+
+                _logger.Information($"File was successfully downloaded.");
             }
             catch (Exception ex)
             {
