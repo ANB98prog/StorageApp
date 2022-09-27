@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Serilog;
 using Storage.Application;
 using Storage.WebApi.Common;
 using Storage.WebApi.Middleware;
+using ILogger = Serilog.ILogger;
 
 namespace Storage.WebApi
 {
@@ -11,19 +13,31 @@ namespace Storage.WebApi
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            ConfigureAppServices(builder.Services, builder.Configuration);
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Information)
+                .WriteTo.File("StorageWebAppLog-.txt", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
 
-            var app = builder.Build();
+            ConfigureAppServices(builder.Services, builder.Configuration, Log.Logger);
 
-            app.UseCustomExceptionHandler();
-            app.UseCors("AllowAll");
+            try
+            {
+                var app = builder.Build();
 
-            app.MapControllers();
+                app.UseCustomExceptionHandler();
+                app.UseCors("AllowAll");
 
-            app.Run();
+                app.MapControllers();
+
+                app.Run();
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "Unexpected error occured while app initialization");
+            }
         }
 
-        private static void ConfigureAppServices(IServiceCollection services, IConfiguration configuration)
+        private static void ConfigureAppServices(IServiceCollection services, IConfiguration configuration, ILogger Logger)
         {
             services.AddControllers();
             services.AddApplication();
