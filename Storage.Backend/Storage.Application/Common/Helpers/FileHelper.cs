@@ -293,23 +293,11 @@ namespace Storage.Application.Common.Helpers
 
             try
             {
-                var ext = Path.GetExtension(filePath).ToLowerInvariant();
-
-                var type = types.FirstOrDefault(t => t.Value.Contains(ext));
-
-                if (type.Value == null
-                    || !type.Value.Any())
-                {
-                    throw new NotSupportedFileTypeException(ext, ErrorMessages.NotSupportedFileExtension(ext));
-                }
-
-                return type.Key;
+                return types.FirstOrDefault(t => 
+                        t.Value.Contains(Path.GetExtension(filePath).ToLowerInvariant()))
+                            .Key;
             }
             catch (ArgumentNullException ex)
-            {
-                throw ex;
-            }
-            catch (NotSupportedFileTypeException ex)
             {
                 throw ex;
             }

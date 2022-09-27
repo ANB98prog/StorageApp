@@ -52,9 +52,9 @@ namespace Storage.Tests.FileHelperTests
         [Fact]
         public void GetFileType_Error_NotSupportedType()
         {
-            var error = Assert.Throws<NotSupportedFileTypeException>(() => FileHelper.GetFileType("C://fake/file.ll"));
+            var result = FileHelper.GetFileType("C://fake/file.ll");
 
-            Assert.Equal(ErrorMessages.NotSupportedFileExtension(".ll"), error.Message);
+            Assert.Equal(FileType.Unknown, result);
         }
     }
 }
