@@ -71,6 +71,8 @@ namespace Storage.Application.Common.Services
                 var file = await _fileService.DownloadFileAsync(filePath, cancellationToken);
 
                 _logger.Information($"File was successfully downloaded.");
+
+                return file;
             }
             catch (Exception ex)
             {
