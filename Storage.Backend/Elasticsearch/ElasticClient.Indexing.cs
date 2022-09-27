@@ -18,7 +18,10 @@ namespace Elasticsearch
         /// <param name="index">Index</param>
         /// <param name="document">Document to index</param>
         /// <param name="cancellationToken">Cancellation token</param>
-        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="IndexNotFoundException"></exception>
+        /// <exception cref="UnexpectedElasticException"></exception>
+        /// <returns>Document id</returns>
         public async Task<string> AddDocumentAsync<TDocument>(string index, TDocument document, CancellationToken cancellationToken = default) where TDocument : class
         {
             try
@@ -31,7 +34,7 @@ namespace Elasticsearch
                 if (!exists.IsValid
                     || !exists.Exists)
                 {
-                    throw new IndexNotFoundException(index);
+                    await CreateIndexAsync(index, cancellationToken);
                 }
 
                 var result = await _client.IndexAsync(document, 
@@ -49,6 +52,10 @@ namespace Elasticsearch
                 throw ex;
             }
             catch (IndexNotFoundException ex)
+            {
+                throw ex;
+            }
+            catch (IndexCreationException ex)
             {
                 throw ex;
             }
