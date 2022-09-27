@@ -1,4 +1,7 @@
-﻿namespace Elasticsearch.Exceptions
+﻿using System;
+using System.Collections.Generic;
+
+namespace Elasticsearch.Exceptions
 {
     public class DeleteBulkDocumentsException : Exception
     {

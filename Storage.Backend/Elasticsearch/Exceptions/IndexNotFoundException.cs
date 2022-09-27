@@ -1,4 +1,6 @@
-﻿namespace Elasticsearch.Exceptions
+﻿using System;
+
+namespace Elasticsearch.Exceptions
 {
     /// <summary>
     /// Index not found exception

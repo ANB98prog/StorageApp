@@ -1,5 +1,6 @@
 ﻿using Elasticsearch.Models;
 using Nest;
+using System.Collections.Generic;
 
 namespace Elasticsearch.Common
 {

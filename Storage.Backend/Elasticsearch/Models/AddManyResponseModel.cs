@@ -1,4 +1,6 @@
-﻿namespace Elasticsearch.Models
+﻿using System.Collections.Generic;
+
+namespace Elasticsearch.Models
 {
     /// <summary>
     /// Index many documents response model

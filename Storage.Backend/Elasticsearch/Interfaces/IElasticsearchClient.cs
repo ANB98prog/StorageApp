@@ -1,5 +1,9 @@
 ﻿using Elasticsearch.Models;
 using Nest;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Elasticsearch.Interfaces
 {
