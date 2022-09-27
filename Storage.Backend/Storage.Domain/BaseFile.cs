@@ -71,6 +71,7 @@ namespace Storage.Domain
     /// </summary>
     public enum FileType
     {
+        Unknown,
         Text,
         Image,
         Video,

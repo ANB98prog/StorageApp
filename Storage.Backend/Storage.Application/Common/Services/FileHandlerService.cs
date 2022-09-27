@@ -1,13 +1,18 @@
 ﻿using AutoMapper;
+using Serilog;
+using Serilog.Sinks.File;
+using Storage.Application.Common.Exceptions;
 using Storage.Application.Common.Helpers;
 using Storage.Application.Common.Models;
 using Storage.Application.Interfaces;
+using Storage.Domain;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using static System.Net.WebRequestMethods;
 using FileAttributes = Storage.Application.Common.Models.FileAttributes;
 
 namespace Storage.Application.Common.Services
@@ -18,6 +23,11 @@ namespace Storage.Application.Common.Services
         /// Contract mapper
         /// </summary>
         private readonly IMapper _mapper;
+
+        /// <summary>
+        /// Logger
+        /// </summary>
+        private readonly ILogger _logger;
 
         /// <summary>
         /// Files service
@@ -34,65 +44,92 @@ namespace Storage.Application.Common.Services
         /// </summary>
         /// <param name="mapper">Contract mapper</param>
         /// <param name="fileService">Files service</param>
-        public FileHandlerService(IMapper mapper, IFileService fileService)
+        /// <param name="logger">Logger</param>
+        public FileHandlerService(IMapper mapper, ILogger logger, IFileService fileService)
         {
             _mapper = mapper;
+            _logger = logger;
             _fileService = fileService;
 
-            if(!Directory.Exists(TEMP_DIR))
+            if (!Directory.Exists(TEMP_DIR))
                 Directory.CreateDirectory(TEMP_DIR);
         }
 
         public async Task<FileStream> DownloadFileAsync(string filePath, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrEmpty(filePath))
-                throw new ArgumentNullException(nameof(filePath));
+            try
+            {
+                var fileName = (!string.IsNullOrEmpty(filePath)) ?
+                                    $"File name '{Path.GetFileName(filePath)}'"
+                                        : string.Empty;
 
-            return await _fileService.DownloadFileAsync(filePath, cancellationToken);
+                _logger.Information($"Try to download file. {fileName}");
+
+                if (string.IsNullOrEmpty(filePath))
+                    throw new ArgumentNullException(nameof(filePath));
+
+                return await _fileService.DownloadFileAsync(filePath, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, ErrorMessages.UNEXPECTED_ERROR_WHILE_DOWNLOAD_FILE_MESSAGE);
+                throw new FileUploadingException(ErrorMessages.UNEXPECTED_ERROR_WHILE_DOWNLOAD_FILE_MESSAGE, ex);
+            }
         }
 
         public async Task<FileStream> DownloadManyFilesAsync(List<string> filesPath, CancellationToken cancellationToken)
         {
-            if (filesPath != null 
-                && filesPath.Count == 0)
+            try
             {
-                throw new ArgumentNullException(nameof(filesPath));
+                _logger.Information($"Try to download files.");
+
+                if (filesPath != null
+                        && filesPath.Count == 0)
+                {
+                    throw new ArgumentNullException(nameof(filesPath));
+                }
+
+                var files = await _fileService.DownloadManyFilesAsync(filesPath, cancellationToken);
+
+                _logger.Information($"Files were successfully downloaded.");
+
+                return files;
             }
-                        
-            return await _fileService.DownloadManyFilesAsync(filesPath, cancellationToken);
+            catch (Exception ex)
+            {
+                _logger.Error(ex, ErrorMessages.UNEXPECTED_ERROR_WHILE_DOWNLOAD_FILES_MESSAGE);
+                throw new FileUploadingException(ErrorMessages.UNEXPECTED_ERROR_WHILE_DOWNLOAD_FILES_MESSAGE, ex);
+            }
         }
 
         public async Task<List<Guid>> UploadArchiveFileAsync(UploadFileRequestModel file, CancellationToken cancellationToken)
         {
-            if (file == null)
-                throw new ArgumentNullException(nameof(file));
-
-            var files = await LoadArchiveFilesAsync(file, cancellationToken);
-
-            /*Save in storage*/
-            var savedFilesPath = await _fileService.UploadManyFilesAsync(_mapper.Map<List<UploadFileRequestModel>, List<FileModel>>(files), cancellationToken);
-
-            /*Need to append saved files path*/
-            if (savedFilesPath != null)
+            try
             {
-                foreach (var savedFile in savedFilesPath)
-                {
-                    var match = files.FirstOrDefault(f => f.SystemName.Equals(Path.GetFileName(savedFile)));
+                var fileName = (file != null
+                                && !string.IsNullOrEmpty(file.OriginalName)) ?
+                                    $"File name '{file.OriginalName}'"
+                                        : string.Empty;
 
-                    if(match != null)
-                    {
-                        match.OriginalFilePath = savedFile;
-                    }
-                }
+                _logger.Information($"Try to upload archive file. {fileName}");
+
+                if (file == null)
+                    throw new ArgumentNullException(nameof(file));
+
+                var files = await LoadArchiveFilesAsync(file, cancellationToken);
+
+                var filesIds = await UploadManyFileAsync(files, cancellationToken);
+
+                _logger.Information($"Archive file were successfully uploaded. Files count: {filesIds.Count}");
+
+                return filesIds;
+
             }
-
-            /*Indexing*/
-            /*
-             TO DO
-             */
-
-            return files.Select(s => s.Id).ToList();
-
+            catch (Exception ex)
+            {
+                _logger.Error(ex, ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_ARCHIVE_FILE_MESSAGE);
+                throw new FileUploadingException(ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_ARCHIVE_FILE_MESSAGE, ex);
+            }
         }
 
         /// <summary>
@@ -106,7 +143,7 @@ namespace Storage.Application.Common.Services
             var filesData = new List<UploadFileRequestModel>();
 
             var tempPath = Path.Combine(TEMP_DIR, archive.SystemName);
-            
+
             /*Save archive in local storage*/
             await FileHelper.SaveFileAsync(archive.Stream, tempPath, cancellationToken);
 
@@ -120,10 +157,22 @@ namespace Storage.Application.Common.Services
             {
                 foreach (var file in files)
                 {
-                    var stream =  await FileHelper.LoadFileAsync(file);
+                    var stream = await FileHelper.LoadFileAsync(file);
 
                     var fileId = Guid.NewGuid();
                     var systemName = $"{fileId.Trunc()}{Path.GetExtension(file)}";
+
+                    FileType fileType;
+
+                    try
+                    {
+                        fileType = FileHelper.GetFileType(file);
+                    }
+                    catch (NotSupportedFileTypeException)
+                    {
+                        fileType = FileType.Unknown;
+                    }
+
                     filesData.Add(new UploadFileRequestModel
                     {
                         Id = fileId,
@@ -131,7 +180,7 @@ namespace Storage.Application.Common.Services
                         OriginalName = Path.GetFileName(file),
                         Attributes = archive.Attributes,
                         FileExtension = Path.GetExtension(file),
-                        ContentType = archive.ContentType,
+                        FileType = fileType,
                         IsAnnotated = archive.IsAnnotated,
                         DepartmentOwnerId = archive.DepartmentOwnerId,
                         OwnerId = archive.OwnerId,
@@ -155,40 +204,78 @@ namespace Storage.Application.Common.Services
         /// <exception cref="ArgumentNullException"></exception>
         public async Task<Guid> UploadFileAsync(UploadFileRequestModel file, CancellationToken cancellationToken)
         {
-            if (file == null)
-                throw new ArgumentNullException(nameof(file));
+            try
+            {
+                var fileName = (file != null
+                                && !string.IsNullOrEmpty(file.OriginalName)) ?
+                                    $"File name '{file.OriginalName}'"
+                                        : string.Empty;
 
-            var result = await UploadFileToStorageAsync(file, cancellationToken);
+                _logger.Information($"Try to upload file. {fileName}");
 
-            return result;
+                if (file == null)
+                    throw new ArgumentNullException(nameof(file));
+
+                var result = await UploadFileToStorageAsync(file, cancellationToken);
+
+                _logger.Information($"File was successfully uploaded.");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_FILE_MESSAGE);
+                throw new FileUploadingException(ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_FILE_MESSAGE, ex);
+            }
         }
 
         public async Task<List<Guid>> UploadManyFileAsync(List<UploadFileRequestModel> files, CancellationToken cancellationToken)
         {
-            if (files == null)
+            try
             {
-                throw new ArgumentNullException(nameof(files));
-            }
+                _logger.Information($"Try to upload files. Files count: {files?.Count}");
 
-            var ids = new List<Guid>();
-            foreach (var file in files)
+                if (files == null)
+                {
+                    throw new ArgumentNullException(nameof(files));
+                }
+
+                var ids = new List<Guid>();
+                foreach (var file in files)
+                {
+                    ids.Add(await UploadFileToStorageAsync(file, cancellationToken));
+                }
+
+                _logger.Information($"Files uploaded successfully.");
+
+                return ids;
+            }
+            catch (Exception ex)
             {
-                ids.Add(await UploadFileToStorageAsync(file, cancellationToken));
+                _logger.Error(ex, ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_FILES_MESSAGE);
+                throw new FileUploadingException(ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_FILES_MESSAGE, ex);
             }
-
-            return ids;
         }
 
+        /// <summary>
+        /// Uploads file to storage
+        /// </summary>
+        /// <param name="upload">Data to upload</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <exception cref="NotSupportedFileTypeException"></exception>
+        /// <returns>File id</returns>
         private async Task<Guid> UploadFileToStorageAsync(UploadFileRequestModel upload, CancellationToken cancellationToken)
         {
             var file = new FileModel
             {
                 FileName = upload.SystemName,
                 Attributes = upload.IsAnnotated ?
-                    new string[] { FileAttributes.Annotated.ToString() }
-                        : new string[] { FileAttributes.NotAnnotated.ToString() },
+                        new string[] { FileAttributes.Annotated.ToString() }
+                            : new string[] { FileAttributes.NotAnnotated.ToString() },
                 FileStream = upload.Stream
             };
+
+            upload.FileType = FileHelper.GetFileType(upload.OriginalName);
 
             // Save file to storage
             var savedFilePath = await _fileService.UploadFileAsync(file, cancellationToken);
@@ -198,7 +285,6 @@ namespace Storage.Application.Common.Services
             // Index file in db
 
             return upload.Id;
-            
         }
     }
 }

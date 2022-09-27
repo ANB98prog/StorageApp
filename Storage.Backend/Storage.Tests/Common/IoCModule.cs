@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Mapper;
+using Moq;
 using Ninject;
 using Ninject.Modules;
+using Serilog;
 using Storage.Application.Common.Services;
 using Storage.Application.Interfaces;
 
@@ -30,8 +32,9 @@ namespace Storage.Tests.Common
             });
             Bind<IMapper>()
                 .ToMethod(ctx => configurationProvider.CreateMapper());
+
             Bind<IFileHandlerService>()
-                .ToMethod(ctx => new FileHandlerService(ctx.Kernel.Get<IMapper>(), ctx.Kernel.Get<IFileService>()));
+                .ToMethod(ctx => new FileHandlerService(ctx.Kernel.Get<IMapper>(), new Mock<ILogger>().Object, ctx.Kernel.Get<IFileService>()));
         }
     }
 }
