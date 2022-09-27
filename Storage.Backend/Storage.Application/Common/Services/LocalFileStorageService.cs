@@ -52,7 +52,8 @@ namespace Storage.Application.Common.Services
         /// <returns>File stream result</returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentException"></exception>
-        /// <exception cref="FileUploadingException"></exception>
+        /// <exception cref="FileNotFoundException"></exception>
+        /// <exception cref="LocalStorageException"></exception>
         public async Task<FileStream> DownloadFileAsync(string filePath, CancellationToken cancellationToken)
         {
             try
@@ -73,7 +74,7 @@ namespace Storage.Application.Common.Services
             }
             catch (Exception ex)
             {
-                throw new FileUploadingException("Unexpected error occured while file downloading.", ex.InnerException);
+                throw new LocalStorageException("Unexpected error occured while file downloading.", ex.InnerException);
             }
         }
 
@@ -125,7 +126,7 @@ namespace Storage.Application.Common.Services
         /// <param name="file">Files to upload</param>
         /// <returns>Uploaded files path</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="FileUploadingException"></exception>
+        /// <exception cref="LocalStorageException"></exception>
         public async Task<List<string>> UploadManyFilesAsync(List<FileModel> files, CancellationToken cancellationToken)
         {
             try
@@ -149,7 +150,7 @@ namespace Storage.Application.Common.Services
             }
             catch (Exception ex)
             {
-                throw new FileUploadingException("Unexpected error occured while many files uploading.", ex.InnerException);
+                throw new LocalStorageException("Unexpected error occured while many files uploading.", ex.InnerException);
             }
         }
 
@@ -160,7 +161,7 @@ namespace Storage.Application.Common.Services
         /// <param name="file">File to upload</param>
         /// <returns>Uploaded file path</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="FileUploadingException"></exception>
+        /// <exception cref="LocalStorageException"></exception>
         public async Task<string> UploadFileAsync(FileModel file, CancellationToken cancellationToken)
         {
             try
@@ -181,7 +182,7 @@ namespace Storage.Application.Common.Services
             }
             catch (Exception ex)
             {
-                throw new FileUploadingException("Unexpected error occured while file uploading.", ex.InnerException);
+                throw new LocalStorageException("Unexpected error occured while file uploading.", ex.InnerException);
             }
         }
 
@@ -201,7 +202,6 @@ namespace Storage.Application.Common.Services
 
         public void Dispose()
         {
-            
         }
     }
 }
