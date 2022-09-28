@@ -19,19 +19,12 @@ namespace Elasticsearch
 		private readonly IElasticClient _client;
 
         /// <summary>
-        /// Contract mapper
-        /// </summary>
-        private readonly IMapper _mapper;
-
-        /// <summary>
         /// Initializes class instance of <see cref="ElasticClient"/>
         /// </summary>
         /// <param name="client">Elastic client</param>
-        /// <param name="mapper">Contract mapper</param>
-		public ElasticClient(IElasticClient client/*, IMapper mapper*/)
+		public ElasticClient(IElasticClient client)
 		{
 			_client = client;
-            //_mapper = mapper;
 		}
 
         /// <summary>

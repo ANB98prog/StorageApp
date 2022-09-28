@@ -49,15 +49,9 @@ namespace Storage.WebApi
 
             services.AddApplication();
 
-            //services.AddAutoMapper(config =>
-            //{
-            //    config.AddProfile(new AssemblyMappingProfile(Assembly.GetExecutingAssembly()));
-            //    config.AddProfile(new AssemblyMappingProfile(typeof(INotesDbContext).Assembly));
-            //});
-
             services.Configure<KestrelServerOptions>(options =>
             {
-                // Application will receive whis amount of data per request
+                // Application will receive this amount of data per request
                 options.Limits.MaxRequestBodySize = Constants.ONE_GIGABYTE_IN_BYTES;
             });
 
