@@ -3,6 +3,7 @@ using Serilog;
 using Storage.Application;
 using Storage.WebApi.Common;
 using Storage.WebApi.Middleware;
+using System.Text.Json.Serialization;
 using ILogger = Serilog.ILogger;
 
 namespace Storage.WebApi
@@ -39,7 +40,13 @@ namespace Storage.WebApi
 
         private static void ConfigureAppServices(IServiceCollection services, IConfiguration configuration, ILogger Logger)
         {
-            services.AddControllers();
+            services.AddControllers()
+                .AddNewtonsoftJson()
+                .AddJsonOptions(opt =>
+                {
+                    opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                });
+
             services.AddApplication();
 
             //services.AddAutoMapper(config =>
