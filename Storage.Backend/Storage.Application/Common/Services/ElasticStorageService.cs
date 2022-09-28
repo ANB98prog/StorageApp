@@ -34,9 +34,9 @@ namespace Storage.Application.Common.Services
         /// Initializes class instance of <see cref="ElasticStorageService"/>
         /// </summary>
         /// <param name="index">Elasticsearch index</param>
-        /// <param name="elasticClient">Elasticsearch client</param>
         /// <param name="logger">Logger</param>
-        public ElasticStorageService(string index, IElasticsearchClient elasticClient, ILogger logger)
+        /// <param name="elasticClient">Elasticsearch client</param>
+        public ElasticStorageService(string index, ILogger logger, IElasticsearchClient elasticClient)
         {
             _index = index;
             _elasticClient = elasticClient;

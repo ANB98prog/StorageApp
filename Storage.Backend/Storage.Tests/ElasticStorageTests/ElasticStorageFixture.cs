@@ -12,7 +12,7 @@ namespace Storage.Tests.ElasticStorageTests
         {
             var loggerMock = new Mock<ILogger>();
 
-            return new ElasticStorageService(elasticClientMock.Object, loggerMock.Object);
+            return new ElasticStorageService("test_files", loggerMock.Object, elasticClientMock.Object);
         }
 
         public void Dispose()

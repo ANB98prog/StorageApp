@@ -12,7 +12,7 @@ namespace ElasticIndexer
              */
             var elasticUrl = "http://localhost:9200";
             var elasticUser = "elastic";
-            var elasticPassword = "TsrxH2l62Q90Dfdyi0Nd";
+            var elasticPassword = "";
 
             var settings = new ConnectionSettings(new Uri(elasticUrl))
                                 .BasicAuthentication(elasticUser, elasticPassword);

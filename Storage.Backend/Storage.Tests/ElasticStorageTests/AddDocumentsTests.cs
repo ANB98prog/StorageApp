@@ -39,7 +39,7 @@ namespace Storage.Tests.ElasticStorageTests
             var indexName = ElasticHelper.GetFormattedIndexName(nameof(StorageTestData));
 
             elasticMock.Setup(
-                s => s.AddDocumentAsync<StorageTestData>(It.Is<string>(s => s.Equals(indexName)), document, CancellationToken.None))
+                s => s.AddDocumentAsync<StorageTestData>(It.IsAny<string>(), document, CancellationToken.None))
                 .ReturnsAsync(document.Id);
 
             var result = await storage.AddDataToStorageAsync(document);
@@ -47,7 +47,7 @@ namespace Storage.Tests.ElasticStorageTests
             Assert.Equal(document.Id, result.ToString());
 
             elasticMock.Verify(
-                s => s.AddDocumentAsync<StorageTestData>(It.Is<string>(s => s.Equals(indexName)), document, CancellationToken.None), Times.Once);
+                s => s.AddDocumentAsync<StorageTestData>(It.IsAny<string>(), document, CancellationToken.None), Times.Once);
         }
 
         [Fact]
@@ -79,10 +79,8 @@ namespace Storage.Tests.ElasticStorageTests
                 Title = "title"
             };
 
-            var indexName = ElasticHelper.GetFormattedIndexName(nameof(StorageTestData));
-
             elasticMock.Setup(
-                s => s.AddDocumentAsync<StorageTestData>(It.Is<string>(s => s.Equals(indexName)), document, CancellationToken.None))
+                s => s.AddDocumentAsync<StorageTestData>(It.IsAny<string>(), document, CancellationToken.None))
                 .ThrowsAsync(new UnexpectedElasticException(Elasticsearch.Exceptions.ErrorMessages.ERROR_ADDITION_DOCUMENT("index"), new Exception()));
 
             var error = await Assert.ThrowsAsync<ElasticStorageServiceException>( async () => await storage.AddDataToStorageAsync(document));
@@ -90,7 +88,7 @@ namespace Storage.Tests.ElasticStorageTests
             Assert.Equal(ErrorMessages.UNEXPECTED_ERROR_WHILE_ADD_ITEM_TO_STORAGE_MESSAGE, error.UserFriendlyMessage);
 
             elasticMock.Verify(
-                s => s.AddDocumentAsync<StorageTestData>(It.Is<string>(s => s.Equals(indexName)), document, CancellationToken.None), Times.Once);
+                s => s.AddDocumentAsync<StorageTestData>(It.IsAny<string>(), document, CancellationToken.None), Times.Once);
         }
     }
 }

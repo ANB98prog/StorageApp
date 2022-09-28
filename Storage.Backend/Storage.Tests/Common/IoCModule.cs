@@ -44,7 +44,7 @@ namespace Storage.Tests.Common
                 .ToMethod(ctx => StorageDataServiceMock.Object);
 
             Bind<IFileHandlerService>()
-                .ToMethod(ctx => new FileHandlerService(ctx.Kernel.Get<IMapper>(), new Mock<ILogger>().Object, ctx.Kernel.Get<IFileService>(), ctx.Kernel.Get<IStorageDataService>()));
+                .ToMethod(ctx => new FileHandlerService(new Mock<ILogger>().Object, ctx.Kernel.Get<IFileService>(), ctx.Kernel.Get<IStorageDataService>()));
         }
     }
 }
