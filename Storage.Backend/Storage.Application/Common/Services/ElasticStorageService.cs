@@ -2,6 +2,7 @@
 using Elasticsearch.Interfaces;
 using Serilog;
 using Storage.Application.Common.Exceptions;
+using Storage.Application.Common.Helpers;
 using Storage.Application.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -58,7 +59,7 @@ namespace Storage.Application.Common.Services
                     throw new ArgumentNullException(nameof(data));
                 }
 
-                var result = await _elasticClient.AddDocumentAsync<T>(GetIndexName(nameof(T)), data);                               
+                var result = await _elasticClient.AddDocumentAsync<T>(ElasticHelper.GetFormattedIndexName(typeof(T).Name), data);                               
 
                 _logger.Information("Data added to elastic successfully.");
 
@@ -69,22 +70,16 @@ namespace Storage.Application.Common.Services
                 _logger.Error(ex, ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName));
                 throw new ElasticStorageServiceException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
             }
+            catch (UnexpectedElasticException ex)
+            {
+                _logger.Error(ex, ex.UserfriendlyMessage);
+                throw new ElasticStorageServiceException(ErrorMessages.UNEXPECTED_ERROR_WHILE_ADD_ITEM_TO_STORAGE_MESSAGE, ex);
+            }
             catch (Exception ex)
             {
-                _logger.Error(ex, ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_ARCHIVE_FILE_MESSAGE);
-                throw new ElasticStorageServiceException(ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_ARCHIVE_FILE_MESSAGE, ex);
+                _logger.Error(ex, ErrorMessages.UNEXPECTED_ERROR_WHILE_ADD_ITEM_TO_STORAGE_MESSAGE);
+                throw new ElasticStorageServiceException(ErrorMessages.UNEXPECTED_ERROR_WHILE_ADD_ITEM_TO_STORAGE_MESSAGE, ex);
             }
-        }
-
-        /// <summary>
-        /// Gets index name from class name
-        /// </summary>
-        /// <param name="className">Class name</param>
-        /// <returns>Formated index name</returns>
-        private string GetIndexName(string className)
-        {
-            return Regex.Replace(className, "Model", string.Empty)
-                        .ToLowerInvariant();
         }
     }
 }
