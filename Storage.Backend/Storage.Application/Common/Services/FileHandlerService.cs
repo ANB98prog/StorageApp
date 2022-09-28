@@ -19,11 +19,6 @@ namespace Storage.Application.Common.Services
     public class FileHandlerService : IFileHandlerService
     {
         /// <summary>
-        /// Contract mapper
-        /// </summary>
-        private readonly IMapper _mapper;
-
-        /// <summary>
         /// Logger
         /// </summary>
         private readonly ILogger _logger;
@@ -46,12 +41,11 @@ namespace Storage.Application.Common.Services
         /// <summary>
         /// Initializes class instance of <see cref="FileHandlerService"/>
         /// </summary>
-        /// <param name="mapper">Contract mapper</param>
-        /// <param name="fileService">Files service</param>
         /// <param name="logger">Logger</param>
-        public FileHandlerService(IMapper mapper, ILogger logger, IFileService fileService, IStorageDataService storageDataService)
+        /// <param name="fileService">Files service</param>
+        /// <param name="storageDataService">Storage data service</param>
+        public FileHandlerService(ILogger logger, IFileService fileService, IStorageDataService storageDataService)
         {
-            _mapper = mapper;
             _logger = logger;
             _fileService = fileService;
             _storageDataService = storageDataService;

@@ -2,14 +2,8 @@
 using Elasticsearch.Interfaces;
 using Serilog;
 using Storage.Application.Common.Exceptions;
-using Storage.Application.Common.Helpers;
 using Storage.Application.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using ErrorMessages = Storage.Application.Common.Exceptions.ErrorMessages;
 
@@ -21,6 +15,11 @@ namespace Storage.Application.Common.Services
     public class ElasticStorageService
         : IStorageDataService
     {
+        /// <summary>
+        /// Data index
+        /// </summary>
+        private readonly string _index;
+
         /// <summary>
         /// Elasticsearch client
         /// </summary>
@@ -34,10 +33,12 @@ namespace Storage.Application.Common.Services
         /// <summary>
         /// Initializes class instance of <see cref="ElasticStorageService"/>
         /// </summary>
+        /// <param name="index">Elasticsearch index</param>
         /// <param name="elasticClient">Elasticsearch client</param>
         /// <param name="logger">Logger</param>
-        public ElasticStorageService(IElasticsearchClient elasticClient, ILogger logger)
+        public ElasticStorageService(string index, IElasticsearchClient elasticClient, ILogger logger)
         {
+            _index = index;
             _elasticClient = elasticClient;
             _logger = logger;
         }
@@ -59,7 +60,7 @@ namespace Storage.Application.Common.Services
                     throw new ArgumentNullException(nameof(data));
                 }
 
-                var result = await _elasticClient.AddDocumentAsync<T>(ElasticHelper.GetFormattedIndexName(typeof(T).Name), data);                               
+                var result = await _elasticClient.AddDocumentAsync<T>(_index, data);                               
 
                 _logger.Information("Data added to elastic successfully.");
 
