@@ -3,6 +3,7 @@ using Storage.Application.Common.Exceptions;
 using Storage.Application.Common.Helpers;
 using Storage.Application.Common.Models;
 using Storage.Application.Interfaces;
+using Storage.Domain;
 using System;
 using System.IO;
 using System.Threading;
@@ -37,7 +38,7 @@ namespace Storage.Application.Images.Commands.UploadImage
                     FileExtension = Path.GetExtension(request.ImageFile.FileName),
                     OriginalName = request.ImageFile.FileName,
                     SystemName = fileSystemName,
-                    ContentType = request.ImageFile.ContentType,
+                    FileType = FileHelper.GetFileType(request.ImageFile.FileName),
                     Stream = request.ImageFile.OpenReadStream(),
                     IsAnnotated = request.IsAnnotated,
                 };
@@ -48,15 +49,15 @@ namespace Storage.Application.Images.Commands.UploadImage
             }
             catch (ArgumentNullException ex)
             {
-                throw new FileUploadingException(ex.Message, ErrorMessages.ArgumentNullExeptionMessage(ex.ParamName));
+                throw new FileHandlerServiceException(ex.Message, ErrorMessages.ArgumentNullExeptionMessage(ex.ParamName));
             }
-            catch (FileUploadingException ex)
+            catch (FileHandlerServiceException ex)
             {
                 throw ex;
             }
             catch (Exception ex)
             {
-                throw new FileUploadingException(ex.Message, ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_FILE_MESSAGE);
+                throw new FileHandlerServiceException(ex.Message, ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_FILE_MESSAGE);
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Storage.Application.Common.Helpers;
 
 namespace Storage.Application.Images.Commands.UploadImage
 {
@@ -17,6 +18,8 @@ namespace Storage.Application.Images.Commands.UploadImage
                 uploadImageCommand.ImageFile.FileName).NotNull();
             RuleFor(uploadImageCommand =>
                 uploadImageCommand.ImageFile.Length).GreaterThan(0);
+            RuleFor(uploadImageCommand =>
+                FileHelper.GetFileType(uploadImageCommand.ImageFile.FileName)).Equal(Domain.FileType.Image);
         }
     }
 }
