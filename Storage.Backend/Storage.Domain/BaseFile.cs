@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace Storage.Domain
 {
@@ -71,10 +72,15 @@ namespace Storage.Domain
     /// </summary>
     public enum FileType
     {
+        [Description("unknown")]
         Unknown,
+        [Description("text")]
         Text,
+        [Description("image")]
         Image,
+        [Description("video")]
         Video,
+        [Description("audio")]
         Audio
     }
 }

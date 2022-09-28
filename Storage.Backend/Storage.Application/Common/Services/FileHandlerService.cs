@@ -12,7 +12,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using static System.Net.WebRequestMethods;
 using FileAttributes = Storage.Application.Common.Models.FileAttributes;
 
 namespace Storage.Application.Common.Services
@@ -35,6 +34,11 @@ namespace Storage.Application.Common.Services
         private readonly IFileService _fileService;
 
         /// <summary>
+        /// Metadata storage service
+        /// </summary>
+        private readonly IStorageDataService _storageDataService;
+
+        /// <summary>
         /// Directory for temporary files
         /// </summary>
         private readonly string TEMP_DIR = Path.Combine(Environment.CurrentDirectory, "temp");
@@ -45,11 +49,12 @@ namespace Storage.Application.Common.Services
         /// <param name="mapper">Contract mapper</param>
         /// <param name="fileService">Files service</param>
         /// <param name="logger">Logger</param>
-        public FileHandlerService(IMapper mapper, ILogger logger, IFileService fileService)
+        public FileHandlerService(IMapper mapper, ILogger logger, IFileService fileService, IStorageDataService storageDataService)
         {
             _mapper = mapper;
             _logger = logger;
             _fileService = fileService;
+            _storageDataService = storageDataService;
 
             if (!Directory.Exists(TEMP_DIR))
                 Directory.CreateDirectory(TEMP_DIR);
@@ -331,8 +336,9 @@ namespace Storage.Application.Common.Services
             upload.OriginalFilePath = savedFilePath;
 
             // Index file in db
+            var indexedDataId = await _storageDataService.AddDataToStorageAsync<BaseFile>(upload);
 
-            return upload.Id;
+            return indexedDataId;
         }
     }
 }
