@@ -55,5 +55,10 @@
         /// Error message if invalid required parameter
         /// </summary>
         public static string InvalidRequiredParameterErrorMessage(string validationMessage) => $"Invalid required paramenter. Validation message: '{validationMessage}'";
+
+        /// <summary>
+        /// Unexpected error message while add item to elastic storage
+        /// </summary>
+        public const string UNEXPECTED_ERROR_WHILE_ADD_ITEM_TO_STORAGE_MESSAGE = "Unexpected error occured while add item to elastic storage.";
     }
 }
