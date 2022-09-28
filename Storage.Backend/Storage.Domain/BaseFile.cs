@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
@@ -39,6 +41,7 @@ namespace Storage.Domain
         /// <summary>
         /// File type
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public FileType FileType { get; set; }
 
         /// <summary>
