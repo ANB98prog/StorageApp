@@ -2,6 +2,9 @@
 using Storage.Application.Common.Helpers;
 using Storage.Tests.Common;
 using Storage.Application.Common.Exceptions;
+using Moq;
+using Storage.Domain;
+using Task = System.Threading.Tasks.Task;
 
 namespace Storage.Tests.FileHandlerServiceTests
 {
@@ -26,6 +29,10 @@ namespace Storage.Tests.FileHandlerServiceTests
                 SystemName = $"{id.Trunc()}.txt",
                 Stream = file,
             };
+
+            StorageDataServiceMock.Setup(s =>
+                s.AddDataToStorageAsync(It.IsAny<BaseFile>()))
+                .ReturnsAsync(id);
 
             var result = await FileHandlerService.UploadFileAsync(request, CancellationToken.None);
 

@@ -8,11 +8,11 @@ namespace Storage.Tests.ElasticStorageTests
 {
     public class ElasticStorageFixture : IDisposable
     {
-        public IStorageDataService<StorageTestData> GetElasticStorageService(Mock<IElasticsearchClient> elasticClientMock)
+        public IStorageDataService GetElasticStorageService(Mock<IElasticsearchClient> elasticClientMock)
         {
             var loggerMock = new Mock<ILogger>();
 
-            return new ElasticStorageService<StorageTestData>(elasticClientMock.Object, loggerMock.Object);
+            return new ElasticStorageService(elasticClientMock.Object, loggerMock.Object);
         }
 
         public void Dispose()

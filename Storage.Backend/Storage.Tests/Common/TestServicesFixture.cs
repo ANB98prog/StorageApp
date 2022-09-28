@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Moq;
 using Ninject;
 using Storage.Application.Interfaces;
 
@@ -14,11 +15,15 @@ namespace Storage.Tests.Common
 
         protected readonly IFileHandlerService FileHandlerService;
 
+        protected readonly Mock<IStorageDataService> StorageDataServiceMock;
+
         public TestServicesFixture()
         {
             var ioCModule = new IoCModule();
 
             Kernel = new StandardKernel(ioCModule);
+
+            StorageDataServiceMock = ioCModule.StorageDataServiceMock;
 
             if (!Directory.Exists(TestConstants.TestFilesDirectory))
                 Directory.CreateDirectory(TestConstants.TestFilesDirectory);

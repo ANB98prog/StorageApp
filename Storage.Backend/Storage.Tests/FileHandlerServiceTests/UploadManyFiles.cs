@@ -2,6 +2,9 @@
 using Storage.Application.Common.Helpers;
 using Storage.Tests.Common;
 using Storage.Application.Common.Exceptions;
+using Moq;
+using Storage.Domain;
+using Task = System.Threading.Tasks.Task;
 
 namespace Storage.Tests.FileHandlerServiceTests
 {
@@ -34,6 +37,10 @@ namespace Storage.Tests.FileHandlerServiceTests
                 });
 
                 ids.Add(id);
+
+                StorageDataServiceMock.Setup(s =>
+                    s.AddDataToStorageAsync(It.Is<BaseFile>(s => s.Id.Equals(id))))
+                        .ReturnsAsync(id);
             }
 
             var result = await FileHandlerService.UploadManyFileAsync(files, CancellationToken.None);

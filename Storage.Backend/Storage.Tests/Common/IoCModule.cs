@@ -11,6 +11,13 @@ namespace Storage.Tests.Common
 {
     public class IoCModule : NinjectModule
     {
+        public Mock<IStorageDataService> StorageDataServiceMock;
+
+        public IoCModule()
+        {
+            StorageDataServiceMock = new Mock<IStorageDataService>();
+        }
+
         public override void Load()
         {
             if(!Directory.Exists(TestConstants.StorageDirectory))
@@ -33,8 +40,11 @@ namespace Storage.Tests.Common
             Bind<IMapper>()
                 .ToMethod(ctx => configurationProvider.CreateMapper());
 
+            Bind<IStorageDataService>()
+                .ToMethod(ctx => StorageDataServiceMock.Object);
+
             Bind<IFileHandlerService>()
-                .ToMethod(ctx => new FileHandlerService(ctx.Kernel.Get<IMapper>(), new Mock<ILogger>().Object, ctx.Kernel.Get<IFileService>()));
+                .ToMethod(ctx => new FileHandlerService(ctx.Kernel.Get<IMapper>(), new Mock<ILogger>().Object, ctx.Kernel.Get<IFileService>(), ctx.Kernel.Get<IStorageDataService>()));
         }
     }
 }
