@@ -6,14 +6,14 @@ namespace Storage.Application.Interfaces
     /// <summary>
     /// Storage interface to work with elastic
     /// </summary>
-    /// <typeparam name="T">Data type</typeparam>
-    public interface IStorageDataService<T> where T : class
+    public interface IStorageDataService
     {
         /// <summary>
         /// Adds data to elastic storage
         /// </summary>
         /// <param name="data">Data to add</param>
+        /// <typeparam name="T">Data type</typeparam>
         /// <returns>Item id</returns>
-        public Task<Guid> AddDataToStorageAsync(T data);
+        public Task<Guid> AddDataToStorageAsync<T>(T data) where T : class;
     }
 }

@@ -18,9 +18,8 @@ namespace Storage.Application.Common.Services
     /// <summary>
     /// Service to work with Elastic storage
     /// </summary>
-    /// <typeparam name="T">Documents type</typeparam>
-    public class ElasticStorageService<T>
-        : IStorageDataService<T> where T : class
+    public class ElasticStorageService
+        : IStorageDataService
     {
         /// <summary>
         /// Elasticsearch client
@@ -47,8 +46,9 @@ namespace Storage.Application.Common.Services
         /// Adds data to elastic storage
         /// </summary>
         /// <param name="data">Data to add</param>
+        /// <typeparam name="T">Documents type</typeparam>
         /// <returns>Item id</returns>
-        public async Task<Guid> AddDataToStorageAsync(T data)
+        public async Task<Guid> AddDataToStorageAsync<T>(T data) where T : class
         {
             try
             {
