@@ -6,6 +6,7 @@ using Ninject.Modules;
 using Serilog;
 using Storage.Application.Common.Services;
 using Storage.Application.Interfaces;
+using Storage.Domain;
 
 namespace Storage.Tests.Common
 {
@@ -34,8 +35,8 @@ namespace Storage.Tests.Common
 
             var configurationProvider = new MapperConfiguration(cfg =>
             {
-                cfg.AddProfile(new AssemblyMappingProfile(
-                    typeof(IFileHandlerService).Assembly));
+                cfg.AddProfile(new AssemblyMappingProfile(typeof(IFileHandlerService).Assembly));
+                cfg.AddProfile(new AssemblyMappingProfile(typeof(BaseFile).Assembly));
             });
             Bind<IMapper>()
                 .ToMethod(ctx => configurationProvider.CreateMapper());
@@ -44,7 +45,7 @@ namespace Storage.Tests.Common
                 .ToMethod(ctx => StorageDataServiceMock.Object);
 
             Bind<IFileHandlerService>()
-                .ToMethod(ctx => new FileHandlerService(new Mock<ILogger>().Object, ctx.Kernel.Get<IFileService>(), ctx.Kernel.Get<IStorageDataService>()));
+                .ToMethod(ctx => new FileHandlerService(new Mock<ILogger>().Object, ctx.Kernel.Get<IMapper>(), ctx.Kernel.Get<IFileService>(), ctx.Kernel.Get<IStorageDataService>()));
         }
     }
 }

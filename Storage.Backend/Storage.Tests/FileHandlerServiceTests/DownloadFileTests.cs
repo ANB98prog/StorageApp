@@ -27,7 +27,7 @@ namespace Storage.Tests.FileHandlerServiceTests
                     FileStream = stream
                 }, CancellationToken.None);
 
-            var result = await FileHandlerService.DownloadFileAsync(fileToDownloadPath, CancellationToken.None);
+            var result = await FileHandlerService.DownloadFileAsync(fileToDownloadPath.FullPath, CancellationToken.None);
 
             Assert.NotNull(result);
             Assert.Equal("download.txt", Path.GetFileName(result.Name));

@@ -13,7 +13,7 @@ namespace Storage.Tests.LocalFileStorageServiceTests
         {
             var file = Path.Combine(TestConstants.TestFilesDirectory, "upload.txt");
 
-            string resultPath = "";
+            UploadedFileModel resultPath = new UploadedFileModel();
 
             var text = "some text";
 
@@ -40,7 +40,7 @@ namespace Storage.Tests.LocalFileStorageServiceTests
 
             var resultText = "";
 
-            using (var ff = File.OpenRead(resultPath))
+            using (var ff = File.OpenRead(resultPath.FullPath))
             {
                 var buffer = new byte[ff.Length];
                 ff.Read(buffer, 0, buffer.Length);

@@ -34,7 +34,7 @@ namespace Storage.Tests.LocalFileStorageServiceTests
                 files.Add(new FileModel
                 {
                     FileName = Path.GetFileName(filesNames[i]),
-                    Attributes = new string[] { "many" },
+                    Attributes = new string[] { "Many", "NotAnnotated" },
                     FileStream = File.OpenRead(filesNames[i]),
                 });
             }
@@ -43,7 +43,7 @@ namespace Storage.Tests.LocalFileStorageServiceTests
 
             Assert.NotNull(result);
             Assert.Equal(3, result.Count);
-            Assert.Equal(3, Directory.GetFiles(Directory.GetParent(result[0])?.FullName).Count());
+            Assert.Equal(3, Directory.GetFiles(Directory.GetParent(result[0].FullPath)?.FullName).Count());
 
             for (int i = 0; i < 3; i++)
             {
