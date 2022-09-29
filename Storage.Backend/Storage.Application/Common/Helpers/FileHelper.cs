@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Task = System.Threading.Tasks.Task;
@@ -312,5 +313,6 @@ namespace Storage.Application.Common.Helpers
                 throw new Exception("Unexpected error occured while get file type", ex);
             }
         }
+
     }
 }

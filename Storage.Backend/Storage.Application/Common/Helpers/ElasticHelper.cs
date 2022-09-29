@@ -17,19 +17,9 @@ namespace Storage.Application.Common.Helpers
             if (!className.Equals("Model"))
             {
                 className = Regex.Replace(className, "Model", string.Empty);
-            }            
-
-            var capitalLetters = Regex.Matches(className, @"[A-Z]");
-
-            foreach(var letter in capitalLetters)
-            {
-                var l = letter.ToString();
-                className = Regex.Replace(className, l, $"_{l.ToLower()}");
             }
 
-            className = className.TrimStart('_');
-
-            return className;
+            return className.ToUnderScore();
         }
     }
 }
