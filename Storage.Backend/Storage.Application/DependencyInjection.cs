@@ -1,4 +1,5 @@
-﻿using Elasticsearch;
+﻿using AutoMapper;
+using Elasticsearch;
 using Elasticsearch.Interfaces;
 using FluentValidation;
 using MediatR;
@@ -65,7 +66,7 @@ namespace Storage.Application
             services.AddTransient<IStorageDataService>(s =>
                 new ElasticStorageService(ElasticIndices.FILES_INDEX, s.GetService<ILogger>(), s.GetService<IElasticsearchClient>()));
 
-            services.AddTransient<IFileHandlerService>(s => new FileHandlerService(s.GetService<ILogger>(), s.GetService<IFileService>(), s.GetService<IStorageDataService>()));
+            services.AddTransient<IFileHandlerService>(s => new FileHandlerService(s.GetService<ILogger>(), s.GetService<IMapper>(), s.GetService<IFileService>(), s.GetService<IStorageDataService>()));
 
             return services;
         }

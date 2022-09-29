@@ -37,7 +37,6 @@ namespace Storage.Application.Images.Commands.UploadImage
                     FileExtension = Path.GetExtension(request.ImageFile.FileName),
                     OriginalName = request.ImageFile.FileName,
                     SystemName = fileSystemName,
-                    FileType = FileHelper.GetFileType(request.ImageFile.FileName),
                     Stream = request.ImageFile.OpenReadStream(),
                     IsAnnotated = request.IsAnnotated,
                 };

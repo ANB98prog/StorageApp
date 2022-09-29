@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Serilog;
 using Storage.Application;
 using Storage.Application.Interfaces;
+using Storage.Domain;
 using Storage.WebApi.Common;
 using Storage.WebApi.Middleware;
 using Storage.WebApi.Services;
@@ -64,6 +65,7 @@ namespace Storage.WebApi
             services.AddAutoMapper(config =>
             {
                 config.AddProfile(new AssemblyMappingProfile(Assembly.GetExecutingAssembly()));
+                config.AddProfile(new AssemblyMappingProfile(typeof(BaseFile).Assembly));
             });
 
             services.Configure<KestrelServerOptions>(options =>

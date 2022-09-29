@@ -18,7 +18,7 @@ namespace Storage.Application.Interfaces
         /// <returns>
         /// Path to saved files
         /// </returns>
-        public Task<List<string>> UploadManyFilesAsync(List<FileModel> files, CancellationToken cancellationToken);
+        public Task<List<UploadedFileModel>> UploadManyFilesAsync(List<FileModel> files, CancellationToken cancellationToken);
 
         /// <summary>
         /// Upload file
@@ -27,7 +27,7 @@ namespace Storage.Application.Interfaces
         /// <returns>
         /// Path to saved file
         /// </returns>
-        public Task<string> UploadFileAsync(FileModel file, CancellationToken cancellationToken);
+        public Task<UploadedFileModel> UploadFileAsync(FileModel file, CancellationToken cancellationToken);
 
         /// <summary>
         /// Download file

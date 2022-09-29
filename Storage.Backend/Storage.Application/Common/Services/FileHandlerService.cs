@@ -24,6 +24,11 @@ namespace Storage.Application.Common.Services
         private readonly ILogger _logger;
 
         /// <summary>
+        /// Contract mapper
+        /// </summary>
+        private readonly IMapper _mapper;
+
+        /// <summary>
         /// Files service
         /// </summary>
         private readonly IFileService _fileService;
@@ -42,11 +47,13 @@ namespace Storage.Application.Common.Services
         /// Initializes class instance of <see cref="FileHandlerService"/>
         /// </summary>
         /// <param name="logger">Logger</param>
+        /// <param name="mapper">Contract mapper</param>
         /// <param name="fileService">Files service</param>
         /// <param name="storageDataService">Storage data service</param>
-        public FileHandlerService(ILogger logger, IFileService fileService, IStorageDataService storageDataService)
+        public FileHandlerService(ILogger logger, IMapper mapper, IFileService fileService, IStorageDataService storageDataService)
         {
             _logger = logger;
+            _mapper = mapper;
             _fileService = fileService;
             _storageDataService = storageDataService;
 
@@ -218,7 +225,6 @@ namespace Storage.Application.Common.Services
                         OriginalName = Path.GetFileName(file),
                         Attributes = archive.Attributes,
                         FileExtension = Path.GetExtension(file),
-                        FileType = fileType,
                         IsAnnotated = archive.IsAnnotated,
                         DepartmentOwnerId = archive.DepartmentOwnerId,
                         OwnerId = archive.OwnerId,
@@ -313,21 +319,32 @@ namespace Storage.Application.Common.Services
         /// <returns>File id</returns>
         private async Task<Guid> UploadFileToStorageAsync(UploadFileRequestModel upload, CancellationToken cancellationToken)
         {
+            var fileAttributes = new List<string>()
+            {
+                upload.FileType.ToString(),
+                upload.IsAnnotated ?
+                         FileAttributes.Annotated.ToString()
+                            :  FileAttributes.NotAnnotated.ToString()
+            };
+
+
+            if (upload.Attributes != null
+                    && upload.Attributes.Any())
+            {
+                fileAttributes.AddRange(upload.Attributes.OrderByDescending(s => s)); 
+            }
+
             var file = new FileModel
             {
                 FileName = upload.SystemName,
-                Attributes = upload.IsAnnotated ?
-                        new string[] { FileAttributes.Annotated.ToString() }
-                            : new string[] { FileAttributes.NotAnnotated.ToString() },
+                Attributes = fileAttributes.ToArray(),
                 FileStream = upload.Stream
             };
-
-            upload.FileType = FileHelper.GetFileType(upload.OriginalName);
 
             // Save file to storage
             var savedFilePath = await _fileService.UploadFileAsync(file, cancellationToken);
 
-            upload.OriginalFilePath = savedFilePath;
+            upload.OriginalFilePath = _mapper.Map<UploadedFileModel, FilePath>(savedFilePath);
 
             // Index file in db
             var indexedDataId = await _storageDataService.AddDataToStorageAsync<BaseFile>(upload);

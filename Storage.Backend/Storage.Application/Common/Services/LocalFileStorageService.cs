@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using static System.Net.WebRequestMethods;
 
 namespace Storage.Application.Common.Services
 {
@@ -127,14 +128,14 @@ namespace Storage.Application.Common.Services
         /// <returns>Uploaded files path</returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="LocalStorageException"></exception>
-        public async Task<List<string>> UploadManyFilesAsync(List<FileModel> files, CancellationToken cancellationToken)
+        public async Task<List<UploadedFileModel>> UploadManyFilesAsync(List<FileModel> files, CancellationToken cancellationToken)
         {
             try
             {
                 if (files == null)
                     throw new ArgumentNullException(nameof(files));
 
-                var filesPaths = new List<string>();
+                var filesPaths = new List<UploadedFileModel>();
 
                 foreach (var file in files)
                 {
@@ -162,19 +163,28 @@ namespace Storage.Application.Common.Services
         /// <returns>Uploaded file path</returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="LocalStorageException"></exception>
-        public async Task<string> UploadFileAsync(FileModel file, CancellationToken cancellationToken)
+        public async Task<UploadedFileModel> UploadFileAsync(FileModel file, CancellationToken cancellationToken)
         {
             try
             {
                 ValidateFile(file);
 
-                var path = Path.Combine(_localStorageDir,
-                            string.Join(Path.DirectorySeparatorChar, file.Attributes),
-                                file.FileName);
+                var formattedAttr = file.Attributes
+                                        .ToList()
+                                            .ConvertAll(s => s.ToUnderScore());
 
-                await FileHelper.SaveFileAsync(file.FileStream, path, cancellationToken);
+                var relativePath = Path.Combine(formattedAttr.ToArray());
+                relativePath = Path.Combine(relativePath, file.FileName);
 
-                return path;
+                var absolutePath = Path.Combine(_localStorageDir, relativePath);
+
+                await FileHelper.SaveFileAsync(file.FileStream, absolutePath, cancellationToken);
+
+                return new UploadedFileModel
+                {
+                    FullPath = absolutePath,
+                    RelativePath = relativePath,
+                };
             }
             catch (ArgumentNullException ex)
             {
