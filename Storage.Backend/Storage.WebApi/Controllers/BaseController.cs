@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -8,6 +9,12 @@ namespace Storage.WebApi.Controllers
     [Route("api/[controller]/[action]")]
     public class BaseController : ControllerBase
     {
+        private IMapper _mapper;
+
+        protected IMapper Mapper =>
+            _mapper ??= HttpContext.RequestServices.GetService<IMapper>();
+
+
         private IMediator _mediator;
 
         protected IMediator Mediator =>

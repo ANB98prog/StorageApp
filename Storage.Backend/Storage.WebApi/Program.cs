@@ -49,6 +49,11 @@ namespace Storage.WebApi
 
             services.AddApplication();
 
+            services.AddAutoMapper(config =>
+            {
+                config.AddProfile(new AssemblyMappingProfile(Assembly.GetExecutingAssembly()));
+            });
+
             services.Configure<KestrelServerOptions>(options =>
             {
                 // Application will receive this amount of data per request

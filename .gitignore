@@ -4,3 +4,4 @@ bin/
 wwwroot/
 /.nuget
 /Storage.Backend/Storage.Domain/Properties/launchSettings.json
+/Storage.Backend/Storage.WebApi/StorageWebAppLog-20220929.txt

@@ -1,27 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Net.Http.Headers;
 using Storage.Application.Images.Commands.UploadImage;
-using Storage.WebApi.Common.Validators;
+using Storage.WebApi.Models;
 
 namespace Storage.WebApi.Controllers.Images
 {
     [Route("api/images/upload")]
     public class ImageUploadController : BaseController
     {
-        [HttpPost]
-        
-        public async Task<IActionResult> UploadImageAsync(IFormFile file)
+        [HttpPost]        
+        public async Task<IActionResult> UploadImageAsync([FromForm] UploadFileRequestModel request)
         {
-            var command = new UploadImageCommand
-            {
-                Attributes = new List<string>() { "soldier" },
-                UserId = UserId,
-                ImageFile = file
-            };
+            var command = Mapper.Map<UploadFileRequestModel, UploadImageCommand>(request);
+
+            command.UserId = UserId;
 
             var imageId = await Mediator.Send(command);
 
-            return Ok($"Image uploaded. Id : " + imageId);
+            return Ok(imageId);
         }
 
         /// <summary>
