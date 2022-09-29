@@ -3,7 +3,6 @@ using Storage.Application.Common.Exceptions;
 using Storage.Application.Common.Helpers;
 using Storage.Application.Common.Models;
 using Storage.Application.Interfaces;
-using Storage.Domain;
 using System;
 using System.IO;
 using System.Threading;
