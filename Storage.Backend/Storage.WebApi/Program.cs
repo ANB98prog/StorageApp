@@ -2,8 +2,10 @@ using Mapper;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Serilog;
 using Storage.Application;
+using Storage.Application.Interfaces;
 using Storage.WebApi.Common;
 using Storage.WebApi.Middleware;
+using Storage.WebApi.Services;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using ILogger = Serilog.ILogger;
@@ -30,17 +32,7 @@ namespace Storage.WebApi
                 if (app.Environment.IsDevelopment())
                 {
                     app.UseSwagger();
-                    app.UseSwaggerUI(config =>
-                    {
-                        var provider = app.Services.GetService<IApiVersionDescriptionProvider>();
-
-                        foreach (var description in provider.ApiVersionDescriptions)
-                        {
-                            config.SwaggerEndpoint(
-                                $"/swagger/{description.GroupName}/swagger.json",
-                                description.GroupName.ToUpperInvariant());
-                        }
-                    });
+                    app.UseSwaggerUI();
                 }
 
                 app.UseCustomExceptionHandler();
@@ -65,6 +57,8 @@ namespace Storage.WebApi
                     opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
 
+            services.AddSingleton<ILogger>(Logger);
+
             services.AddApplication();
 
             services.AddAutoMapper(config =>
@@ -87,6 +81,11 @@ namespace Storage.WebApi
                     policy.AllowAnyOrigin();
                 });
             });
+
+            services.AddSwaggerGen();
+
+            services.AddSingleton<ICurrentUserService, CurrentUserService>();
+            services.AddHttpContextAccessor();
         }
 
     }
