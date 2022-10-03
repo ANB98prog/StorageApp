@@ -59,7 +59,22 @@ namespace Storage.Domain
         /// <summary>
         /// File path
         /// </summary>
-        public FilePath OriginalFilePath { get; set; }
+        public string FilePath { get; set; }
+
+        /// <summary>
+        /// File url
+        /// </summary>
+        public string FileUrl { 
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(FilePath))
+                {
+                    return string.Join("/", (FilePath.Split(Path.DirectorySeparatorChar)));
+                }
+
+                return string.Empty;
+            }
+        }
 
         /// <summary>
         /// Image attributes

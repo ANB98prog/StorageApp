@@ -344,7 +344,7 @@ namespace Storage.Application.Common.Services
             // Save file to storage
             var savedFilePath = await _fileService.UploadFileAsync(file, cancellationToken);
 
-            upload.OriginalFilePath = _mapper.Map<UploadedFileModel, FilePath>(savedFilePath);
+            upload.FilePath = savedFilePath.RelativePath;
 
             // Index file in db
             var indexedDataId = await _storageDataService.AddDataToStorageAsync<BaseFile>(upload);
