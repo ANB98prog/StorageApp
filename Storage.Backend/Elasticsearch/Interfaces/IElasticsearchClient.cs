@@ -98,6 +98,15 @@ namespace Elasticsearch.Interfaces
         /// <returns>Documents</returns>
         public Task<Models.SearchResponse<TDocument>> SearchAsync<TDocument>(SearchRequest<TDocument> request, CancellationToken cancellationToken = default) where TDocument : class;
 
+        /// <summary>
+        /// Searches documents
+        /// </summary>
+        /// <typeparam name="TDocument">Documents types</typeparam>
+        /// <param name="request">Search request</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Documents</returns>
+        public Task<Models.SearchResponse<TDocument>> SearchAsync<TDocument>(Func<SearchDescriptor<TDocument>, ISearchRequest> request, CancellationToken cancellationToken = default) where TDocument : class;
+
         #endregion
 
         #region Delete

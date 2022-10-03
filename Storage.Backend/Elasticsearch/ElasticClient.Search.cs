@@ -114,5 +114,55 @@ namespace Elasticsearch
                 throw new UnexpectedElasticException(ErrorMessages.UNEXPECTED_ERROR_SEARCHING_DOCUMENTS(), ex);
             }
         }
+
+        /// <summary>
+        /// Searches documents
+        /// </summary>
+        /// <typeparam name="TDocument">Documents types</typeparam>
+        /// <param name="index">Index to search in</param>
+        /// <param name="request">Search request</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Documents</returns>
+        public async Task<Models.SearchResponse<TDocument>> SearchAsync<TDocument>(Func<SearchDescriptor<TDocument>, ISearchRequest> request, CancellationToken cancellationToken = default) where TDocument : class
+        {
+            try
+            {
+                var result = await _client.SearchAsync<TDocument>(request);
+
+                if (!result.IsValid)
+                {
+                    if ((result.ServerError?.Error?.Reason ?? string.Empty)
+                        .StartsWith(ElasticConstants.INDEX_NOT_EXISTS_SERVER_MESSAGE))
+                    {
+                        var indexNameReg = Regex.Match(result.ServerError.Error.Reason, @"\[\w*\]");
+
+                        var index = "";
+                        if (indexNameReg != null
+                            && indexNameReg.Success)
+                        {
+                            index = Regex.Replace(indexNameReg.Value, @"[\[\]]", string.Empty);
+                        }
+
+                        throw new IndexNotFoundException(index);
+                    }
+
+                    return null;
+                }
+
+                return result.MapHits();
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw ex;
+            }
+            catch (IndexNotFoundException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new UnexpectedElasticException(ErrorMessages.UNEXPECTED_ERROR_SEARCHING_DOCUMENTS(), ex);
+            }
+        }
     }
 }
