@@ -9,6 +9,12 @@ namespace Storage.Application.Common.Exceptions
         /// </summary>
         public string UserFriendlyMessage { get; set; }
 
+        public BaseServiceException(string message)
+            : base(message)
+        {
+            UserFriendlyMessage = message;
+        }
+
         public BaseServiceException(string message, Exception innerException)
             : base(message, innerException)
         {

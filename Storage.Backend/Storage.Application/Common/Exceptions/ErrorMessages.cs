@@ -60,5 +60,17 @@
         /// Unexpected error message while add item to elastic storage
         /// </summary>
         public const string UNEXPECTED_ERROR_WHILE_ADD_ITEM_TO_STORAGE_MESSAGE = "Unexpected error occured while add item to elastic storage.";
+
+        /// <summary>
+        /// Item not found error message
+        /// </summary>
+        /// <param name="id">Item id</param>
+        /// <returns>Error message</returns>
+        public static string ItemNotFoundErrorMessage(string id) => $"Item with '{id}' id not found!";
+
+        /// <summary>
+        /// Unexpected eeor while get image by id
+        /// </summary>
+        public const string UNEXPECTED_ERROR_WHILE_GET_IMAGE_BY_ID_MESSAGE = "Unexpected error occured while get image by id.";
     }
 }
