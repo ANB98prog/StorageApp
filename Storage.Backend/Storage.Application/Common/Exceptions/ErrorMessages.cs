@@ -72,5 +72,10 @@
         /// Unexpected eeor while get image by id
         /// </summary>
         public const string UNEXPECTED_ERROR_WHILE_GET_IMAGE_BY_ID_MESSAGE = "Unexpected error occured while get image by id.";
+
+        /// <summary>
+        /// Unexpected error while get images list
+        /// </summary>
+        public const string UNEXPECTED_ERROR_WHILE_SEARCH_IMAGES_MESSAGE = "Unexpected error occured while get list of images.";
     }
 }

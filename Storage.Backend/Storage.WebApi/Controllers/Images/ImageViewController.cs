@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Storage.Application.Images.Queries.GetImage;
+using Storage.Application.Images.Queries.GetImagesList;
 using Storage.Application.Images.Queries.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Storage.WebApi.Controllers.Images
 {
@@ -13,7 +9,7 @@ namespace Storage.WebApi.Controllers.Images
     public class ImageViewController : BaseController
     {
         [HttpGet("{id}")]
-        public async Task<ActionResult<ImageVm>> Get(Guid id)
+        public async Task<ActionResult<ImageVm>> GetAsync(Guid id)
         {
             var query = new GetImageByIdQuery()
             {
@@ -24,5 +20,14 @@ namespace Storage.WebApi.Controllers.Images
 
             return Ok(vm);
         }
+
+        [HttpGet]
+        public async Task<ActionResult<ImageListVm>> SearchAsync([FromQuery] GetImagesListQuery query)
+        {
+            var vm = await Mediator.Send(query);
+
+            return Ok(vm);
+        }
+
     }
 }
