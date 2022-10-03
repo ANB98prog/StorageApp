@@ -2,12 +2,14 @@ using Mapper;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Serilog;
 using Storage.Application;
+using Storage.Application.Images.Queries.GetImage;
 using Storage.Application.Interfaces;
 using Storage.Domain;
 using Storage.WebApi.Common;
 using Storage.WebApi.Middleware;
 using Storage.WebApi.Services;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Text.Json.Serialization;
 using ILogger = Serilog.ILogger;
 
@@ -62,10 +64,14 @@ namespace Storage.WebApi
 
             services.AddApplication();
 
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => a.GetName().Name.StartsWith("Storage."));
+
             services.AddAutoMapper(config =>
             {
-                config.AddProfile(new AssemblyMappingProfile(Assembly.GetExecutingAssembly()));
-                config.AddProfile(new AssemblyMappingProfile(typeof(BaseFile).Assembly));
+                foreach (var assembly in assemblies)
+                {
+                    config.AddProfile(new AssemblyMappingProfile(assembly));
+                }
             });
 
             services.Configure<KestrelServerOptions>(options =>
