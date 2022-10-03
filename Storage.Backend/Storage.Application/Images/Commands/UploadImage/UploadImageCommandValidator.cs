@@ -19,7 +19,7 @@ namespace Storage.Application.Images.Commands.UploadImage
             RuleFor(uploadImageCommand =>
                 uploadImageCommand.ImageFile.Length).GreaterThan(0);
             RuleFor(uploadImageCommand =>
-                FileHelper.GetFileType(uploadImageCommand.ImageFile.FileName)).Equal(Domain.FileType.Image);
+                uploadImageCommand.FileType).Equal(Domain.FileType.Image.ToString());
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using FluentValidation;
+using System.Net;
 using System.Text.Json;
 
 namespace Storage.WebApi.Middleware
@@ -42,7 +43,10 @@ namespace Storage.WebApi.Middleware
             var result = string.Empty;
             switch (exception)
             {
-                 //Handle exceptions
+                case ValidationException validationException:
+                    code = HttpStatusCode.BadRequest;
+                    result = JsonSerializer.Serialize(validationException.Errors);
+                    break;
             }
 
             context.Response.ContentType = "application/json";
