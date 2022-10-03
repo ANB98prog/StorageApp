@@ -4,7 +4,7 @@ using Storage.Domain;
 using System;
 using System.Collections.Generic;
 
-namespace Storage.Application.Images.Queries.GetImage
+namespace Storage.Application.Images.Queries.Models
 {
     /// <summary>
     /// Image view model

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Storage.Application.Images.Queries.GetImage;
+using Storage.Application.Images.Queries.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

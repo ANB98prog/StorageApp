@@ -3,6 +3,7 @@ using Elasticsearch.Exceptions;
 using Elasticsearch.Interfaces;
 using MediatR;
 using Storage.Application.Common.Exceptions;
+using Storage.Application.Images.Queries.Models;
 using Storage.Domain;
 using System;
 using System.Threading;

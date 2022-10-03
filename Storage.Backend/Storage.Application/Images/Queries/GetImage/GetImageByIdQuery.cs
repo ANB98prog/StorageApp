@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Storage.Application.Images.Queries.Models;
 using System;
 
 namespace Storage.Application.Images.Queries.GetImage
