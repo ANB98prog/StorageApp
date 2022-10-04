@@ -15,6 +15,6 @@
         /// <summary>
         /// Default page number
         /// </summary>
-        public const int DEFAULT_PAGE_NUMBER = 1;
+        public const int DEFAULT_PAGE_NUMBER = 0;
     }
 }
