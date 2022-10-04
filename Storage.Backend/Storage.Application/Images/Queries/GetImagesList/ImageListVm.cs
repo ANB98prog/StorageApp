@@ -21,7 +21,7 @@ namespace Storage.Application.Images.Queries.GetImagesList
         { 
             get
             {
-                return Images.Count;
+                return Images?.Count ?? 0;
             }
         }
 

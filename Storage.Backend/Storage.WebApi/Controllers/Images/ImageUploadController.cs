@@ -4,10 +4,23 @@ using Storage.WebApi.Models;
 
 namespace Storage.WebApi.Controllers.Images
 {
+    /// <summary>
+    /// Endpoint to upload images to storage
+    /// </summary>
+    [Produces("application/json")]
     [Route("api/images/upload")]
     public class ImageUploadController : BaseController
     {
-        [HttpPost]        
+        /// <summary>
+        /// Uploads image to storage
+        /// </summary>
+        /// <param name="request">Request model</param>
+        /// <returns>Uploaded image id </returns>
+        /// <response code="201">Created</response>
+        /// <response code="400">BadRequest</response>
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UploadImageAsync([FromForm] UploadFileRequestModel request)
         {
             var command = Mapper.Map<UploadFileRequestModel, UploadImageCommand>(request);
@@ -16,7 +29,7 @@ namespace Storage.WebApi.Controllers.Images
 
             var imageId = await Mediator.Send(command);
 
-            return Ok(imageId);
+            return Created("", imageId);
         }
 
         /// <summary>
