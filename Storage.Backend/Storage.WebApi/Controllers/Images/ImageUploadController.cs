@@ -45,7 +45,7 @@ namespace Storage.WebApi.Controllers.Images
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UploadImagesAsync([FromForm] UploadFileRequestModel request)
         {
-            var command = Mapper.Map<UploadFileRequestModel, UploadManyImagesCommand>(request);
+            var command = Mapper.Map<UploadFileRequestModel, UploadManyImagesArchiveCommand>(request);
 
             command.UserId = UserId;
 

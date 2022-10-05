@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace Storage.Application.Images.Commands.UploadManyImages
+namespace Storage.Application.Images.Commands.UploadManyImagesArchive
 {
-    public class UploadManyImagesCommandValidator : AbstractValidator<UploadManyImagesCommand>
+    public class UploadManyImagesArchiveCommandValidator : AbstractValidator<UploadManyImagesArchiveCommand>
     {
-        public UploadManyImagesCommandValidator()
+        public UploadManyImagesArchiveCommandValidator()
         {
             RuleFor(uploadManyCommand =>
             uploadManyCommand.ImagesZipFile).NotNull().NotEmpty();

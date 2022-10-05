@@ -39,7 +39,7 @@ namespace Storage.WebApi.Models
                 .ForMember(model => model.Attributes,
                     opt => opt.MapFrom(upload => upload.Attributes));
 
-            profile.CreateMap<UploadFileRequestModel, UploadManyImagesCommand>()
+            profile.CreateMap<UploadFileRequestModel, UploadManyImagesArchiveCommand>()
                 .ForMember(model => model.ImagesZipFile,
                     opt => opt.MapFrom(upload => upload.File))
                 .ForMember(model => model.IsAnnotated,

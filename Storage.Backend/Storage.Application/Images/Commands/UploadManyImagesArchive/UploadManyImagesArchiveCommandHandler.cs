@@ -9,19 +9,19 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Storage.Application.Images.Commands.UploadManyImages
+namespace Storage.Application.Images.Commands.UploadManyImagesArchive
 {
-    public class UploadManyImagesCommandHandler
-        : IRequestHandler<UploadManyImagesCommand, List<Guid>>
+    public class UploadManyImagesArchiveCommandHandler
+        : IRequestHandler<UploadManyImagesArchiveCommand, List<Guid>>
     {
         private readonly IFileHandlerService _fileHandlerService;
 
-        public UploadManyImagesCommandHandler(IFileHandlerService fileHandlerService)
+        public UploadManyImagesArchiveCommandHandler(IFileHandlerService fileHandlerService)
         {
             _fileHandlerService = fileHandlerService;
         }
 
-        public async Task<List<Guid>> Handle(UploadManyImagesCommand request, CancellationToken cancellationToken)
+        public async Task<List<Guid>> Handle(UploadManyImagesArchiveCommand request, CancellationToken cancellationToken)
         {
             try
             {

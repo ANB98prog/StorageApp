@@ -4,9 +4,9 @@ using Storage.Application.Common.Helpers;
 using System;
 using System.Collections.Generic;
 
-namespace Storage.Application.Images.Commands.UploadManyImages
+namespace Storage.Application.Images.Commands.UploadManyImagesArchive
 {
-    public class UploadManyImagesCommand : IRequest<List<Guid>>
+    public class UploadManyImagesArchiveCommand : IRequest<List<Guid>>
     {
         public Guid UserId { get; set; }
 
