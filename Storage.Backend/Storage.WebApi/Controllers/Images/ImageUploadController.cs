@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Storage.Application.Images.Commands.UploadImage;
+using Storage.Application.Images.Commands.UploadManyImages;
 using Storage.WebApi.Models;
 
 namespace Storage.WebApi.Controllers.Images
@@ -33,13 +34,24 @@ namespace Storage.WebApi.Controllers.Images
         }
 
         /// <summary>
-        /// Тут должен быть zip файл
+        /// Uploads images to storage in zip file
         /// </summary>
-        /// <returns></returns>
-        [HttpPost("many")]
-        public async Task<IActionResult> UploadImagesAsync()
+        /// <param name="request">Request model</param>
+        /// <returns>Uploaded images ids </returns>
+        /// <response code="201">Created</response>
+        /// <response code="400">BadRequest</response>
+        [HttpPost("many/zip")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> UploadImagesAsync([FromForm] UploadFileRequestModel request)
         {
-            return Ok("Many images uploaded");
+            var command = Mapper.Map<UploadFileRequestModel, UploadManyImagesCommand>(request);
+
+            command.UserId = UserId;
+
+            var imagesIds = await Mediator.Send(command);
+
+            return Created("", imagesIds);
         }
 
         [HttpPost("annotated")]

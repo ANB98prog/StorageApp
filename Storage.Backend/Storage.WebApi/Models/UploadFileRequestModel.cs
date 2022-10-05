@@ -2,6 +2,7 @@
 using Mapper;
 using Newtonsoft.Json;
 using Storage.Application.Images.Commands.UploadImage;
+using Storage.Application.Images.Commands.UploadManyImages;
 
 namespace Storage.WebApi.Models
 {
@@ -32,6 +33,14 @@ namespace Storage.WebApi.Models
         {
             profile.CreateMap<UploadFileRequestModel, UploadImageCommand>()
                 .ForMember(model => model.ImageFile,
+                    opt => opt.MapFrom(upload => upload.File))
+                .ForMember(model => model.IsAnnotated,
+                    opt => opt.MapFrom(upload => upload.isAnnotated))
+                .ForMember(model => model.Attributes,
+                    opt => opt.MapFrom(upload => upload.Attributes));
+
+            profile.CreateMap<UploadFileRequestModel, UploadManyImagesCommand>()
+                .ForMember(model => model.ImagesZipFile,
                     opt => opt.MapFrom(upload => upload.File))
                 .ForMember(model => model.IsAnnotated,
                     opt => opt.MapFrom(upload => upload.isAnnotated))

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -67,7 +68,7 @@ namespace Storage.Application.Common.Helpers
                 throw new ArgumentException("Path does not contains file name!", nameof(filePath));
 
             var directory = Directory.GetParent(filePath);
-            
+
             if (directory != null
                 && !Directory.Exists(directory.FullName))
                 Directory.CreateDirectory(directory.FullName);
@@ -291,6 +292,7 @@ namespace Storage.Application.Common.Helpers
                 { FileType.Image, new List<string> { ".jpg", ".png", ".jpeg", ".bmp", ".tif", ".tiff", ".gif" } },
                 { FileType.Video, new List<string> { ".mp4", ".avi", ".mpg", ".mpeg", ".wmv" } },
                 { FileType.Audio, new List<string> { ".mp3", ".wav", ".wma", ".mid", ".midi", ".aiff", ".au" } },
+                { FileType.Zip, new List<string> { ".zip", ".rar" } },
             };
 
             try
@@ -300,7 +302,7 @@ namespace Storage.Application.Common.Helpers
                     throw new ArgumentNullException(nameof(filePath));
                 }
 
-                return types.FirstOrDefault(t => 
+                return types.FirstOrDefault(t =>
                         t.Value.Contains(Path.GetExtension(filePath).ToLowerInvariant()))
                             .Key;
             }

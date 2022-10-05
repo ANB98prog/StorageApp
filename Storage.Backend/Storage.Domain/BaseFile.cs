@@ -158,6 +158,8 @@ namespace Storage.Domain
         [Description("video")]
         Video,
         [Description("audio")]
-        Audio
+        Audio,
+        [Description("zip")]
+        Zip
     }
 }
