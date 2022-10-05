@@ -23,7 +23,7 @@ namespace Storage.WebApi
 
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Information)
-                .WriteTo.File("StorageWebAppLog-.txt", rollingInterval: RollingInterval.Day)
+                .WriteTo.File("StorageWebAppLog-.log", rollingInterval: RollingInterval.Day)
                 .CreateLogger();
 
             ConfigureAppServices(builder.Services, builder.Configuration, Log.Logger);

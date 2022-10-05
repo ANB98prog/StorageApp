@@ -7,3 +7,4 @@ wwwroot/
 /Storage.Backend/Storage.WebApi/StorageWebAppLog-20220929.txt
 /launchSettings.json
 /Storage.Backend/Storage.WebApi/Properties
+*.log
