@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Serilog;
-using Serilog.Sinks.File;
 using Storage.Application.Common.Exceptions;
 using Storage.Application.Common.Helpers;
 using Storage.Application.Common.Models;
@@ -206,17 +205,6 @@ namespace Storage.Application.Common.Services
 
                     var fileId = Guid.NewGuid();
                     var systemName = $"{fileId.Trunc()}{Path.GetExtension(file)}";
-
-                    FileType fileType;
-
-                    try
-                    {
-                        fileType = FileHelper.GetFileType(file);
-                    }
-                    catch (NotSupportedFileTypeException)
-                    {
-                        fileType = FileType.Unknown;
-                    }
 
                     filesData.Add(new UploadFileRequestModel
                     {
