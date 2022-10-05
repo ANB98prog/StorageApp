@@ -2,14 +2,11 @@ using Mapper;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Serilog;
 using Storage.Application;
-using Storage.Application.Images.Queries.GetImage;
 using Storage.Application.Interfaces;
-using Storage.Domain;
 using Storage.WebApi.Common;
 using Storage.WebApi.Middleware;
 using Storage.WebApi.Services;
 using System.Reflection;
-using System.Reflection.Emit;
 using System.Text.Json.Serialization;
 using ILogger = Serilog.ILogger;
 
