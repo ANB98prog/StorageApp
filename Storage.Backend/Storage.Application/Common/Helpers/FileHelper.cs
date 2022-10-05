@@ -1,4 +1,6 @@
-﻿using Storage.Application.Common.Exceptions;
+﻿using SharpCompress.Archives;
+using SharpCompress.Archives.Rar;
+using Storage.Application.Common.Exceptions;
 using Storage.Domain;
 using System;
 using System.Collections.Generic;
@@ -254,23 +256,21 @@ namespace Storage.Application.Common.Helpers
         /// </summary>
         /// <param name="archivePath">Archive file</param>
         /// <param name="destinationPath">Unzipped files path</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="FileNotFoundException"></exception>
+        /// <exception cref="NotSupportedArchiveTypeException"></exception>
         /// <exception cref="Exception"></exception>
         public static string UnzipFolder(string archivePath, string destinationPath = null)
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(archivePath))
-                    throw new ArgumentNullException(nameof(archivePath));
-                if (!File.Exists(archivePath))
-                    throw new FileNotFoundException("Couldn't found archive file", archivePath);
-                if (string.IsNullOrWhiteSpace(destinationPath))
-                    destinationPath = Path.Combine(Directory.GetParent(archivePath)?.FullName, Path.GetFileNameWithoutExtension(archivePath));
-
-                ZipFile.ExtractToDirectory(archivePath, destinationPath);
-
-                return destinationPath;
+                return ArchiveHelper.UnzipFile(archivePath, destinationPath);
             }
             catch (ArgumentNullException ex)
+            {
+                throw ex;
+            }
+            catch (NotSupportedArchiveTypeException ex)
             {
                 throw ex;
             }
