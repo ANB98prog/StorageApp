@@ -195,7 +195,7 @@ namespace Storage.Application.Common.Services
             /*Unzip*/
             var unzipPath = FileHelper.UnzipFolder(tempPath);
 
-            var files = Directory.GetFiles(unzipPath);
+            var files = Directory.GetFiles(unzipPath, "*.*", SearchOption.AllDirectories);
 
             /*Need to add attributes to each file*/
             if (files.Any())
