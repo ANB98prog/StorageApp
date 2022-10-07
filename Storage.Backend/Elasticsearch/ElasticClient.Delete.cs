@@ -17,8 +17,12 @@ namespace Elasticsearch
         /// <param name="index">Index to delete in</param>
         /// <param name="documentId">Document to delete</param>
         /// <param name="cancellationToken">Cancellation token</param>
-        /// <returns></returns>
-        public async Task DeleteDocumentAsync<TDocument>(string index, string documentId, CancellationToken cancellationToken = default) where TDocument : class
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="IndexNotFoundException"></exception>
+        /// <exception cref="DeleteDocumentException"></exception>
+        /// <exception cref="UnexpectedElasticException"></exception>
+        /// <returns>Acknowledged</returns>
+        public async Task<bool> DeleteDocumentAsync(string index, string documentId, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -35,19 +39,29 @@ namespace Elasticsearch
                     throw new IndexNotFoundException(index);
                 }
 
-                var result = await _client.DeleteAsync<TDocument>(documentId, s => s.Index(index), cancellationToken);
+                var result = await _client.DeleteAsync(new DeleteRequest(index, documentId), cancellationToken);
 
-                if (!result.IsValid
+               if (!result.IsValid
                     && result.ServerError != null)
                 {
-                    throw new UnexpectedElasticException();
+                    throw new DeleteDocumentException(ErrorMessages.ERROR_DELETE_BY_ID_DOCUMENT(index, documentId), result.OriginalException);
                 }
+                else if (!result.IsValid)
+                {
+                    return false;
+                }
+
+                return true;
             }
             catch (ArgumentNullException ex)
             {
                 throw ex;
             }
             catch (IndexNotFoundException ex)
+            {
+                throw ex;
+            }
+            catch (DeleteDocumentException ex)
             {
                 throw ex;
             }

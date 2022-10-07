@@ -2,6 +2,7 @@
 using Storage.Application.Common.Helpers;
 using Storage.Application.Common.Models;
 using Storage.Application.Interfaces;
+using Storage.Domain;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -210,8 +211,66 @@ namespace Storage.Application.Common.Services
             }
         }
 
+        public void DeleteFile(string filePath)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(filePath))
+                {
+                    throw new ArgumentNullException(nameof(filePath));
+                }
+
+                var absolutePath = Path.Combine(_localStorageDir, filePath);
+
+                FileHelper.RemoveFile(absolutePath);
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw ex;
+            }
+            catch (IOException ex)
+            {
+                throw new LocalStorageException("Cannot remove file, file is in use!", ex.InnerException);
+            }
+            catch (Exception ex)
+            {
+                throw new LocalStorageException("Unexpected error occured while file removing.", ex.InnerException);
+            }
+        }
+
+        public void DeleteFiles(List<string> filesPath)
+        {
+            try
+            {
+                if (filesPath.Any())
+                {
+                    foreach (var filePath in filesPath)
+                    {
+                        if (string.IsNullOrWhiteSpace(filePath))
+                        {
+                            throw new ArgumentNullException(nameof(filePath));
+                        }
+
+                        var absolutePath = Path.Combine(_localStorageDir, filePath);
+
+                        FileHelper.RemoveFile(absolutePath);  
+                    }
+                }
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new LocalStorageException("Unexpected error occured while file removing.", ex.InnerException);
+            }
+        }
+
         public void Dispose()
         {
         }
+
+        
     }
 }

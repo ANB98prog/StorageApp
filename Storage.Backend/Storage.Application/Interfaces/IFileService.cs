@@ -42,5 +42,18 @@ namespace Storage.Application.Interfaces
         /// <param name="filesPath">Path to file</param>
         /// <returns>Zip file stream</returns>
         public Task<FileStream> DownloadManyFilesAsync(List<string> filesPath, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Deletes file from storage
+        /// </summary>
+        /// <param name="filePath">File path</param>
+        /// <returns></returns>
+        public void DeleteFile(string filePath);
+
+        /// <summary>
+        /// Deletes files from storage
+        /// </summary>
+        /// <param name="filesPath">Files paths</param>
+        public void DeleteFiles(List<string> filesPath);
     }
 }

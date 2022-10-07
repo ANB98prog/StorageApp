@@ -113,12 +113,11 @@ namespace Elasticsearch.Interfaces
         /// <summary>
         /// Deletes document
         /// </summary>
-        /// <typeparam name="TDocument">Document type</typeparam>
         /// <param name="index">Index to delete in</param>
         /// <param name="documentId">Document to delete</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns></returns>
-        public Task DeleteDocumentAsync<TDocument>(string index, string documentId, CancellationToken cancellationToken = default) where TDocument : class;
+        public Task<bool> DeleteDocumentAsync(string index, string documentId, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Deletes document

@@ -19,6 +19,11 @@ namespace Elasticsearch.Exceptions
             UserfriendlyMessage = message;
         }
 
+        public UnexpectedElasticException(string userFriendlyMessage, string message) : base(message)
+        {
+            UserfriendlyMessage = userFriendlyMessage;
+        }
+
         public UnexpectedElasticException(string? message, Exception? innerException) : base(message, innerException)
         {
             UserfriendlyMessage = message;

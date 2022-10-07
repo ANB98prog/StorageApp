@@ -51,5 +51,19 @@ namespace Storage.Application.Interfaces
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Downloading task</returns>
         public Task<FileStream> DownloadManyFilesAsync(List<string> files, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Removes file
+        /// </summary>
+        /// <param name="id">File id</param>
+        /// <returns>Acknowledged</returns>
+        public Task<DeleteFileModel> RemoveFileAsync(Guid id);
+
+        /// <summary>
+        /// Removes file
+        /// </summary>
+        /// <param name="ids">Files ids</param>
+        /// <returns>Acknowledged</returns>
+        public Task<DeleteFilesModel> RemoveFilesAsync(List<Guid> ids);
     }
 }

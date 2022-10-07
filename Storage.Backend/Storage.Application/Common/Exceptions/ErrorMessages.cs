@@ -1,4 +1,6 @@
-﻿namespace Storage.Application.Common.Exceptions
+﻿using System;
+
+namespace Storage.Application.Common.Exceptions
 {
     public static class ErrorMessages
     {
@@ -35,6 +37,11 @@
         public const string UNEXPECTED_ERROR_WHILE_DOWNLOAD_FILE_MESSAGE = "Unexpected error occured while download file.";
 
         /// <summary>
+        /// Unexpected error message while remove file
+        /// </summary>
+        public static string UNEXPECTED_ERROR_WHILE_FILE_REMOVE_MESSAGE => "Unexpected error occured while remove file.";
+
+        /// <summary>
         /// Error message if uploaded not supported file type
         /// </summary>
         /// <param name="fileExt">File extension</param>
@@ -45,6 +52,11 @@
         /// Error message while download file if it not found
         /// </summary>
         public static string FileNotFoundErrorMessage(string fileName) => $"Could not find file '{fileName}'";
+
+        /// <summary>
+        /// File not found exception
+        /// </summary>
+        public static string FILE_NOT_FOUND_ERROR_MESSAGE => "File not found!";
 
         /// <summary>
         /// Error message if required parameter are empty
@@ -60,6 +72,11 @@
         /// Unexpected error message while add item to elastic storage
         /// </summary>
         public const string UNEXPECTED_ERROR_WHILE_ADD_ITEM_TO_STORAGE_MESSAGE = "Unexpected error occured while add item to elastic storage.";
+
+        /// <summary>
+        /// Unexpected error message while get item info from elastic storage
+        /// </summary>
+        public const string UNEXPECTED_ERROR_WHILE_GET_ITEM_INFO_FROM_STORAGE_MESSAGE = "Unexpected error occured while get item info from elastic storage.";
 
         /// <summary>
         /// Item not found error message
@@ -82,5 +99,12 @@
         /// Error message if passed unsupported archive type
         /// </summary>
         public static string NotSupportedArchiveTypeErrorMessage(string type) => $"Not supported archive type: '{type}'";
+
+        /// <summary>
+        /// Remove item error message
+        /// </summary>
+        /// <param name="id">Item id</param>
+        /// <returns>Error message</returns>
+        public static string RemovingItemFromStorageErrorMessage(string id) => $"Cannot remove item with id '{id}'";
     }
 }

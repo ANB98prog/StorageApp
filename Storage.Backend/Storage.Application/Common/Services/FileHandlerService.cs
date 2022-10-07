@@ -339,5 +339,102 @@ namespace Storage.Application.Common.Services
 
             return indexedDataId;
         }
+
+        /// <summary>
+        /// Removes file
+        /// </summary>
+        /// <param name="id">File id to remove</param>
+        /// <returns><see cref="DeleteFileModel"/></returns>
+        /// <exception cref="FileHandlerServiceException"></exception>
+        public async Task<DeleteFileModel> RemoveFileAsync(Guid id)
+        {
+            try
+            {
+                _logger.Information($"Try to remove file. File id: {id}");
+
+                var result = new DeleteFileModel();
+
+                if (id == Guid.Empty)
+                {
+                    throw new ArgumentNullException(nameof(id));
+                }
+
+                var file = await _storageDataService.GetFileInfoAsync(id);
+
+                if(file != null
+                    && !string.IsNullOrWhiteSpace(file.FilePath))
+                {
+                    try
+                    {
+                        _fileService.DeleteFile(file.FilePath);
+
+                        var deleted = await _storageDataService.RemoveFileFromStorageAsync(id);
+
+                        if (!deleted)
+                        {
+                            result.Acknowledged = false;
+                            result.Error = new DeleteErrorModel
+                            {
+                                FileId = id,
+                                ErrorMessage = ErrorMessages.RemovingItemFromStorageErrorMessage(id.ToString())
+                            };
+                        }
+                    }                    
+                    catch (LocalStorageException ex)
+                    {
+                        result.Acknowledged = false;
+                        result.Error = new DeleteErrorModel
+                        {
+                            FileId = id,
+                            ErrorMessage = ex.UserFriendlyMessage
+                        };
+                    }
+                    catch (Exception ex)
+                    {
+                        result.Acknowledged = false;
+                        result.Error = new DeleteErrorModel
+                        {
+                            FileId = id,
+                            ErrorMessage = ErrorMessages.UNEXPECTED_ERROR_WHILE_FILE_REMOVE_MESSAGE
+                        };
+                    }
+                }
+                else
+                {
+                    result.Acknowledged = false;
+                    result.Error = new DeleteErrorModel
+                    {
+                        FileId = id,
+                        ErrorMessage = ErrorMessages.FILE_NOT_FOUND_ERROR_MESSAGE
+                    };
+                }
+
+                if (!result.Acknowledged)
+                {
+                    _logger.Information($"File deleted with errors.");
+                }
+                else
+                {
+                    _logger.Information($"File deleted successfully.");
+                }                
+
+                return result;
+            }
+            catch (ArgumentNullException ex)
+            {
+                _logger.Error(ex, ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName));
+                throw new FileHandlerServiceException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_FILES_MESSAGE);
+                throw new FileHandlerServiceException(ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_FILES_MESSAGE, ex);
+            }
+        }
+
+        public Task<DeleteFilesModel> RemoveFilesAsync(List<Guid> ids)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
