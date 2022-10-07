@@ -48,7 +48,7 @@ namespace Storage.Application.Images.Queries.GetImagesList
             }
             set
             {
-                _pageNumber = value - 1;
+                _pageNumber = value;
 
                 if(_pageNumber < 0)
                 {
