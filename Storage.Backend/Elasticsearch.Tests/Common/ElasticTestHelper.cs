@@ -166,6 +166,25 @@ namespace Elasticsearch.Tests.Common
             };
         }
 
+        public static FakeResponse GetRefreshResponse()
+        {
+            var response = new
+            {
+                _shards = new
+                {
+                    total = 2,
+                    successful = 1,
+                    failed = 0
+                }
+            };
+
+            return new FakeResponse
+            {
+                Body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(response)),
+                StatusCode = (int)HttpStatusCode.NotFound,
+            };
+        }
+
         public static FakeResponse GetBulkDocumentsDeletedSuccessResponse()
         {
             var response = new

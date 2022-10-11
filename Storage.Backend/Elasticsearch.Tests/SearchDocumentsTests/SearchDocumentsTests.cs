@@ -61,10 +61,13 @@ namespace Elasticsearch.Tests.SearchDocumentsTests
                 .Setup(s => s.GetResponseData(It.Is<string>(m => m.StartsWith($"{_fixture.ElasticBasePath}/{indexName}/_doc/{id}")), Net.HttpMethod.GET))
                 .Returns(ElasticTestHelper.GetByIdNotFoundResponse(id, indexName));
 
+            responseMock
+                .Setup(s => s.GetResponseData(It.Is<string>(m => m.Equals($"{_fixture.ElasticBasePath}/{indexName}/_refresh")), Net.HttpMethod.POST))
+                .Returns(ElasticTestHelper.GetRefreshResponse());
 
-            var result = await client.GetByIdAsync<TestModel>(indexName, id);
+            var error = await Assert.ThrowsAsync<ItemNotFoundException>(async () => await client.GetByIdAsync<TestModel>(indexName, id));
 
-            Assert.Null(result);
+            Assert.Equal(error.Message, "Item with 'id' is not found!");
 
             responseMock.Verify(v => v.GetResponseData(It.Is<string>(m => m.Equals($"{_fixture.ElasticBasePath}/{indexName}")), Net.HttpMethod.HEAD), Times.Once);
             responseMock.Verify(v => v.GetResponseData(It.Is<string>(m => m.StartsWith($"{_fixture.ElasticBasePath}/{indexName}/_doc/{id}")), Net.HttpMethod.GET), Times.Once);

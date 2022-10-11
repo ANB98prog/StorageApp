@@ -30,6 +30,10 @@ namespace Storage.Application.Files.Commands.DeleteFile
             {
                 throw new FileHandlerServiceException(ex.Message, ErrorMessages.ArgumentNullExeptionMessage(ex.ParamName));
             }
+            catch (NotFoundException ex)
+            {
+                throw ex;
+            }
             catch (FileHandlerServiceException ex)
             {
                 throw ex;

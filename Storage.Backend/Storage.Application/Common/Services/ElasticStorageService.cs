@@ -116,6 +116,11 @@ namespace Storage.Application.Common.Services
                 _logger.Error(ex, ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName));
                 throw new ElasticStorageServiceException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
             }
+            catch (ItemNotFoundException ex)
+            {
+                _logger.Error(ex, ex.Message);
+                throw new NotFoundException(id.ToString());
+            }
             catch (UnexpectedElasticException ex)
             {
                 _logger.Error(ex, ex.UserfriendlyMessage);

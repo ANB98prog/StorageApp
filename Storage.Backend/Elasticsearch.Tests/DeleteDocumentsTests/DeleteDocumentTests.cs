@@ -37,6 +37,9 @@ namespace Elasticsearch.Tests.DeleteDocumentsTests
                 .Returns(ElasticTestHelper.GetDocumentDeletedSuccessResponse(indexName, docId));
             #endregion
 
+            responseMock
+                .Setup(s => s.GetResponseData(It.Is<string>(m => m.Equals($"{_fixture.ElasticBasePath}/{indexName}/_refresh")), Net.HttpMethod.POST))
+                .Returns(ElasticTestHelper.GetRefreshResponse());
 
             await client.DeleteDocumentAsync(indexName, docId);
 
@@ -161,6 +164,10 @@ namespace Elasticsearch.Tests.DeleteDocumentsTests
                 .Setup(s => s.GetResponseData(It.Is<string>(m => m.Equals($"{_fixture.ElasticBasePath}/{indexName}/_delete_by_query")), Net.HttpMethod.POST))
                 .Returns(ElasticTestHelper.GetBulkDocumentsDeletedSuccessResponse());
             #endregion
+
+            responseMock
+                .Setup(s => s.GetResponseData(It.Is<string>(m => m.Equals($"{_fixture.ElasticBasePath}/{indexName}/_refresh")), Net.HttpMethod.POST))
+                .Returns(ElasticTestHelper.GetRefreshResponse());
 
             await client.DeleteBulkByIdAsync(indexName, ids);
 

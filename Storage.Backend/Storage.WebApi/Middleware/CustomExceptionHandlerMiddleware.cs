@@ -1,7 +1,8 @@
-﻿using FluentValidation;
+﻿using Storage.Application.Common.Exceptions;
 using Storage.WebApi.Common.Exceptions;
 using System.Net;
 using System.Text.Json;
+using ValidationException = FluentValidation.ValidationException;
 
 namespace Storage.WebApi.Middleware
 {
@@ -48,6 +49,10 @@ namespace Storage.WebApi.Middleware
                     code = HttpStatusCode.BadRequest;
                     var errmsg = validationException.Errors.Select(msg => msg.ErrorMessage);
                     result = JsonSerializer.Serialize(new UserfriendlyException(errmsg));
+                    break;
+                case NotFoundException notFoundException:
+                    code = HttpStatusCode.NotFound;
+                    result = JsonSerializer.Serialize(new UserfriendlyException(notFoundException.UserFriendlyMessage));
                     break;
             }
 

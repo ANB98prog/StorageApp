@@ -1,6 +1,5 @@
 ﻿using Elasticsearch.Common;
 using Elasticsearch.Exceptions;
-using Elasticsearch.Models;
 using Nest;
 using System;
 using System.Collections.Generic;
@@ -20,6 +19,10 @@ namespace Elasticsearch
         /// <param name="index">Documents' index</param>
         /// <param name="id">Document id</param>
         /// <param name="cancellationToken">Cancellation token</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ItemNotFoundException"></exception>
+        /// <exception cref="IndexNotFoundException"></exception>
+        /// <exception cref="UnexpectedElasticException"></exception>
         /// <returns>Document info</returns>
         public async Task<TDocument?> GetByIdAsync<TDocument>(string index, string id, CancellationToken cancellationToken = default) where TDocument : class
         {
@@ -43,12 +46,16 @@ namespace Elasticsearch
                 if (!result.IsValid
                     || !result.Found)
                 {
-                    return null;
+                    throw new ItemNotFoundException(id);
                 }
 
                 return result.Source;
             }
             catch (ArgumentNullException ex)
+            {
+                throw ex;
+            }
+            catch (ItemNotFoundException ex)
             {
                 throw ex;
             }

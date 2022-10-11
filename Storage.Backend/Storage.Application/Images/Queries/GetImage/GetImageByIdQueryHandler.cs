@@ -44,6 +44,10 @@ namespace Storage.Application.Images.Queries.GetImage
             {
                 throw new ServiceArgumentException(ex.Message, ErrorMessages.ArgumentNullExeptionMessage(ex.ParamName));
             }
+            catch (ItemNotFoundException ex)
+            {
+                throw new NotFoundException(request.Id.ToString());
+            }
             catch (IndexNotFoundException ex)
             {
                 throw new NotFoundException(request.Id.ToString(), ex);

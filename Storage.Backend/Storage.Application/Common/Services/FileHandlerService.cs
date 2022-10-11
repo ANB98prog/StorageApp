@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Elasticsearch.Exceptions;
 using Nest;
 using Serilog;
 using Storage.Application.Common.Exceptions;
@@ -12,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ErrorMessages = Storage.Application.Common.Exceptions.ErrorMessages;
 using FileAttributes = Storage.Application.Common.Models.FileAttributes;
 
 namespace Storage.Application.Common.Services
@@ -425,6 +427,11 @@ namespace Storage.Application.Common.Services
             {
                 _logger.Error(ex, ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName));
                 throw new FileHandlerServiceException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
+            }
+            catch (NotFoundException ex)
+            {
+                _logger.Error(ex, ex.Message);
+                throw new NotFoundException(id.ToString());
             }
             catch (Exception ex)
             {
