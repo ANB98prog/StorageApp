@@ -107,7 +107,8 @@ namespace Elasticsearch
                         {
                             Field = "_id",
                             Terms = ids.ToArray()
-                        }
+                        },
+                        WaitForCompletion = true
                     };
                                         
                     var result = await _client.DeleteByQueryAsync(req);
