@@ -88,6 +88,15 @@ namespace Elasticsearch.Interfaces
         /// <returns>Found document</returns>
         public Task<TDocument?> GetByIdAsync<TDocument>(string index, string id, CancellationToken cancellationToken = default) where TDocument : class;
 
+        /// <summary>
+        /// Gets many documents by ids
+        /// </summary>
+        /// <typeparam name="TDocument">Document type</typeparam>
+        /// <param name="index">Documents' index</param>
+        /// <param name="ids">Documents ids</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Removed doc id</returns>
+        public Task<List<TDocument>> GetManyByIdsAsync<TDocument>(string index, List<string> ids, CancellationToken cancellationToken = default) where TDocument : class;
 
         /// <summary>
         /// Searches documents
@@ -122,12 +131,21 @@ namespace Elasticsearch.Interfaces
         /// <summary>
         /// Deletes document
         /// </summary>
-        /// <typeparam name="TDocument">Document type</typeparam>
         /// <param name="index">Index to delete in</param>
         /// <param name="ids">List of documents ids to delete</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns></returns>
-        public Task DeleteBulkAsync<TDocument>(string index, IEnumerable<string> ids, CancellationToken cancellationToken = default) where TDocument : class;
+        public Task DeleteBulkByIdAsync(string index, IEnumerable<string> ids, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Deletes bulk of documents
+        /// </summary>
+        /// <typeparam name="TDocument">Documents types</typeparam>
+        /// <param name="index">Index to delete from</param>
+        /// <param name="docs">Documents to delete</param>
+        /// <param name="cancellationToken">Cancallation token</param>
+        /// <returns></returns>
+        public Task DeleteBulkAsync<TDocument>(string index, IEnumerable<TDocument> docs, CancellationToken cancellationToken = default) where TDocument : class;
 
         /// <summary>
         /// Deletes document

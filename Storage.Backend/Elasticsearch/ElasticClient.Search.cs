@@ -3,6 +3,8 @@ using Elasticsearch.Exceptions;
 using Elasticsearch.Models;
 using Nest;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,7 +20,7 @@ namespace Elasticsearch
         /// <param name="index">Documents' index</param>
         /// <param name="id">Document id</param>
         /// <param name="cancellationToken">Cancellation token</param>
-        /// <returns>Removed doc id</returns>
+        /// <returns>Document info</returns>
         public async Task<TDocument?> GetByIdAsync<TDocument>(string index, string id, CancellationToken cancellationToken = default) where TDocument : class
         {
             try
@@ -62,6 +64,62 @@ namespace Elasticsearch
                                         ? string.Empty : $"'{index}'";
 
                 throw new UnexpectedElasticException(ErrorMessages.ERROR_GET_BY_ID_DOCUMENT(indexName, docId), ex);
+            }
+        }
+
+        /// <summary>
+        /// Gets many documents by ids
+        /// </summary>
+        /// <typeparam name="TDocument">Document type</typeparam>
+        /// <param name="index">Documents' index</param>
+        /// <param name="ids">Documents ids</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Removed doc id</returns>
+        public async Task<List<TDocument>> GetManyByIdsAsync<TDocument>(string index, List<string> ids, CancellationToken cancellationToken = default) where TDocument : class
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(index))
+                    throw new ArgumentNullException(nameof(index));
+
+                if (ids.Any())
+                {
+                    var exists = await _client.Indices.ExistsAsync(index, ct: cancellationToken);
+
+                    if (!exists.IsValid
+                        || !exists.Exists)
+                    {
+                        throw new IndexNotFoundException(index);
+                    }
+
+                    var result = await _client.GetManyAsync<TDocument>(ids, index, cancellationToken);
+
+                    if (!result.Any())
+                    {
+                        return new List<TDocument>();
+                    }
+
+                    return result.Where(item => item.Found)
+                                    .Select(hit => hit.Source)
+                                        .ToList(); 
+                }
+
+                return new List<TDocument>();
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw ex;
+            }
+            catch (IndexNotFoundException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                var indexName = string.IsNullOrWhiteSpace(index)
+                                        ? string.Empty : $"'{index}'";
+
+                throw new UnexpectedElasticException(ErrorMessages.ERROR_GET_MANY_BY_IDS_DOCUMENTS(indexName), ex);
             }
         }
 

@@ -13,6 +13,7 @@
         public static string ERROR_REMOVING_INDEX(string indexName) => $"Error occured while index delete. Index name '{indexName}'";
         public static string ERROR_ADDITION_DOCUMENT(string indexName) => $"Error occured while add document to {indexName} index.";
         public static string ERROR_GET_BY_ID_DOCUMENT(string indexName, string id) => $"Error occured while get document {id} from {indexName} index.";
+        public static string ERROR_GET_MANY_BY_IDS_DOCUMENTS(string indexName) => $"Error occured while get many documents from {indexName} index.";
         public static string ERROR_DELETE_BY_ID_DOCUMENT(string indexName, string id) => $"Error occured while remove document {id} from {indexName} index.";
         public static string ERROR_DELETE_BULK_DOCUMENTS(string indexName, string ids) => $"Error occured while remove bulk of documents {ids} from {indexName} index.";
 
