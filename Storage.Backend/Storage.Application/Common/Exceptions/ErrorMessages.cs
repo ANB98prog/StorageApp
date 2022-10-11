@@ -123,6 +123,6 @@ namespace Storage.Application.Common.Exceptions
         /// <param name="parameter">Parameter name</param>
         /// <param name="format">Correct format</param>
         /// <returns><Error message/returns>
-        public static string WrongParameterFormatErrorMessage(string parameter, string format) => $"Parameter '{parameter}' has wrong format. Correct format is '{format}'";
+        public static string WrongParameterFormatErrorMessage(string parameter, string paramValue, string format) => $"Parameter '{parameter}' with value '{paramValue}' has wrong format. Correct format is '{format}'";
     }
 }

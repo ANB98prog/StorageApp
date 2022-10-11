@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Storage.WebApi.Common.Exceptions;
 using System.Net;
 using System.Text.Json;
 
@@ -45,7 +46,8 @@ namespace Storage.WebApi.Middleware
             {
                 case ValidationException validationException:
                     code = HttpStatusCode.BadRequest;
-                    result = JsonSerializer.Serialize(validationException.Errors);
+                    var errmsg = validationException.Errors.Select(msg => msg.ErrorMessage);
+                    result = JsonSerializer.Serialize(new UserfriendlyException(errmsg));
                     break;
             }
 
@@ -54,7 +56,7 @@ namespace Storage.WebApi.Middleware
 
             if(result == string.Empty)
             {
-                result = JsonSerializer.Serialize(new { errpr = exception.Message });
+                result = JsonSerializer.Serialize(new UserfriendlyException(exception.Message));
             }
 
             return context.Response.WriteAsync(result);

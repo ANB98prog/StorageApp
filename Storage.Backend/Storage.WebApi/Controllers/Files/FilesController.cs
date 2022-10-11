@@ -2,6 +2,7 @@
 using Storage.Application.Common.Models;
 using Storage.Application.Files.Commands.DeleteFile;
 using Storage.Application.Files.Commands.DeleteFiles;
+using Storage.WebApi.Common.Exceptions;
 
 namespace Storage.WebApi.Controllers.Files
 {
@@ -21,8 +22,8 @@ namespace Storage.WebApi.Controllers.Files
         /// <response code="400">BadRequest</response>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<DeleteFileModel>> RemoveFileByIdAsync([FromRoute] Guid id)
+        [ProducesResponseType(typeof(UserfriendlyException), StatusCodes.Status400BadRequest)]
+        public async Task<DeleteFileModel> RemoveFileByIdAsync([FromRoute] Guid id)
         {
             var command = new DeleteFileCommand()
             {
@@ -41,13 +42,13 @@ namespace Storage.WebApi.Controllers.Files
         /// <response code="200">Successfully</response>
         /// <response code="400">BadRequest</response>
         [HttpDelete("delete")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<DeleteFilesModel>> RemoveFilesAsync([FromBody] List<string> ids)
+        [ProducesResponseType(typeof(DeleteFilesModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(UserfriendlyException), StatusCodes.Status400BadRequest)]
+        public async Task<DeleteFilesModel> RemoveFilesAsync([FromBody] string[] ids)
         {
             var command = new DeleteFilesCommand()
             {
-                FilesIds = ids,
+                FilesIds = ids.ToList(),
                 UserId = UserId
             };
 

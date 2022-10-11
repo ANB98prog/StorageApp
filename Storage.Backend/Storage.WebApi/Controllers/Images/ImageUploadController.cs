@@ -2,6 +2,7 @@
 using Storage.Application.Images.Commands.UploadImage;
 using Storage.Application.Images.Commands.UploadManyImages;
 using Storage.Application.Images.Commands.UploadManyImagesArchive;
+using Storage.WebApi.Common.Exceptions;
 using Storage.WebApi.Models;
 
 namespace Storage.WebApi.Controllers.Images
@@ -22,7 +23,7 @@ namespace Storage.WebApi.Controllers.Images
         /// <response code="400">BadRequest</response>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(UserfriendlyException), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UploadImageAsync([FromForm] UploadFileRequestModel request)
         {
             var command = Mapper.Map<UploadFileRequestModel, UploadImageCommand>(request);
@@ -43,7 +44,7 @@ namespace Storage.WebApi.Controllers.Images
         /// <response code="400">BadRequest</response>
         [HttpPost("many/zip")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(UserfriendlyException), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UploadImagesAsync([FromForm] UploadFileRequestModel request)
         {
             var command = Mapper.Map<UploadFileRequestModel, UploadManyImagesArchiveCommand>(request);
@@ -64,7 +65,7 @@ namespace Storage.WebApi.Controllers.Images
         /// <response code="400">BadRequest</response>
         [HttpPost("many")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(UserfriendlyException), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UploadImagesAsync([FromForm] UploadManyFilesRequestModel request)
         {
             var command = Mapper.Map<UploadManyFilesRequestModel, UploadManyImagesCommand>(request);
@@ -74,14 +75,6 @@ namespace Storage.WebApi.Controllers.Images
             var imagesIds = await Mediator.Send(command);
 
             return Created("", imagesIds);
-        }
-
-        [HttpPost("annotated")]
-        public async Task<IActionResult> UploadAnnotatedImagesAsync()
-        {
-            var bytes = System.IO.File.ReadAllBytes(Path.Combine("wwwroot", "some.txt"));
-
-            return new FileContentResult(bytes, "plain/text");
         }
     }
 }
