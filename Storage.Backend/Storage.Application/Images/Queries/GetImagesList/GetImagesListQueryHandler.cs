@@ -35,13 +35,25 @@ namespace Storage.Application.Images.Queries.GetImagesList
         {
             try
             {
+                //var queryContainer = new QueryContainer()
+                //{
+                //    new BoolQuery
+                //    {
+                //        Must = new QueryStringQuery()
+                //        {
+                //            Fields = new Fields()
+                //        }
+                //    }
+                //}
+
                 var from = request.PageNumber * request.PageSize;
                 var take = request.PageSize;
                 var response = await _elasticService.SearchAsync<BaseFile>(descriptor => descriptor
                                     .Query(q => q
                                         .QueryString(queryDescriptor => queryDescriptor
                                             .Query(String.Join(" ", request.Attributes))
-                                                .Fields(fs => fs.Fields(f => f.Attributes))))
+                                                .Fields(fs => fs.Fields(f => f.Attributes))
+                                                .DefaultOperator(Operator.And)))
                                     .From(from)
                                     .Take(take)
                                     .Index(ElasticIndices.FILES_INDEX));
@@ -55,8 +67,17 @@ namespace Storage.Application.Images.Queries.GetImagesList
                     };
                 }
 
+                var count = await _elasticService.CountAsync<BaseFile>(descriptor => descriptor
+                                    .Query(q => q
+                                        .QueryString(queryDescriptor => queryDescriptor
+                                            .Query(String.Join(" ", request.Attributes))
+                                                .Fields(fs => fs.Fields(f => f.Attributes))
+                                                .DefaultOperator(Operator.And)))
+                                    .Index(ElasticIndices.FILES_INDEX));
+
                 var mapped = _mapper.Map<Elasticsearch.Models.SearchResponse<BaseFile>, ImageListVm>(response);
 
+                mapped.Count = (int)count;
                 mapped.PageNumber = request.PageNumber;
                 mapped.PageSize = request.PageSize;
 

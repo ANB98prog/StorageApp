@@ -222,5 +222,96 @@ namespace Elasticsearch
                 throw new UnexpectedElasticException(ErrorMessages.UNEXPECTED_ERROR_SEARCHING_DOCUMENTS(), ex);
             }
         }
+
+        /// <summary>
+        /// Counts documents
+        /// </summary>
+        /// <typeparam name="TDocument">Documents types</typeparam>
+        /// <param name="index">Index to count in</param>
+        /// <returns>Count of documents</returns>
+        public async Task<long> CountAsync<TDocument>(string index) where TDocument : class
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(index))
+                {
+                    throw new ArgumentNullException(nameof(index));
+                }
+
+                var result = await _client.CountAsync<TDocument>(s => s.Index(index));
+
+                if (!result.IsValid)
+                {
+                    if ((result.ServerError?.Error?.Reason ?? string.Empty)
+                        .StartsWith(ElasticConstants.INDEX_NOT_EXISTS_SERVER_MESSAGE))
+                    {
+                        var indexNameReg = Regex.Match(result.ServerError.Error.Reason, @"\[\w*\]");
+
+                        throw new IndexNotFoundException(index);
+                    }                    
+                }
+
+                return result.Count;
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw ex;
+            }
+            catch (IndexNotFoundException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new UnexpectedElasticException(ErrorMessages.UNEXPECTED_ERROR_COUNTING_DOCUMENTS(), ex);
+            }
+        }
+
+        /// <summary>
+        /// Counts documents
+        /// </summary>
+        /// <typeparam name="TDocument">Documents types</typeparam>
+        /// <param name="request">Count request</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Count of documents</returns>
+        public async Task<long> CountAsync<TDocument>(Func<CountDescriptor<TDocument>, ICountRequest> request, CancellationToken cancellationToken = default) where TDocument : class
+        {
+            try
+            {
+                var result = await _client.CountAsync<TDocument>(request);
+
+                if (!result.IsValid)
+                {
+                    if ((result.ServerError?.Error?.Reason ?? string.Empty)
+                        .StartsWith(ElasticConstants.INDEX_NOT_EXISTS_SERVER_MESSAGE))
+                    {
+                        var indexNameReg = Regex.Match(result.ServerError.Error.Reason, @"\[\w*\]");
+
+                        var index = "";
+                        if (indexNameReg != null
+                            && indexNameReg.Success)
+                        {
+                            index = Regex.Replace(indexNameReg.Value, @"[\[\]]", string.Empty);
+                        }
+
+                        throw new IndexNotFoundException(index);
+                    }
+                }
+
+                return result.Count;
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw ex;
+            }
+            catch (IndexNotFoundException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new UnexpectedElasticException(ErrorMessages.UNEXPECTED_ERROR_COUNTING_DOCUMENTS(), ex);
+            }
+        }
     }
 }

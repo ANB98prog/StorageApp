@@ -17,11 +17,20 @@ namespace Storage.Application.Images.Queries.GetImagesList
         /// <summary>
         /// Images count
         /// </summary>
-        public int Count 
+        private long _count;
+
+        /// <summary>
+        /// Images count
+        /// </summary>
+        public long Count 
         { 
             get
             {
-                return Images?.Count ?? 0;
+                return _count;
+            }
+            set
+            {
+                _count = value;
             }
         }
 

@@ -20,5 +20,6 @@
         public static string UNEXPECTED_ERROR_REMOVING_BULK_DOCUMENTS(string indexName) => $"Unexpected error occured while remove bulk of documents from {indexName} index.";
         public static string UNEXPECTED_ERROR_REMOVING_BULK_DOCUMENTS_BY_QUERY() => $"Unexpected error occured while remove bulk of documents by query.";
         public static string UNEXPECTED_ERROR_SEARCHING_DOCUMENTS() => $"Unexpected error occured while search documents by query.";
+        public static string UNEXPECTED_ERROR_COUNTING_DOCUMENTS() => $"Unexpected error occured while count documents.";
     }
 }

@@ -108,6 +108,23 @@ namespace Elasticsearch.Interfaces
         public Task<Models.SearchResponse<TDocument>> SearchAsync<TDocument>(SearchRequest<TDocument> request, CancellationToken cancellationToken = default) where TDocument : class;
 
         /// <summary>
+        /// Counts documents
+        /// </summary>
+        /// <typeparam name="TDocument">Documents types</typeparam>
+        /// <param name="index">Index to count in</param>
+        /// <returns>Count of documents</returns>
+        public Task<long> CountAsync<TDocument>(string index) where TDocument : class;
+
+        /// <summary>
+        /// Counts documents
+        /// </summary>
+        /// <typeparam name="TDocument">Documents types</typeparam>
+        /// <param name="request">Count request</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Count of documents</returns>
+        public Task<long> CountAsync<TDocument>(Func<CountDescriptor<TDocument>, ICountRequest> request, CancellationToken cancellationToken = default) where TDocument : class;
+
+        /// <summary>
         /// Searches documents
         /// </summary>
         /// <typeparam name="TDocument">Documents types</typeparam>
