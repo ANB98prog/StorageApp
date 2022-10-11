@@ -452,7 +452,8 @@ namespace Storage.Application.Common.Services
 
                         var deleteFilesIds = new List<Guid>(ids);
 
-                        if (deletionResult.Errors.Any())
+                        if (deletionResult.Errors != null
+                                && deletionResult.Errors.Any())
                         {
                             var errorFilesPaths = deletionResult.Errors
                                                     .Select(error => error.FilePath).ToList();

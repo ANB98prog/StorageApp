@@ -66,7 +66,7 @@ namespace Storage.Application.Files.Commands.DeleteFiles
 
                     if (!isParsed)
                     {
-                        errMessages.Add(ErrorMessages.WrongParameterFormatErrorMessage("id", "1065ea8c-a85b-42e3-90f3-c21af5184b08"));
+                        errMessages.Add(ErrorMessages.WrongParameterFormatErrorMessage("id", id, "1065ea8c-a85b-42e3-90f3-c21af5184b08"));
                     }
                 }
 

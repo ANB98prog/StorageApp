@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Elasticsearch.Models;
 using Mapper;
+using Newtonsoft.Json;
 using Storage.Application.Images.Queries.Models;
 using Storage.Domain;
 using System.Collections.Generic;
@@ -17,20 +18,32 @@ namespace Storage.Application.Images.Queries.GetImagesList
         /// <summary>
         /// Images count
         /// </summary>
-        private long _count;
-
-        /// <summary>
-        /// Images count
-        /// </summary>
-        public long Count 
-        { 
+        public int Count 
+        {
             get
             {
-                return _count;
+                return Images?.Count ?? 0;
+            }
+        }
+
+        /// <summary>
+        /// Items total count
+        /// </summary>
+        private long _totalCount;
+
+        /// <summary>
+        /// Images total count
+        /// </summary>
+        [JsonProperty("total_count")]
+        public long TotalCount
+        {
+            get
+            {
+                return _totalCount;
             }
             set
             {
-                _count = value;
+                _totalCount = value;
             }
         }
 

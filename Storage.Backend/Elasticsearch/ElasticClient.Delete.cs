@@ -3,6 +3,7 @@ using Nest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -50,6 +51,8 @@ namespace Elasticsearch
                 {
                     return false;
                 }
+
+                await _client.Indices.RefreshAsync(index, ct: cancellationToken);
 
                 return true;
             }
@@ -107,12 +110,13 @@ namespace Elasticsearch
                         {
                             Field = "_id",
                             Terms = ids.ToArray()
-                        },
-                        WaitForCompletion = true
+                        }
                     };
                                         
                     var result = await _client.DeleteByQueryAsync(req);
 
+                    await _client.Indices.RefreshAsync(index, ct: cancellationToken);
+                    
                     if (!result.IsValid)
                     {
                         throw new UnexpectedElasticException();
@@ -167,6 +171,8 @@ namespace Elasticsearch
                     {
                         throw new UnexpectedElasticException();
                     }
+
+                    await _client.Indices.RefreshAsync(index, ct: cancellationToken);
                 }
             }
             catch (ArgumentNullException ex)
@@ -207,6 +213,8 @@ namespace Elasticsearch
                 {
                     throw new UnexpectedElasticException();
                 }
+
+                await _client.Indices.RefreshAsync(index, ct: cancellationToken);
 
             }
             catch (ArgumentNullException ex)

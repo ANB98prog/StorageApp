@@ -77,7 +77,7 @@ namespace Storage.Application.Images.Queries.GetImagesList
 
                 var mapped = _mapper.Map<Elasticsearch.Models.SearchResponse<BaseFile>, ImageListVm>(response);
 
-                mapped.Count = (int)count;
+                mapped.TotalCount = (int)count;
                 mapped.PageNumber = request.PageNumber;
                 mapped.PageSize = request.PageSize;
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Storage.Application.Common.Models
 {
@@ -10,6 +11,7 @@ namespace Storage.Application.Common.Models
         /// <summary>
         /// Deleting errors
         /// </summary>
-        public List<DeleteErrorModel> Errors { get; set; } = new List<DeleteErrorModel>();
+        [JsonProperty("errors", NullValueHandling = NullValueHandling.Ignore)]
+        public List<DeleteErrorModel> Errors { get; set; }
     }
 }

@@ -270,7 +270,7 @@ namespace Storage.Application.Common.Services
                         {
                             var errmsg = $"Cannot delete file by path: {filePath}";
                             _logger.Error(ex, errmsg);
-                            result.Errors.Add(new DeleteErrorModel
+                            (result.Errors ?? new List<DeleteErrorModel>()).Add(new DeleteErrorModel
                             {
                                 FilePath = filePath,
                                 ErrorMessage = errmsg,
