@@ -13,7 +13,7 @@ namespace Storage.Application.Images.Commands.UploadManyImagesArchive
             RuleFor(uploadManyCommand =>
             uploadManyCommand.ImagesZipFile.Length).GreaterThan(0);
             RuleFor(uploadManyCommand =>
-            uploadManyCommand.FileType).Equal(Domain.FileType.Zip.ToString());
+            uploadManyCommand.FileType).Equal(Domain.FileType.Zip.ToString()).WithMessage("Тип загружаемого файла должен быть 'Архив (rar, zip)'");
         }
     }
 }

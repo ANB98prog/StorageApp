@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Nest;
 using Serilog;
 using Storage.Application.Common.Exceptions;
 using Storage.Application.Common.Helpers;
@@ -432,9 +433,59 @@ namespace Storage.Application.Common.Services
             }
         }
 
-        public Task<DeleteFilesModel> RemoveFilesAsync(List<Guid> ids)
+        public async Task<DeleteFilesModel> RemoveFilesAsync(List<Guid> ids)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _logger.Information($"Try to remove files. Files count: {ids.Count}");
+
+                var result = new DeleteFilesModel();
+
+                if (ids.Any())
+                {
+                    var files = await _storageDataService.GetFilesInfoAsync(ids);
+
+                    if (files.Any())
+                    {
+                        var deletionResult = _fileService.DeleteFiles(
+                                files.Select(path => path.FilePath).ToList());
+
+                        var deleteFilesIds = new List<Guid>(ids);
+
+                        if (deletionResult.Errors.Any())
+                        {
+                            var errorFilesPaths = deletionResult.Errors
+                                                    .Select(error => error.FilePath).ToList();
+                            /*Берем файлы которые удалось удалить*/
+                            deleteFilesIds = files.Where(f => 
+                                                !errorFilesPaths.Contains(f.FilePath))
+                                                    .Select(g => g.Id).ToList();
+
+                            result.Errors = deletionResult.Errors
+                                                    .Select(error => 
+                                                        new DeleteErrorModel() 
+                                                        { 
+                                                            ErrorMessage = error.ErrorMessage,
+                                                            FileId = files.FirstOrDefault(f => f.FilePath.Equals(error.FilePath))?.Id ?? Guid.Empty 
+                                                        }).ToList();                            
+                        }
+
+                        await _storageDataService.RemoveFilesFromStorageAsync(deleteFilesIds);
+                    }
+                }
+
+                return result;
+            }
+            catch (ArgumentNullException ex)
+            {
+                _logger.Error(ex, ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName));
+                throw new FileHandlerServiceException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_FILES_MESSAGE);
+                throw new FileHandlerServiceException(ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_FILES_MESSAGE, ex);
+            }
         }
     }
 }

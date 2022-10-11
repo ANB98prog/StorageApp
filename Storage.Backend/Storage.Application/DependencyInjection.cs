@@ -45,7 +45,7 @@ namespace Storage.Application
             var localStorageDir = Environment.GetEnvironmentVariable(EnvironmentVariables.LOCAL_STORAGE_DIR)
                 ?? throw new ArgumentNullException("Local storage directory!");
 
-            services.AddTransient<IFileService>(s => new LocalFileStorageService(localStorageDir));
+            services.AddTransient<IFileService>(s => new LocalFileStorageService(localStorageDir, s.GetService<ILogger>()));
 
             var elasticUrl = Environment.GetEnvironmentVariable(EnvironmentVariables.ELASTIC_URL)
                 ?? throw new ArgumentNullException("Elastic url");

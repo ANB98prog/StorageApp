@@ -31,7 +31,7 @@ namespace Storage.Tests.Common
                 Directory.CreateDirectory(TestConstants.TestFilesDirectory);
 
             Bind<IFileService>()
-                .ToMethod(ctx => new LocalFileStorageService(TestConstants.StorageDirectory));
+                .ToMethod(ctx => new LocalFileStorageService(TestConstants.StorageDirectory, new Mock<ILogger>().Object));
 
             var configurationProvider = new MapperConfiguration(cfg =>
             {

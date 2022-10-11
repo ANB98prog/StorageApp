@@ -42,6 +42,11 @@ namespace Storage.Application.Common.Exceptions
         public static string UNEXPECTED_ERROR_WHILE_FILE_REMOVE_MESSAGE => "Unexpected error occured while remove file.";
 
         /// <summary>
+        /// Unexpected error message while remove files
+        /// </summary>
+        public static string UNEXPECTED_ERROR_WHILE_FILES_REMOVE_MESSAGE => "Unexpected error occured while remove files.";
+
+        /// <summary>
         /// Error message if uploaded not supported file type
         /// </summary>
         /// <param name="fileExt">File extension</param>
@@ -79,6 +84,11 @@ namespace Storage.Application.Common.Exceptions
         public const string UNEXPECTED_ERROR_WHILE_GET_ITEM_INFO_FROM_STORAGE_MESSAGE = "Unexpected error occured while get item info from elastic storage.";
 
         /// <summary>
+        /// Unexpected error message while get items info from elastic storage
+        /// </summary>
+        public const string UNEXPECTED_ERROR_WHILE_GET_ITEMS_INFO_FROM_STORAGE_MESSAGE = "Unexpected error occured while get items info from elastic storage.";
+
+        /// <summary>
         /// Item not found error message
         /// </summary>
         /// <param name="id">Item id</param>
@@ -106,5 +116,13 @@ namespace Storage.Application.Common.Exceptions
         /// <param name="id">Item id</param>
         /// <returns>Error message</returns>
         public static string RemovingItemFromStorageErrorMessage(string id) => $"Cannot remove item with id '{id}'";
+
+        /// <summary>
+        /// Wrong parameter format error message
+        /// </summary>
+        /// <param name="parameter">Parameter name</param>
+        /// <param name="format">Correct format</param>
+        /// <returns><Error message/returns>
+        public static string WrongParameterFormatErrorMessage(string parameter, string format) => $"Parameter '{parameter}' has wrong format. Correct format is '{format}'";
     }
 }

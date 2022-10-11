@@ -1,4 +1,5 @@
-﻿using Storage.Application.Common.Exceptions;
+﻿using Serilog;
+using Storage.Application.Common.Exceptions;
 using Storage.Application.Common.Helpers;
 using Storage.Application.Common.Models;
 using Storage.Application.Interfaces;
@@ -28,7 +29,12 @@ namespace Storage.Application.Common.Services
         /// </summary>
         private readonly string _tempDir;
 
-        public LocalFileStorageService(string localStorageDir)
+        /// <summary>
+        /// Logger
+        /// </summary>
+        private readonly ILogger _logger;
+
+        public LocalFileStorageService(string localStorageDir, ILogger logger)
         {
             if (string.IsNullOrEmpty(localStorageDir))
                 throw new ArgumentNullException(nameof(localStorageDir));
@@ -38,6 +44,7 @@ namespace Storage.Application.Common.Services
                 throw new DirectoryNotFoundException("Storage directory should exist!");
             }
 
+            _logger = logger;
             _localStorageDir = localStorageDir;
             _tempDir = Path.Combine(_localStorageDir, "temp");
 
@@ -238,10 +245,12 @@ namespace Storage.Application.Common.Services
             }
         }
 
-        public void DeleteFiles(List<string> filesPath)
+        public DeleteFilesModel DeleteFiles(List<string> filesPath)
         {
             try
             {
+                var result = new DeleteFilesModel();
+
                 if (filesPath.Any())
                 {
                     foreach (var filePath in filesPath)
@@ -253,9 +262,24 @@ namespace Storage.Application.Common.Services
 
                         var absolutePath = Path.Combine(_localStorageDir, filePath);
 
-                        FileHelper.RemoveFile(absolutePath);  
+                        try
+                        {
+                            FileHelper.RemoveFile(absolutePath);
+                        }
+                        catch (Exception ex)
+                        {
+                            var errmsg = $"Cannot delete file by path: {filePath}";
+                            _logger.Error(ex, errmsg);
+                            result.Errors.Add(new DeleteErrorModel
+                            {
+                                FilePath = filePath,
+                                ErrorMessage = errmsg,
+                            });
+                        }  
                     }
                 }
+
+                return result;
             }
             catch (ArgumentNullException ex)
             {

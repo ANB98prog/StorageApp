@@ -7,6 +7,10 @@ namespace Storage.Application.Common.Exceptions
     /// </summary>
     public class FileHandlerServiceException : BaseServiceException
     {
+        public FileHandlerServiceException(string message) : base(message)
+        {
+        }
+
         public FileHandlerServiceException(string message, Exception innerException) : base(message, innerException)
         {
         }

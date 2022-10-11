@@ -3,10 +3,10 @@ using System;
 
 namespace Storage.Application.Files.Commands.DeleteFile
 {
-    public class DeleteCommandValidator
+    public class DeleteFileCommandValidator
         : AbstractValidator<DeleteFileCommand>
     {
-        public DeleteCommandValidator()
+        public DeleteFileCommandValidator()
         {
             RuleFor(delete =>
                 delete.FileId).NotEqual(Guid.Empty);

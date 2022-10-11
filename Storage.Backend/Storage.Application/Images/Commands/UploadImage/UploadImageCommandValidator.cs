@@ -19,7 +19,7 @@ namespace Storage.Application.Images.Commands.UploadImage
             RuleFor(uploadImageCommand =>
                 uploadImageCommand.ImageFile.Length).GreaterThan(0);
             RuleFor(uploadImageCommand =>
-                uploadImageCommand.FileType).Equal(Domain.FileType.Image.ToString());
+                uploadImageCommand.FileType).Equal(Domain.FileType.Image.ToString()).WithMessage("Тип загружаемого файла должен быть 'Картинка'");
         }
     }
 }

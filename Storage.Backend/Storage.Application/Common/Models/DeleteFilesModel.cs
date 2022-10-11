@@ -10,6 +10,6 @@ namespace Storage.Application.Common.Models
         /// <summary>
         /// Deleting errors
         /// </summary>
-        List<DeleteErrorModel> Errors { get; set; }
+        public List<DeleteErrorModel> Errors { get; set; } = new List<DeleteErrorModel>();
     }
 }

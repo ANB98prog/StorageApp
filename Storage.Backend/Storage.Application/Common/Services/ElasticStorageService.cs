@@ -7,6 +7,7 @@ using Storage.Application.Interfaces;
 using Storage.Domain;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ErrorMessages = Storage.Application.Common.Exceptions.ErrorMessages;
 
@@ -98,7 +99,7 @@ namespace Storage.Application.Common.Services
                 }
 
                 var result = await _elasticClient.GetByIdAsync<FileInfoModel>(_index, id.ToString());
-
+                
                 if(result == null)
                 {
                     _logger.Information($"Info for file with id: '{id}' not found!");
@@ -124,6 +125,42 @@ namespace Storage.Application.Common.Services
             {
                 _logger.Error(ex, ErrorMessages.UNEXPECTED_ERROR_WHILE_GET_ITEM_INFO_FROM_STORAGE_MESSAGE);
                 throw new ElasticStorageServiceException(ErrorMessages.UNEXPECTED_ERROR_WHILE_GET_ITEM_INFO_FROM_STORAGE_MESSAGE, ex);
+            }
+        }
+
+        public async Task<List<FileInfoModel>> GetFilesInfoAsync(List<Guid> ids)
+        {
+            try
+            {
+                _logger.Information($"Try to get files info from elastic. Files count: '{ids.Count}'");
+
+                var infos = new List<FileInfoModel>();
+
+                if (ids.Any())
+                {
+                    infos = await _elasticClient
+                                .GetManyByIdsAsync<FileInfoModel>(_index, ids.Select(id => id.ToString())
+                                    .ToList());
+
+                    _logger.Information($"Files info successfully got. Files found: '{infos.Count}'");
+                }
+
+                return infos;
+            }
+            catch (ArgumentNullException ex)
+            {
+                _logger.Error(ex, ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName));
+                throw new ElasticStorageServiceException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
+            }
+            catch (UnexpectedElasticException ex)
+            {
+                _logger.Error(ex, ex.UserfriendlyMessage);
+                throw new ElasticStorageServiceException(ErrorMessages.UNEXPECTED_ERROR_WHILE_GET_ITEMS_INFO_FROM_STORAGE_MESSAGE, ex);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, ErrorMessages.UNEXPECTED_ERROR_WHILE_GET_ITEMS_INFO_FROM_STORAGE_MESSAGE);
+                throw new ElasticStorageServiceException(ErrorMessages.UNEXPECTED_ERROR_WHILE_GET_ITEMS_INFO_FROM_STORAGE_MESSAGE, ex);
             }
         }
 
@@ -182,9 +219,41 @@ namespace Storage.Application.Common.Services
             }
         }
 
-        public Task<bool> RemoveFilesFromStorageAsync(List<Guid> id)
+        public async Task<bool> RemoveFilesFromStorageAsync(List<Guid> ids)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _logger.Information($"Try to remove files from elastic. Files count: '{ids.Count}'");
+
+
+                if (ids != null
+                    && ids.Any())
+                {
+                    await _elasticClient.DeleteBulkByIdAsync(_index, ids.Select(i => i.ToString()));                    
+                }
+
+                return true;
+            }
+            catch (ArgumentNullException ex)
+            {
+                _logger.Error(ex, ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName));
+                throw new ElasticStorageServiceException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
+            }
+            catch (DeleteDocumentException ex)
+            {
+                _logger.Error(ex, ErrorMessages.RemovingItemFromStorageErrorMessage(ids.ToString()));
+                throw new ElasticStorageServiceException(ErrorMessages.RemovingItemFromStorageErrorMessage(ids.ToString()), ex);
+            }
+            catch (UnexpectedElasticException ex)
+            {
+                _logger.Error(ex, ex.UserfriendlyMessage);
+                throw new ElasticStorageServiceException(ErrorMessages.UNEXPECTED_ERROR_WHILE_GET_ITEM_INFO_FROM_STORAGE_MESSAGE, ex);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, ErrorMessages.UNEXPECTED_ERROR_WHILE_GET_ITEM_INFO_FROM_STORAGE_MESSAGE);
+                throw new ElasticStorageServiceException(ErrorMessages.UNEXPECTED_ERROR_WHILE_GET_ITEM_INFO_FROM_STORAGE_MESSAGE, ex);
+            }
         }
     }
 }
