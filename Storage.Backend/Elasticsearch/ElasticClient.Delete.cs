@@ -77,14 +77,13 @@ namespace Elasticsearch
         }
 
         /// <summary>
-        /// Deletes document
+        /// Deletes documents by id
         /// </summary>
-        /// <typeparam name="TDocument">Document type</typeparam>
         /// <param name="index">Index to delete in</param>
         /// <param name="ids">List of documents ids to delete</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns></returns>
-        public async Task DeleteBulkAsync<TDocument>(string index, IEnumerable<string> ids, CancellationToken cancellationToken = default) where TDocument : class
+        public async Task DeleteBulkByIdAsync(string index, IEnumerable<string> ids, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -102,10 +101,66 @@ namespace Elasticsearch
                         throw new IndexNotFoundException(index);
                     }
 
-                    var result = await _client.DeleteByQueryAsync<TDocument>(s =>
-                                        s.Query(q =>
-                                            q.Ids(i => i.Values(ids)))
-                                        .Index(index));
+                    var req = new DeleteByQueryRequest(index)
+                    {
+                        Query = new TermsQuery()
+                        {
+                            Field = "_id",
+                            Terms = ids.ToArray()
+                        }
+                    };
+                                        
+                    var result = await _client.DeleteByQueryAsync(req);
+
+                    if (!result.IsValid)
+                    {
+                        throw new UnexpectedElasticException();
+                    }
+                }
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw ex;
+            }
+            catch (IndexNotFoundException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                var indexName = string.IsNullOrWhiteSpace(index)
+                                        ? string.Empty : $"'{index}'";
+
+                throw new UnexpectedElasticException(ErrorMessages.UNEXPECTED_ERROR_REMOVING_BULK_DOCUMENTS(indexName), ex);
+            }
+        }
+
+        /// <summary>
+        /// Deletes bulk documents
+        /// </summary>
+        /// <param name="index">Index to delete in</param>
+        /// <param name="docs">List of documents to delete</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns></returns>
+        public async Task DeleteBulkAsync<TDocument>(string index, IEnumerable<TDocument> docs, CancellationToken cancellationToken = default) where TDocument : class
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(index))
+                    throw new ArgumentNullException(nameof(index));
+
+                if (docs != null
+                    && docs.Any())
+                {
+                    var exists = await _client.Indices.ExistsAsync(index, ct: cancellationToken);
+
+                    if (!exists.IsValid
+                        || !exists.Exists)
+                    {
+                        throw new IndexNotFoundException(index);
+                    }
+
+                    var result = await _client.DeleteManyAsync(docs, index, cancellationToken);
 
                     if (!result.IsValid)
                     {

@@ -38,7 +38,7 @@ namespace Elasticsearch.Tests.DeleteDocumentsTests
             #endregion
 
 
-            await client.DeleteDocumentAsync<string>(indexName, docId);
+            await client.DeleteDocumentAsync(indexName, docId);
 
             responseMock.Verify(v => v.GetResponseData(It.Is<string>(m => m.Equals($"{_fixture.ElasticBasePath}/{indexName}")), Net.HttpMethod.HEAD), Times.Once);
             responseMock.Verify(v => v.GetResponseData(It.Is<string>(m => m.Equals($"{_fixture.ElasticBasePath}/{indexName}/_doc/{docId}")), Net.HttpMethod.DELETE), Times.Once);
@@ -66,7 +66,7 @@ namespace Elasticsearch.Tests.DeleteDocumentsTests
             #endregion
 
 
-            await client.DeleteDocumentAsync<string>(indexName, docId);
+            await client.DeleteDocumentAsync(indexName, docId);
 
             responseMock.Verify(v => v.GetResponseData(It.Is<string>(m => m.Equals($"{_fixture.ElasticBasePath}/{indexName}")), Net.HttpMethod.HEAD), Times.Once);
             responseMock.Verify(v => v.GetResponseData(It.Is<string>(m => m.Equals($"{_fixture.ElasticBasePath}/{indexName}/_doc/{docId}")), Net.HttpMethod.DELETE), Times.Once);
@@ -87,7 +87,7 @@ namespace Elasticsearch.Tests.DeleteDocumentsTests
                 .Returns(ElasticTestHelper.GetIndexNotExistsResponse());
             #endregion
 
-            var error = await Assert.ThrowsAsync<IndexNotFoundException>( async () =>  await client.DeleteDocumentAsync<string>(indexName, docId));
+            var error = await Assert.ThrowsAsync<IndexNotFoundException>( async () =>  await client.DeleteDocumentAsync(indexName, docId));
 
             Assert.Equal(ErrorMessages.INDEX_NOT_EXISTS(indexName), error.Message);
 
@@ -106,7 +106,7 @@ namespace Elasticsearch.Tests.DeleteDocumentsTests
             var responseMock = new Mock<IElasticFakeResponse>();
             var client = _fixture.GetElasticsearchClient(responseMock);
 
-            var error = await Assert.ThrowsAsync<ArgumentNullException>(async () => await client.DeleteDocumentAsync<string>(indexName, docId));
+            var error = await Assert.ThrowsAsync<ArgumentNullException>(async () => await client.DeleteDocumentAsync(indexName, docId));
 
             Assert.Equal("index", error.ParamName);
 
@@ -125,7 +125,7 @@ namespace Elasticsearch.Tests.DeleteDocumentsTests
             var responseMock = new Mock<IElasticFakeResponse>();
             var client = _fixture.GetElasticsearchClient(responseMock);
 
-            var error = await Assert.ThrowsAsync<ArgumentNullException>(async () => await client.DeleteDocumentAsync<string>(indexName, docId));
+            var error = await Assert.ThrowsAsync<ArgumentNullException>(async () => await client.DeleteDocumentAsync(indexName, docId));
 
             Assert.Equal("documentId", error.ParamName);
 
@@ -140,8 +140,8 @@ namespace Elasticsearch.Tests.DeleteDocumentsTests
         {
             var ids = new List<string>
             {
-                "931ca62a-2bcd-4376-ac0e-93eaec7f07bc",
-                "931ca62a-2bcd-4376-ac0e-93eaec7f07ba",
+                "58a16e84-0296-49fa-b4a3-db4f280b7832",
+                "83aba3ba-cd19-448f-95e9-e23162f49224",
                 "931ca62a-2bcd-4376-ac0e-93eaec7f07br",
             };
 
@@ -162,7 +162,7 @@ namespace Elasticsearch.Tests.DeleteDocumentsTests
                 .Returns(ElasticTestHelper.GetBulkDocumentsDeletedSuccessResponse());
             #endregion
 
-            await client.DeleteBulkAsync<string>(indexName, ids);
+            await client.DeleteBulkByIdAsync(indexName, ids);
 
             responseMock.Verify(v => v.GetResponseData(It.Is<string>(m => m.Equals($"{_fixture.ElasticBasePath}/{indexName}")), Net.HttpMethod.HEAD), Times.Once);
             responseMock.Verify(v => v.GetResponseData(It.Is<string>(m => m.Equals($"{_fixture.ElasticBasePath}/{indexName}/_delete_by_query")), Net.HttpMethod.POST), Times.Once);
