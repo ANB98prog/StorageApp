@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Storage.Application.Common.Models;
 using Storage.Application.Files.Commands.DeleteFile;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Storage.Application.Files.Commands.DeleteFiles;
 
 namespace Storage.WebApi.Controllers.Files
 {
@@ -17,7 +13,7 @@ namespace Storage.WebApi.Controllers.Files
     public class FilesController : BaseController
     {
         /// <summary>
-        /// Uploads image to storage
+        /// Removes file from storage
         /// </summary>
         /// <param name="id">File id to remove</param>
         /// <returns>Remove acknowledgment</returns>
@@ -31,6 +27,27 @@ namespace Storage.WebApi.Controllers.Files
             var command = new DeleteFileCommand()
             {
                 FileId = id,
+                UserId = UserId
+            };
+
+            return await Mediator.Send(command);
+        }
+
+        /// <summary>
+        /// Removes files from storage
+        /// </summary>
+        /// <param name="ids">Files ids to remove</param>
+        /// <returns>Remove acknowledgment</returns>
+        /// <response code="200">Successfully</response>
+        /// <response code="400">BadRequest</response>
+        [HttpDelete("delete")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<DeleteFilesModel>> RemoveFilesAsync([FromBody] List<string> ids)
+        {
+            var command = new DeleteFilesCommand()
+            {
+                FilesIds = ids,
                 UserId = UserId
             };
 
