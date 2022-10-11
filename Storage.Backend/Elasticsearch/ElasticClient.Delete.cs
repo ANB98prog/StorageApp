@@ -213,9 +213,6 @@ namespace Elasticsearch
                 {
                     throw new UnexpectedElasticException();
                 }
-
-                await _client.Indices.RefreshAsync(index, ct: cancellationToken);
-
             }
             catch (ArgumentNullException ex)
             {
