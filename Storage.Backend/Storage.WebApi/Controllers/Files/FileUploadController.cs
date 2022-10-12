@@ -1,17 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Storage.Application.Images.Commands.UploadImage;
-using Storage.Application.Images.Commands.UploadManyImages;
-using Storage.Application.Images.Commands.UploadManyImagesArchive;
+using Storage.Application.Files.Commands.UploadFile;
+using Storage.Application.Files.Commands.UploadManyFiles;
+using Storage.Application.Files.Commands.UploadManyFilesArchive;
 using Storage.WebApi.Common.Exceptions;
 using Storage.WebApi.Models;
 
 namespace Storage.WebApi.Controllers.Files
 {
     /// <summary>
-    /// Endpoint to upload images to storage
+    /// Endpoint to upload files to storage
     /// </summary>
     [Produces("application/json")]
-    [Route("api/images/upload")]
+    [Route("api/files/upload")]
     public class FileUploadController : BaseController
     {
         /// <summary>
@@ -26,13 +26,13 @@ namespace Storage.WebApi.Controllers.Files
         [ProducesResponseType(typeof(UserfriendlyException), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UploadFileAsync([FromForm] UploadFileRequestModel request)
         {
-            var command = Mapper.Map<UploadFileRequestModel, UploadImageCommand>(request);
+            var command = Mapper.Map<UploadFileRequestModel, UploadFileCommand>(request);
 
             command.UserId = UserId;
 
-            var imageId = await Mediator.Send(command);
+            var fileId = await Mediator.Send(command);
 
-            return Created("", imageId);
+            return Created("", fileId);
         }
 
         /// <summary>
@@ -47,13 +47,13 @@ namespace Storage.WebApi.Controllers.Files
         [ProducesResponseType(typeof(UserfriendlyException), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UploadFilesAsync([FromForm] UploadFileRequestModel request)
         {
-            var command = Mapper.Map<UploadFileRequestModel, UploadManyImagesArchiveCommand>(request);
+            var command = Mapper.Map<UploadFileRequestModel, UploadManyFilesArchiveCommand>(request);
 
             command.UserId = UserId;
 
-            var imagesIds = await Mediator.Send(command);
+            var filesIds = await Mediator.Send(command);
 
-            return Created("", imagesIds);
+            return Created("", filesIds);
         }
 
         /// <summary>
@@ -68,13 +68,13 @@ namespace Storage.WebApi.Controllers.Files
         [ProducesResponseType(typeof(UserfriendlyException), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UploadFilesAsync([FromForm] UploadManyFilesRequestModel request)
         {
-            var command = Mapper.Map<UploadManyFilesRequestModel, UploadManyImagesCommand>(request);
+            var command = Mapper.Map<UploadManyFilesRequestModel, UploadManyFilesCommand>(request);
 
             command.UserId = UserId;
 
-            var imagesIds = await Mediator.Send(command);
+            var filesIds = await Mediator.Send(command);
 
-            return Created("", imagesIds);
+            return Created("", filesIds);
         }
     }
 }

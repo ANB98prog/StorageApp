@@ -284,37 +284,68 @@ namespace Storage.Application.Common.Helpers
             }
         }
 
-        public static FileType GetFileType(string filePath)
+        /// <summary>
+        /// Gets mime type by file name
+        /// </summary>
+        /// <param name="fileName">File name</param>
+        /// <returns>Mime type</returns>
+        public static string GetFileMimeType(string fileName)
         {
-            var types = new Dictionary<FileType, List<string>>
+            if (!string.IsNullOrWhiteSpace(fileName)
+                && MimeTypes.TryGetMimeType(fileName, out var mimeType))
             {
-                { FileType.Text, new List<string> { ".txt", ".docx"} },
-                { FileType.Image, new List<string> { ".jpg", ".png", ".jpeg", ".bmp", ".tif", ".tiff", ".gif" } },
-                { FileType.Video, new List<string> { ".mp4", ".avi", ".mpg", ".mpeg", ".wmv" } },
-                { FileType.Audio, new List<string> { ".mp3", ".wav", ".wma", ".mid", ".midi", ".aiff", ".au" } },
-                { FileType.Zip, new List<string> { ".zip", ".rar" } },
-            };
+                return mimeType;
+            }
 
-            try
-            {
-                if (string.IsNullOrWhiteSpace(filePath))
-                {
-                    throw new ArgumentNullException(nameof(filePath));
-                }
-
-                return types.FirstOrDefault(t =>
-                        t.Value.Contains(Path.GetExtension(filePath).ToLowerInvariant()))
-                            .Key;
-            }
-            catch (ArgumentNullException ex)
-            {
-                throw ex;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Unexpected error occured while get file type", ex);
-            }
+            return Constants.DEFAULT_MIME_TYPE;
         }
+
+        /// <summary>
+        /// Gets
+        /// </summary>
+        /// <param name="mimeType"></param>
+        /// <returns></returns>
+        public static IEnumerable<string> GetFileAttributesByMimeData(string mimeType)
+        {
+            if (!string.IsNullOrWhiteSpace(mimeType))
+            {
+                return mimeType.Split("/");
+            }
+
+            return new string[] {};
+        }
+
+        //public static FileType GetFileType(string filePath)
+        //{
+        //    var types = new Dictionary<FileType, List<string>>
+        //    {
+        //        { FileType.Text, new List<string> { ".txt", ".docx"} },
+        //        { FileType.Image, new List<string> { ".jpg", ".png", ".jpeg", ".bmp", ".tif", ".tiff", ".gif" } },
+        //        { FileType.Video, new List<string> { ".mp4", ".avi", ".mpg", ".mpeg", ".wmv" } },
+        //        { FileType.Audio, new List<string> { ".mp3", ".wav", ".wma", ".mid", ".midi", ".aiff", ".au" } },
+        //        { FileType.Zip, new List<string> { ".zip", ".rar" } },
+        //    };
+
+        //    try
+        //    {
+        //        if (string.IsNullOrWhiteSpace(filePath))
+        //        {
+        //            throw new ArgumentNullException(nameof(filePath));
+        //        }
+
+        //        return types.FirstOrDefault(t =>
+        //                t.Value.Contains(Path.GetExtension(filePath).ToLowerInvariant()))
+        //                    .Key;
+        //    }
+        //    catch (ArgumentNullException ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception("Unexpected error occured while get file type", ex);
+        //    }
+        //}
 
     }
 }

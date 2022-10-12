@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
 using Mapper;
 using Newtonsoft.Json;
-using Storage.Application.Images.Commands.UploadImage;
-using Storage.Application.Images.Commands.UploadManyImagesArchive;
+using Storage.Application.Files.Commands.UploadFile;
+using Storage.Application.Files.Commands.UploadManyFilesArchive;
 
 namespace Storage.WebApi.Models
 {
     /// <summary>
     /// Upload file request
     /// </summary>
-    public class UploadFileRequestModel : IMapWith<UploadImageCommand>
+    public class UploadFileRequestModel : IMapWith<UploadFileCommand>
     {
         /// <summary>
         /// File attributes
@@ -31,16 +31,16 @@ namespace Storage.WebApi.Models
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<UploadFileRequestModel, UploadImageCommand>()
-                .ForMember(model => model.ImageFile,
+            profile.CreateMap<UploadFileRequestModel, UploadFileCommand>()
+                .ForMember(model => model.File,
                     opt => opt.MapFrom(upload => upload.File))
                 .ForMember(model => model.IsAnnotated,
                     opt => opt.MapFrom(upload => upload.isAnnotated))
                 .ForMember(model => model.Attributes,
                     opt => opt.MapFrom(upload => upload.Attributes));
 
-            profile.CreateMap<UploadFileRequestModel, UploadManyImagesArchiveCommand>()
-                .ForMember(model => model.ImagesZipFile,
+            profile.CreateMap<UploadFileRequestModel, UploadManyFilesArchiveCommand>()
+                .ForMember(model => model.File,
                     opt => opt.MapFrom(upload => upload.File))
                 .ForMember(model => model.IsAnnotated,
                     opt => opt.MapFrom(upload => upload.isAnnotated))

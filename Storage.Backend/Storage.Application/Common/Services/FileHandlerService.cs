@@ -215,7 +215,7 @@ namespace Storage.Application.Common.Services
                         SystemName = systemName,
                         OriginalName = Path.GetFileName(file),
                         Attributes = archive.Attributes,
-                        FileExtension = Path.GetExtension(file),
+                        MimeType = FileHelper.GetFileMimeType(file),
                         IsAnnotated = archive.IsAnnotated,
                         DepartmentOwnerId = archive.DepartmentOwnerId,
                         OwnerId = archive.OwnerId,
@@ -310,14 +310,12 @@ namespace Storage.Application.Common.Services
         /// <returns>File id</returns>
         private async Task<Guid> UploadFileToStorageAsync(UploadFileRequestModel upload, CancellationToken cancellationToken)
         {
-            var fileAttributes = new List<string>()
-            {
-                upload.FileType.ToString(),
-                upload.IsAnnotated ?
-                         FileAttributes.Annotated.ToString()
-                            :  FileAttributes.NotAnnotated.ToString()
-            };
+            var fileAttributes = new List<string>();
 
+            fileAttributes.AddRange(FileHelper.GetFileAttributesByMimeData(upload.MimeType));
+            fileAttributes.Add(upload.IsAnnotated ?
+                         FileAttributes.Annotated.ToString()
+                            : FileAttributes.NotAnnotated.ToString());
 
             if (upload.Attributes != null
                     && upload.Attributes.Any())

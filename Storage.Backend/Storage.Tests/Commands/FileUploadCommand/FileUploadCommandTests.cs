@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http.Internal;
 using Moq;
 using Storage.Application.Common.Exceptions;
 using Storage.Application.Common.Models;
-using Storage.Application.Images.Commands.UploadImage;
+using Storage.Application.Files.Commands.UploadFile;
 using Storage.Tests.Common;
 
 namespace Storage.Tests.Commands.FileUploadCommand
@@ -14,7 +14,7 @@ namespace Storage.Tests.Commands.FileUploadCommand
         [Fact]
         public async Task FileUploadCommand_Success()
         {
-            var handler = new UploadImageCommandHandler(FileHandlerServiceMock.Object);
+            var handler = new UploadFileCommandHandler(FileHandlerServiceMock.Object);
 
             var dir = Path.Combine(TestConstants.CommandsFilesDirectory);
 
@@ -26,12 +26,12 @@ namespace Storage.Tests.Commands.FileUploadCommand
             file.Headers = new HeaderDictionary();
             file.ContentType = "plain/text";
 
-            var request = new UploadImageCommand
+            var request = new UploadFileCommand
             {
                 UserId = Guid.NewGuid(),
                 Attributes = new List<string> { "human", "boy" },
                 IsAnnotated = true,
-                ImageFile = file
+                File = file
             };
 
             var fileId = Guid.NewGuid();
@@ -50,7 +50,7 @@ namespace Storage.Tests.Commands.FileUploadCommand
         [Fact]
         public async Task FileUploadCommand_Error_IfModelIsEmpty()
         {
-            var handler = new UploadImageCommandHandler(FileHandlerServiceMock.Object);
+            var handler = new UploadFileCommandHandler(FileHandlerServiceMock.Object);
 
             var error = await Assert.ThrowsAsync<FileHandlerServiceException>(async () =>
                             await handler.Handle(null, CancellationToken.None));
@@ -61,18 +61,18 @@ namespace Storage.Tests.Commands.FileUploadCommand
         [Fact]
         public async Task FileUploadCommand_Error_IfFileIsEmpty()
         {
-            var handler = new UploadImageCommandHandler(FileHandlerServiceMock.Object);
+            var handler = new UploadFileCommandHandler(FileHandlerServiceMock.Object);
 
             var error = await Assert.ThrowsAsync<FileHandlerServiceException>(async () =>
-                            await handler.Handle(new UploadImageCommand(), CancellationToken.None));
+                            await handler.Handle(new UploadFileCommand(), CancellationToken.None));
 
-            Assert.Equal(ErrorMessages.ArgumentNullExeptionMessage("ImageFile"), error.UserFriendlyMessage);
+            Assert.Equal(ErrorMessages.ArgumentNullExeptionMessage("File"), error.UserFriendlyMessage);
         }
 
         [Fact]
         public async Task FileUploadCommand_Error_IfFileServiceThrowsException()
         {
-            var handler = new UploadImageCommandHandler(FileHandlerServiceMock.Object);
+            var handler = new UploadFileCommandHandler(FileHandlerServiceMock.Object);
 
             var dir = Path.Combine(TestConstants.CommandsFilesDirectory);
 
@@ -84,12 +84,12 @@ namespace Storage.Tests.Commands.FileUploadCommand
             file.Headers = new HeaderDictionary();
             file.ContentType = "plain/text";
 
-            var request = new UploadImageCommand
+            var request = new UploadFileCommand
             {
                 UserId = Guid.NewGuid(),
                 Attributes = new List<string> { "human", "boy" },
                 IsAnnotated = true,
-                ImageFile = file
+                File = file
             };
 
             FileHandlerServiceMock.Setup(mock =>

@@ -36,25 +36,25 @@ namespace Storage.Domain
         public string SystemName { get; set; }
 
         /// <summary>
-        /// File extension
+        /// File Mime type
         /// </summary>
-        public string FileExtension { get; set; }
+        public string MimeType { get; set;}
 
-        /// <summary>
-        /// File type
-        /// </summary>
-        [JsonConverter(typeof(StringEnumConverter))]
-        public FileType FileType { 
-            get
-            {
-                if (!string.IsNullOrWhiteSpace(OriginalName))
-                {
-                    return GetFileType(OriginalName);
-                }
+        ///// <summary>
+        ///// File type
+        ///// </summary>
+        //[JsonConverter(typeof(StringEnumConverter))]
+        //public FileType FileType { 
+        //    get
+        //    {
+        //        if (!string.IsNullOrWhiteSpace(OriginalName))
+        //        {
+        //            return GetFileType(OriginalName);
+        //        }
 
-                return FileType.Unknown;
-            } 
-        }
+        //        return FileType.Unknown;
+        //    } 
+        //}
 
         /// <summary>
         /// File path
@@ -96,36 +96,36 @@ namespace Storage.Domain
         /// </summary>
         public bool IsAnnotated { get; set; }
 
-        public static FileType GetFileType(string filePath)
-        {
-            var types = new Dictionary<FileType, List<string>>
-            {
-                { FileType.Text, new List<string> { ".txt", ".docx"} },
-                { FileType.Image, new List<string> { ".jpg", ".png", ".jpeg", ".bmp", ".tif", ".tiff", ".gif" } },
-                { FileType.Video, new List<string> { ".mp4", ".avi", ".mpg", ".mpeg", ".wmv" } },
-                { FileType.Audio, new List<string> { ".mp3", ".wav", ".wma", ".mid", ".midi", ".aiff", ".au" } },
-            };
+        //public static FileType GetFileType(string filePath)
+        //{
+        //    var types = new Dictionary<FileType, List<string>>
+        //    {
+        //        { FileType.Text, new List<string> { ".txt", ".docx"} },
+        //        { FileType.Image, new List<string> { ".jpg", ".png", ".jpeg", ".bmp", ".tif", ".tiff", ".gif" } },
+        //        { FileType.Video, new List<string> { ".mp4", ".avi", ".mpg", ".mpeg", ".wmv" } },
+        //        { FileType.Audio, new List<string> { ".mp3", ".wav", ".wma", ".mid", ".midi", ".aiff", ".au" } },
+        //    };
 
-            try
-            {
-                if (string.IsNullOrWhiteSpace(filePath))
-                {
-                    throw new ArgumentNullException(nameof(filePath));
-                }
+        //    try
+        //    {
+        //        if (string.IsNullOrWhiteSpace(filePath))
+        //        {
+        //            throw new ArgumentNullException(nameof(filePath));
+        //        }
 
-                return types.FirstOrDefault(t =>
-                        t.Value.Contains(Path.GetExtension(filePath).ToLowerInvariant()))
-                            .Key;
-            }
-            catch (ArgumentNullException ex)
-            {
-                throw ex;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Unexpected error occured while get file type", ex);
-            }
-        }
+        //        return types.FirstOrDefault(t =>
+        //                t.Value.Contains(Path.GetExtension(filePath).ToLowerInvariant()))
+        //                    .Key;
+        //    }
+        //    catch (ArgumentNullException ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception("Unexpected error occured while get file type", ex);
+        //    }
+        //}
     }
 
     /// <summary>
@@ -147,19 +147,19 @@ namespace Storage.Domain
     /// <summary>
     /// File types
     /// </summary>
-    public enum FileType
-    {
-        [Description("unknown")]
-        Unknown,
-        [Description("text")]
-        Text,
-        [Description("image")]
-        Image,
-        [Description("video")]
-        Video,
-        [Description("audio")]
-        Audio,
-        [Description("zip")]
-        Zip
-    }
+    //public enum FileType
+    //{
+    //    [Description("unknown")]
+    //    Unknown,
+    //    [Description("text")]
+    //    Text,
+    //    [Description("image")]
+    //    Image,
+    //    [Description("video")]
+    //    Video,
+    //    [Description("audio")]
+    //    Audio,
+    //    [Description("zip")]
+    //    Zip
+    //}
 }

@@ -4,46 +4,45 @@ using Storage.Application.Common.Helpers;
 using Storage.Application.Common.Models;
 using Storage.Application.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Storage.Application.Images.Commands.UploadImage
+namespace Storage.Application.Files.Commands.UploadManyFilesArchive
 {
-    public class UploadImageCommandHandler
-        : IRequestHandler<UploadImageCommand, Guid>
+    public class UploadManyFilesArchiveCommandHandler
+        : IRequestHandler<UploadManyFilesArchiveCommand, List<Guid>>
     {
         private readonly IFileHandlerService _fileHandlerService;
 
-        public UploadImageCommandHandler(IFileHandlerService fileHandlerService)
+        public UploadManyFilesArchiveCommandHandler(IFileHandlerService fileHandlerService)
         {
             _fileHandlerService = fileHandlerService;
         }
 
-        public async Task<Guid> Handle(UploadImageCommand request, CancellationToken cancellationToken)
+        public async Task<List<Guid>> Handle(UploadManyFilesArchiveCommand request, CancellationToken cancellationToken)
         {
             try
             {
-                ValidateRequest(request);
-
                 var id = Guid.NewGuid();
-                var fileSystemName = $"{id.Trunc()}{Path.GetExtension(request.ImageFile.FileName)}";
+                var fileSystemName = $"{id.Trunc()}{Path.GetExtension(request.File.FileName)}";
 
                 var uploadRequest = new UploadFileRequestModel
                 {
                     Id = id,
                     OwnerId = request.UserId,
                     Attributes = request.Attributes,
-                    FileExtension = Path.GetExtension(request.ImageFile.FileName),
-                    OriginalName = request.ImageFile.FileName,
+                    MimeType = request.MimeType,
+                    OriginalName = request.File.FileName,
                     SystemName = fileSystemName,
-                    Stream = request.ImageFile.OpenReadStream(),
+                    Stream = request.File.OpenReadStream(),
                     IsAnnotated = request.IsAnnotated,
                 };
 
-                var uploadedFileId = await _fileHandlerService.UploadFileAsync(uploadRequest, cancellationToken);
+                var uploadedFilesIds = await _fileHandlerService.UploadArchiveFileAsync(uploadRequest, cancellationToken);
 
-                return uploadedFileId;
+                return uploadedFilesIds;
             }
             catch (ArgumentNullException ex)
             {
@@ -57,14 +56,6 @@ namespace Storage.Application.Images.Commands.UploadImage
             {
                 throw new FileHandlerServiceException(ex.Message, ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_FILE_MESSAGE);
             }
-        }
-
-        private void ValidateRequest(UploadImageCommand request)
-        {
-            if (request == null)
-                throw new ArgumentNullException(nameof(request));
-            if(request.ImageFile == null)
-                throw new ArgumentNullException(nameof(request.ImageFile));
         }
     }
 }
