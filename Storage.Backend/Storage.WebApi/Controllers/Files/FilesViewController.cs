@@ -1,28 +1,28 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Storage.Application.Images.Queries.GetImage;
-using Storage.Application.Images.Queries.GetImagesList;
-using Storage.Application.Images.Queries.Models;
+using Storage.Application.Files.Queries.GetFile;
+using Storage.Application.Files.Queries.GetFilesList;
+using Storage.Application.Files.Queries.Models;
 using Storage.WebApi.Common.Exceptions;
 
-namespace Storage.WebApi.Controllers.Images
+namespace Storage.WebApi.Controllers.Files
 {
     [Produces("application/json")]
-    [Route("api/images")]
-    public class ImageViewController : BaseController
+    [Route("api/files")]
+    public class FilesViewController : BaseController
     {
         /// <summary>
-        /// Gets image by id
+        /// Gets file by id
         /// </summary>
-        /// <param name="id">Image id</param>
-        /// <returns>Image details</returns>
+        /// <param name="id">File id</param>
+        /// <returns>File details</returns>
         /// <response code="200">Ok</response>
         /// <response code="400">BadRequest</response>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(UserfriendlyException), StatusCodes.Status400BadRequest)]
         [HttpGet("{id}")]
-        public async Task<ActionResult<ImageVm>> GetAsync(Guid id)
+        public async Task<ActionResult<FileVm>> GetAsync(Guid id)
         {
-            var query = new GetImageByIdQuery()
+            var query = new GetFileByIdQuery()
             {
                 Id = id
             };
@@ -33,16 +33,16 @@ namespace Storage.WebApi.Controllers.Images
         }
 
         /// <summary>
-        /// Gets images by query
+        /// Gets files by query
         /// </summary>
         /// <param name="query">Search query</param>
-        /// <returns>Images details</returns>
+        /// <returns>Files details</returns>
         /// <response code="200">Ok</response>
         /// <response code="400">BadRequest</response>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(UserfriendlyException), StatusCodes.Status400BadRequest)]
         [HttpGet]
-        public async Task<ActionResult<ImageListVm>> SearchAsync([FromQuery] GetImagesListQuery query)
+        public async Task<ActionResult<FilesListVm>> SearchAsync([FromQuery] GetFilesListQuery query)
         {
             var vm = await Mediator.Send(query);
 

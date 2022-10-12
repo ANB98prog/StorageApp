@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Storage.WebApi.Controllers.Images
+namespace Storage.WebApi.Controllers.Files
 {
-    public class TaskController
+    public class FilesDownloadController : BaseController
     {
 
     }

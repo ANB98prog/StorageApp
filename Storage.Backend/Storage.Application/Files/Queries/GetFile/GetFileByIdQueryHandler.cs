@@ -3,30 +3,30 @@ using Elasticsearch.Exceptions;
 using Elasticsearch.Interfaces;
 using MediatR;
 using Storage.Application.Common.Exceptions;
-using Storage.Application.Images.Queries.Models;
+using Storage.Application.Files.Queries.Models;
 using Storage.Domain;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 using ErrorMessages = Storage.Application.Common.Exceptions.ErrorMessages;
 
-namespace Storage.Application.Images.Queries.GetImage
+namespace Storage.Application.Files.Queries.GetFile
 {
-    public class GetImageByIdQueryHandler
-        : IRequestHandler<GetImageByIdQuery, ImageVm>
+    public class GetFileByIdQueryHandler
+        : IRequestHandler<GetFileByIdQuery, FileVm>
     {
 
         private readonly IElasticsearchClient _elasticService;
 
         private readonly IMapper _mapper;
 
-        public GetImageByIdQueryHandler(IElasticsearchClient elasticService, IMapper mapper)
+        public GetFileByIdQueryHandler(IElasticsearchClient elasticService, IMapper mapper)
         {
             _elasticService = elasticService;
             _mapper = mapper;
         }
 
-        public async Task<ImageVm> Handle(GetImageByIdQuery request, CancellationToken cancellationToken)
+        public async Task<FileVm> Handle(GetFileByIdQuery request, CancellationToken cancellationToken)
         {
             try
             {
@@ -38,7 +38,7 @@ namespace Storage.Application.Images.Queries.GetImage
                     throw new NotFoundException(request.Id.ToString());
                 }
 
-                return _mapper.Map<BaseFile, ImageVm>(response);
+                return _mapper.Map<BaseFile, FileVm>(response);
             }
             catch (ArgumentNullException ex)
             {
@@ -54,11 +54,11 @@ namespace Storage.Application.Images.Queries.GetImage
             }
             catch (BaseServiceException ex)
             {
-                throw new UnexpectedStorageException(ex.UserFriendlyMessage, ErrorMessages.UNEXPECTED_ERROR_WHILE_GET_IMAGE_BY_ID_MESSAGE);
+                throw new UnexpectedStorageException(ex.UserFriendlyMessage, ErrorMessages.UNEXPECTED_ERROR_WHILE_GET_FILES_BY_ID_MESSAGE);
             }
             catch (Exception ex)
             {
-                throw new UnexpectedStorageException(ex.Message, ErrorMessages.UNEXPECTED_ERROR_WHILE_GET_IMAGE_BY_ID_MESSAGE);
+                throw new UnexpectedStorageException(ex.Message, ErrorMessages.UNEXPECTED_ERROR_WHILE_GET_FILES_BY_ID_MESSAGE);
             }
         }
     }

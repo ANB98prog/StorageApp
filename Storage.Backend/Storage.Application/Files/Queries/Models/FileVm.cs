@@ -1,15 +1,16 @@
 ﻿using AutoMapper;
 using Mapper;
+using Storage.Application.Common;
 using Storage.Domain;
 using System;
 using System.Collections.Generic;
 
-namespace Storage.Application.Images.Queries.Models
+namespace Storage.Application.Files.Queries.Models
 {
     /// <summary>
-    /// Image view model
+    /// File view model
     /// </summary>
-    public class ImageVm : IMapWith<BaseFile>
+    public class FileVm : IMapWith<BaseFile>
     {
         /// <summary>
         /// File id
@@ -17,22 +18,22 @@ namespace Storage.Application.Images.Queries.Models
         public Guid Id { get; set; }
 
         /// <summary>
-        /// Image owner id
+        /// File owner id
         /// </summary>
         public Guid OwnerId { get; set; }
 
         /// <summary>
-        /// Image department owner id
+        /// File department owner id
         /// </summary>
         public Guid DepartmentOwnerId { get; set; }
 
         /// <summary>
-        /// Image url
+        /// File url
         /// </summary>
-        public string ImageUrl { get; set; }
+        public string FileUrl { get; set; }
 
         /// <summary>
-        /// Image attributes
+        /// File attributes
         /// </summary>
         public List<string> Attributes { get; set; }
 
@@ -42,9 +43,20 @@ namespace Storage.Application.Images.Queries.Models
         public string OriginalFileName { get; set; }
 
         /// <summary>
-        /// File extension
+        /// File mime type
         /// </summary>
-        public string FileExtension { get; set; }
+        public string MimeType { 
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(OriginalFileName)
+                    && MimeTypes.TryGetMimeType(OriginalFileName, out var mimeType))
+                {
+                    return mimeType;
+                }
+
+                return Constants.DEFAULT_MIME_TYPE;
+            }
+        }
 
         /// <summary>
         /// Created at
@@ -63,13 +75,11 @@ namespace Storage.Application.Images.Queries.Models
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<BaseFile, ImageVm>()
+            profile.CreateMap<BaseFile, FileVm>()
                  .ForMember(model => model.Id,
                      opt => opt.MapFrom(upload => upload.Id))
                  .ForMember(model => model.OriginalFileName,
                      opt => opt.MapFrom(upload => upload.OriginalName))
-                 .ForMember(model => model.FileExtension,
-                     opt => opt.MapFrom(upload => upload.FileExtension))
                  .ForMember(model => model.Attributes,
                      opt => opt.MapFrom(upload => upload.Attributes))
                  .ForMember(model => model.CreatedAt,
@@ -80,7 +90,7 @@ namespace Storage.Application.Images.Queries.Models
                      opt => opt.MapFrom(upload => upload.DepartmentOwnerId))
                  .ForMember(model => model.OwnerId,
                      opt => opt.MapFrom(upload => upload.OwnerId))
-                 .ForMember(model => model.ImageUrl,
+                 .ForMember(model => model.FileUrl,
                      opt => opt.MapFrom(upload => upload.FileUrl))
                  .ForMember(model => model.IsAnnotated,
                      opt => opt.MapFrom(upload => upload.IsAnnotated));

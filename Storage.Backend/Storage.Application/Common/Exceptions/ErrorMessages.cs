@@ -96,14 +96,14 @@ namespace Storage.Application.Common.Exceptions
         public static string ItemNotFoundErrorMessage(string id) => $"Item with '{id}' id not found!";
 
         /// <summary>
-        /// Unexpected eeor while get image by id
+        /// Unexpected eeor while get files by id
         /// </summary>
-        public const string UNEXPECTED_ERROR_WHILE_GET_IMAGE_BY_ID_MESSAGE = "Unexpected error occured while get image by id.";
+        public const string UNEXPECTED_ERROR_WHILE_GET_FILES_BY_ID_MESSAGE = "Unexpected error occured while get file by id.";
 
         /// <summary>
-        /// Unexpected error while get images list
+        /// Unexpected error while get files list
         /// </summary>
-        public const string UNEXPECTED_ERROR_WHILE_SEARCH_IMAGES_MESSAGE = "Unexpected error occured while get list of images.";
+        public const string UNEXPECTED_ERROR_WHILE_SEARCH_FILES_MESSAGE = "Unexpected error occured while get list of files.";
 
         /// <summary>
         /// Error message if passed unsupported archive type

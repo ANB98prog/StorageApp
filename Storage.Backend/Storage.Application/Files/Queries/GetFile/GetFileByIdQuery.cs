@@ -1,23 +1,23 @@
 ﻿using MediatR;
-using Storage.Application.Images.Queries.Models;
+using Storage.Application.Files.Queries.Models;
 using System;
 
-namespace Storage.Application.Images.Queries.GetImage
+namespace Storage.Application.Files.Queries.GetFile
 {
-    public class GetImageByIdQuery : IRequest<ImageVm>
+    public class GetFileByIdQuery : IRequest<FileVm>
     {
         /// <summary>
-        /// Image id
+        /// File id
         /// </summary>
         public Guid Id { get; set; }
 
         /// <summary>
-        /// Image owner id
+        /// File owner id
         /// </summary>
         public Guid OwnerId { get; set; }
 
         /// <summary>
-        /// Image department owner id
+        /// File department owner id
         /// </summary>
         public Guid DepartmentOwnerId { get; set; }
     }

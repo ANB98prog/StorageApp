@@ -11,7 +11,7 @@ namespace Storage.WebApi.Controllers.Files
     /// </summary>
     [Produces("application/json")]
     [Route("api/files")]
-    public class FilesController : BaseController
+    public class FilesRemoveController : BaseController
     {
         /// <summary>
         /// Removes file from storage

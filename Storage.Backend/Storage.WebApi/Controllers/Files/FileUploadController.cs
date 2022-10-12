@@ -5,17 +5,17 @@ using Storage.Application.Images.Commands.UploadManyImagesArchive;
 using Storage.WebApi.Common.Exceptions;
 using Storage.WebApi.Models;
 
-namespace Storage.WebApi.Controllers.Images
+namespace Storage.WebApi.Controllers.Files
 {
     /// <summary>
     /// Endpoint to upload images to storage
     /// </summary>
     [Produces("application/json")]
     [Route("api/images/upload")]
-    public class ImageUploadController : BaseController
+    public class FileUploadController : BaseController
     {
         /// <summary>
-        /// Uploads image to storage
+        /// Uploads file to storage
         /// </summary>
         /// <param name="request">Request model</param>
         /// <returns>Uploaded image id </returns>
@@ -24,7 +24,7 @@ namespace Storage.WebApi.Controllers.Images
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(UserfriendlyException), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UploadImageAsync([FromForm] UploadFileRequestModel request)
+        public async Task<IActionResult> UploadFileAsync([FromForm] UploadFileRequestModel request)
         {
             var command = Mapper.Map<UploadFileRequestModel, UploadImageCommand>(request);
 
@@ -36,16 +36,16 @@ namespace Storage.WebApi.Controllers.Images
         }
 
         /// <summary>
-        /// Uploads images to storage in zip file
+        /// Uploads files to storage in zip file
         /// </summary>
         /// <param name="request">Request model</param>
-        /// <returns>Uploaded images ids </returns>
+        /// <returns>Uploaded files ids </returns>
         /// <response code="201">Created</response>
         /// <response code="400">BadRequest</response>
         [HttpPost("many/zip")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(UserfriendlyException), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UploadImagesAsync([FromForm] UploadFileRequestModel request)
+        public async Task<IActionResult> UploadFilesAsync([FromForm] UploadFileRequestModel request)
         {
             var command = Mapper.Map<UploadFileRequestModel, UploadManyImagesArchiveCommand>(request);
 
@@ -57,16 +57,16 @@ namespace Storage.WebApi.Controllers.Images
         }
 
         /// <summary>
-        /// Uploads images to storage in separate files
+        /// Uploads files to storage in separate files
         /// </summary>
         /// <param name="request">Request model</param>
-        /// <returns>Uploaded images ids </returns>
+        /// <returns>Uploaded files ids </returns>
         /// <response code="201">Created</response>
         /// <response code="400">BadRequest</response>
         [HttpPost("many")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(UserfriendlyException), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UploadImagesAsync([FromForm] UploadManyFilesRequestModel request)
+        public async Task<IActionResult> UploadFilesAsync([FromForm] UploadManyFilesRequestModel request)
         {
             var command = Mapper.Map<UploadManyFilesRequestModel, UploadManyImagesCommand>(request);
 

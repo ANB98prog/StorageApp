@@ -1,20 +1,19 @@
 ﻿using MediatR;
-using Newtonsoft.Json.Linq;
 using Storage.Application.Common;
 using System;
 using System.Collections.Generic;
 
-namespace Storage.Application.Images.Queries.GetImagesList
+namespace Storage.Application.Files.Queries.GetFilesList
 {
-    public class GetImagesListQuery : IRequest<ImageListVm>
+    public class GetFilesListQuery : IRequest<FilesListVm>
     {
         /// <summary>
-        /// Image owner id
+        /// File owner id
         /// </summary>
         public string? OwnerId { get; set; }
 
         /// <summary>
-        /// Image department owner id
+        /// File department owner id
         /// </summary>
         public string? DepartmentOwnerId { get; set; }
 

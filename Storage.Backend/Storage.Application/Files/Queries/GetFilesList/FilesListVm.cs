@@ -2,27 +2,27 @@
 using Elasticsearch.Models;
 using Mapper;
 using Newtonsoft.Json;
-using Storage.Application.Images.Queries.Models;
+using Storage.Application.Files.Queries.Models;
 using Storage.Domain;
 using System.Collections.Generic;
 
-namespace Storage.Application.Images.Queries.GetImagesList
+namespace Storage.Application.Files.Queries.GetFilesList
 {
-    public class ImageListVm : IMapWith<SearchResponse<BaseFile>>
+    public class FilesListVm : IMapWith<SearchResponse<BaseFile>>
     {
         /// <summary>
-        /// Images list
+        /// Files list
         /// </summary>
-        public IList<ImageVm> Images { get; set; }
+        public IList<FileVm> Files { get; set; }
 
         /// <summary>
-        /// Images count
+        /// Files count
         /// </summary>
         public int Count 
         {
             get
             {
-                return Images?.Count ?? 0;
+                return Files?.Count ?? 0;
             }
         }
 
@@ -32,7 +32,7 @@ namespace Storage.Application.Images.Queries.GetImagesList
         private long _totalCount;
 
         /// <summary>
-        /// Images total count
+        /// Files total count
         /// </summary>
         [JsonProperty("total_count")]
         public long TotalCount
@@ -73,11 +73,11 @@ namespace Storage.Application.Images.Queries.GetImagesList
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<SearchResponse<BaseFile>, ImageListVm>()
-                .ForMember(model => model.Images,
+            profile.CreateMap<SearchResponse<BaseFile>, FilesListVm>()
+                .ForMember(model => model.Files,
                 opt => opt.MapFrom(p => p.Documents));
 
-            profile.CreateMap<HitModel<BaseFile>, ImageVm>()
+            profile.CreateMap<HitModel<BaseFile>, FileVm>()
                 .ForMember(model => model.Id,
                 opt => opt.MapFrom(p => p.Document.Id))
                 .ForMember(model => model.OwnerId,
@@ -86,15 +86,13 @@ namespace Storage.Application.Images.Queries.GetImagesList
                 opt => opt.MapFrom(p => p.Document.DepartmentOwnerId))
                 .ForMember(model => model.OriginalFileName,
                 opt => opt.MapFrom(p => p.Document.OriginalName))
-                .ForMember(model => model.FileExtension,
-                opt => opt.MapFrom(p => p.Document.FileExtension))
                 .ForMember(model => model.Attributes,
                 opt => opt.MapFrom(p => p.Document.Attributes))
                 .ForMember(model => model.EditedAt,
                 opt => opt.MapFrom(p => p.Document.EditedAt))
                 .ForMember(model => model.CreatedAt,
                 opt => opt.MapFrom(p => p.Document.CreatedAt))
-                .ForMember(model => model.ImageUrl,
+                .ForMember(model => model.FileUrl,
                 opt => opt.MapFrom(p => p.Document.FileUrl))
                 .ForMember(model => model.IsAnnotated,
                 opt => opt.MapFrom(p => p.Document.IsAnnotated));

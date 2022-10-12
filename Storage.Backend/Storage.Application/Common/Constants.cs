@@ -16,5 +16,10 @@
         /// Default page number
         /// </summary>
         public const int DEFAULT_PAGE_NUMBER = 0;
+
+        /// <summary>
+        /// Default mime type
+        /// </summary>
+        public const string DEFAULT_MIME_TYPE = "plain/text";
     }
 }
