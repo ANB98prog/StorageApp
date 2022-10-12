@@ -312,10 +312,11 @@ namespace Storage.Application.Common.Services
         {
             var fileAttributes = new List<string>();
 
-            fileAttributes.AddRange(FileHelper.GetFileAttributesByMimeData(upload.MimeType));
             fileAttributes.Add(upload.IsAnnotated ?
                          FileAttributes.Annotated.ToString()
                             : FileAttributes.NotAnnotated.ToString());
+            fileAttributes.AddRange(FileHelper.GetFileAttributesByMimeData(upload.MimeType));
+            
 
             if (upload.Attributes != null
                     && upload.Attributes.Any())
