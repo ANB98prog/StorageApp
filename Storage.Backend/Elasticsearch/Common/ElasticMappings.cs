@@ -16,7 +16,8 @@ namespace Elasticsearch.Common
         {
             var mapped = new Models.SearchResponse<T>()
             {
-                Count = response.Total
+                Total = response.Total,
+                Count = response.Hits.Count
             };
 
             var documents = new List<HitModel<T>>();

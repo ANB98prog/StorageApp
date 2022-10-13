@@ -10,12 +10,12 @@ namespace Storage.Application.Files.Queries.GetFilesList
         /// <summary>
         /// File owner id
         /// </summary>
-        public string? OwnerId { get; set; }
+        public Guid? OwnerId { get; set; }
 
         /// <summary>
         /// File department owner id
         /// </summary>
-        public string? DepartmentOwnerId { get; set; }
+        public Guid? DepartmentOwnerId { get; set; }
 
         /// <summary>
         /// List of attributes

@@ -100,10 +100,19 @@ namespace Storage.Application.Common.Exceptions
         /// </summary>
         public const string UNEXPECTED_ERROR_WHILE_GET_FILES_BY_ID_MESSAGE = "Unexpected error occured while get file by id.";
 
+
+        #region Search Error messages
         /// <summary>
         /// Unexpected error while get files list
         /// </summary>
         public const string UNEXPECTED_ERROR_WHILE_SEARCH_FILES_MESSAGE = "Unexpected error occured while get list of files.";
+
+        /// <summary>
+        /// Invalid date range request
+        /// </summary>
+        public const string INVALID_SEARCH_REQUEST_FROM_DATE_GRT_THAN_TO = "Invalid search request 'From date greater than To date'";
+
+        #endregion
 
         /// <summary>
         /// Error message if passed unsupported archive type

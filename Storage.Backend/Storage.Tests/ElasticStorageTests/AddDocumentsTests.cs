@@ -4,12 +4,14 @@ using Moq;
 using Nest;
 using Storage.Application.Common.Exceptions;
 using Storage.Application.Common.Helpers;
+using Storage.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ErrorMessages = Storage.Application.Common.Exceptions.ErrorMessages;
+using Task = System.Threading.Tasks.Task;
 
 namespace Storage.Tests.ElasticStorageTests
 {

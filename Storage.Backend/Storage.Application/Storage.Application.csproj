@@ -27,8 +27,4 @@
     <ProjectReference Include="..\Storage.Domain\Storage.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Images\Commands\" />
-  </ItemGroup>
-
 </Project>

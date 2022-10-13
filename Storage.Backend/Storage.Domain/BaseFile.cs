@@ -1,10 +1,7 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
-using System.Linq;
 
 namespace Storage.Domain
 {
@@ -13,57 +10,49 @@ namespace Storage.Domain
         /// <summary>
         /// Image id
         /// </summary>
+        [JsonProperty("id")]
         public Guid Id { get; set; }
 
         /// <summary>
         /// Image owner id
         /// </summary>
+        [JsonProperty("ownerId")]
         public Guid OwnerId { get; set; }
 
         /// <summary>
         /// Image department owner id
         /// </summary>
+        [JsonProperty("departmentOwnerId")]
         public Guid DepartmentOwnerId { get; set; }
 
         /// <summary>
         /// Original image name
         /// </summary>
+        [JsonProperty("originalName")]
         public string OriginalName { get; set; }
 
         /// <summary>
         /// System image name
         /// </summary>
+        [JsonProperty("systemName")]
         public string SystemName { get; set; }
 
         /// <summary>
         /// File Mime type
         /// </summary>
+        [JsonProperty("mimeType")]
         public string MimeType { get; set;}
-
-        ///// <summary>
-        ///// File type
-        ///// </summary>
-        //[JsonConverter(typeof(StringEnumConverter))]
-        //public FileType FileType { 
-        //    get
-        //    {
-        //        if (!string.IsNullOrWhiteSpace(OriginalName))
-        //        {
-        //            return GetFileType(OriginalName);
-        //        }
-
-        //        return FileType.Unknown;
-        //    } 
-        //}
 
         /// <summary>
         /// File path
         /// </summary>
+        [JsonProperty("filePath")]
         public string FilePath { get; set; }
 
         /// <summary>
         /// File url
         /// </summary>
+        [JsonProperty("fileUrl")]
         public string FileUrl { 
             get
             {
@@ -79,53 +68,26 @@ namespace Storage.Domain
         /// <summary>
         /// Image attributes
         /// </summary>
+        [JsonProperty("attributes")]
         public IEnumerable<string> Attributes { get; set; }
 
         /// <summary>
         /// Created at
         /// </summary>
-        public DateTime CreatedAt { get; private set; } = DateTime.Now;
+        [JsonProperty("createdAt")]
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         /// <summary>
         /// Edited at
         /// </summary>
+        [JsonProperty("editedAt")]
         public DateTime EditedAt { get; set; }
 
         /// <summary>
         /// Describes is file annotated
         /// </summary>
+        [JsonProperty("isAnnotated")]
         public bool IsAnnotated { get; set; }
-
-        //public static FileType GetFileType(string filePath)
-        //{
-        //    var types = new Dictionary<FileType, List<string>>
-        //    {
-        //        { FileType.Text, new List<string> { ".txt", ".docx"} },
-        //        { FileType.Image, new List<string> { ".jpg", ".png", ".jpeg", ".bmp", ".tif", ".tiff", ".gif" } },
-        //        { FileType.Video, new List<string> { ".mp4", ".avi", ".mpg", ".mpeg", ".wmv" } },
-        //        { FileType.Audio, new List<string> { ".mp3", ".wav", ".wma", ".mid", ".midi", ".aiff", ".au" } },
-        //    };
-
-        //    try
-        //    {
-        //        if (string.IsNullOrWhiteSpace(filePath))
-        //        {
-        //            throw new ArgumentNullException(nameof(filePath));
-        //        }
-
-        //        return types.FirstOrDefault(t =>
-        //                t.Value.Contains(Path.GetExtension(filePath).ToLowerInvariant()))
-        //                    .Key;
-        //    }
-        //    catch (ArgumentNullException ex)
-        //    {
-        //        throw ex;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception("Unexpected error occured while get file type", ex);
-        //    }
-        //}
     }
 
     /// <summary>
@@ -136,30 +98,13 @@ namespace Storage.Domain
         /// <summary>
         /// Fill (absolute) file path
         /// </summary>
+        [JsonProperty("fullPath")]
         public string FullPath { get; set; }
 
         /// <summary>
         /// Relative file path
         /// </summary>
+        [JsonProperty("relativePath")]
         public string RelativePath { get; set; }
     }
-
-    /// <summary>
-    /// File types
-    /// </summary>
-    //public enum FileType
-    //{
-    //    [Description("unknown")]
-    //    Unknown,
-    //    [Description("text")]
-    //    Text,
-    //    [Description("image")]
-    //    Image,
-    //    [Description("video")]
-    //    Video,
-    //    [Description("audio")]
-    //    Audio,
-    //    [Description("zip")]
-    //    Zip
-    //}
 }

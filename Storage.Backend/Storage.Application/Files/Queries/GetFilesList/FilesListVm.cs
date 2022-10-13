@@ -75,7 +75,11 @@ namespace Storage.Application.Files.Queries.GetFilesList
         {
             profile.CreateMap<SearchResponse<BaseFile>, FilesListVm>()
                 .ForMember(model => model.Files,
-                opt => opt.MapFrom(p => p.Documents));
+                    opt => opt.MapFrom(p => p.Documents))
+                .ForMember(model => model.Count,
+                    opt => opt.MapFrom(p => p.Count))
+                .ForMember(model => model.TotalCount,
+                    opt => opt.MapFrom(p => p.Total));
 
             profile.CreateMap<HitModel<BaseFile>, FileVm>()
                 .ForMember(model => model.Id,

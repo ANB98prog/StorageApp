@@ -54,6 +54,10 @@ namespace Storage.WebApi.Middleware
                     code = HttpStatusCode.NotFound;
                     result = JsonSerializer.Serialize(new UserfriendlyException(notFoundException.UserFriendlyMessage));
                     break;
+                case InvalidSearchRequestException invalidSearchRequestException:
+                    code = HttpStatusCode.BadRequest;
+                    result = JsonSerializer.Serialize(new UserfriendlyException(invalidSearchRequestException.UserFriendlyMessage));
+                    break;
             }
 
             context.Response.ContentType = "application/json";

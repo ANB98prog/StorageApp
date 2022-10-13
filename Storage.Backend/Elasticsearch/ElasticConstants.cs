@@ -22,5 +22,10 @@ namespace Elasticsearch
         /// Index not found server message
         /// </summary>
         public const string INDEX_NOT_EXISTS_SERVER_MESSAGE = "no such index";
+
+        /// <summary>
+        /// Keyword property type
+        /// </summary>
+        public const string KEYWORD_PROPERTY = "keyword";
     }
 }
