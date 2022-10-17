@@ -88,6 +88,12 @@ namespace Storage.Domain
         /// </summary>
         [JsonProperty("isAnnotated")]
         public bool IsAnnotated { get; set; }
+
+        /// <summary>
+        /// File annotation
+        /// </summary>
+        [JsonProperty("Annotation", NullValueHandling = NullValueHandling.Ignore)]
+        public AnnotationMetadata Annotation { get; set; }
     }
 
     /// <summary>
@@ -106,5 +112,56 @@ namespace Storage.Domain
         /// </summary>
         [JsonProperty("relativePath")]
         public string RelativePath { get; set; }
+    }
+
+    /// <summary>
+    /// Annotation metadata
+    /// </summary>
+    public class AnnotationMetadata
+    {
+        /// <summary>
+        /// Annotation classes
+        /// </summary>
+        [JsonProperty("classes")]
+        public List<AnnotatedClass> Classes { get; set; }
+
+        /// <summary>
+        /// Annotation
+        /// </summary>
+        [JsonProperty("annotations")]
+        public List<Annotation> Annotations { get; set; }
+    }
+
+    /// <summary>
+    /// Annotation class info
+    /// </summary>
+    public class AnnotatedClass
+    {
+        /// <summary>
+        /// Class index
+        /// </summary>
+        [JsonProperty("classIndex")]
+        public int ClassIndex { get; set; }
+
+        /// <summary>
+        /// Class name
+        /// </summary>
+        [JsonProperty("className")]
+        public string ClassName { get; set; }
+    }
+
+    public class Annotation
+    {
+        /// <summary>
+        /// Class index
+        /// </summary>
+        [JsonProperty("classIndex")]
+        public int ClassIndex { get; set; }
+
+        /// <summary>
+        /// Bounding boxes
+        /// </summary>
+        [JsonProperty("bboxes")]
+        public float[] Bboxes { get; set; }
     }
 }
