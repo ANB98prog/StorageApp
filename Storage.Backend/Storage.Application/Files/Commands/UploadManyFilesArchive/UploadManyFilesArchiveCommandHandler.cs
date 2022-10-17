@@ -6,6 +6,7 @@ using Storage.Application.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,22 +26,30 @@ namespace Storage.Application.Files.Commands.UploadManyFilesArchive
         {
             try
             {
-                var id = Guid.NewGuid();
-                var fileSystemName = $"{id.Trunc()}{Path.GetExtension(request.File.FileName)}";
+                var uploadedFilesIds = new List<Guid>();
 
-                var uploadRequest = new UploadFileRequestModel
+                if (request != null
+                    && request.Files.Any())
                 {
-                    Id = id,
-                    OwnerId = request.UserId,
-                    Attributes = request.Attributes,
-                    MimeType = request.MimeType,
-                    OriginalName = request.File.FileName,
-                    SystemName = fileSystemName,
-                    Stream = request.File.OpenReadStream(),
-                    IsAnnotated = request.IsAnnotated,
-                };
+                    foreach (var archive in request.Files)
+                    {
+                        var id = Guid.NewGuid();
+                        var fileSystemName = $"{id.Trunc()}{Path.GetExtension(archive.FileName)}";
 
-                var uploadedFilesIds = await _fileHandlerService.UploadArchiveFileAsync(uploadRequest, cancellationToken);
+                        var uploadRequest = new UploadFileRequestModel
+                        {
+                            Id = id,
+                            OwnerId = request.UserId,
+                            Attributes = request.Attributes,
+                            OriginalName = archive.FileName,
+                            SystemName = fileSystemName,
+                            Stream = archive.OpenReadStream(),
+                            IsAnnotated = request.IsAnnotated,
+                        };
+
+                        uploadedFilesIds.AddRange(await _fileHandlerService.UploadArchiveFileAsync(uploadRequest, request.MimeTypes, cancellationToken));
+                    } 
+                }
 
                 return uploadedFilesIds;
             }

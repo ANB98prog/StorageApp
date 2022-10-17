@@ -2,7 +2,6 @@
 using Mapper;
 using Newtonsoft.Json;
 using Storage.Application.Files.Commands.UploadFile;
-using Storage.Application.Files.Commands.UploadManyFilesArchive;
 
 namespace Storage.WebApi.Models
 {
@@ -21,12 +20,6 @@ namespace Storage.WebApi.Models
         public void Mapping(Profile profile)
         {
             profile.CreateMap<UploadFileRequestModel, UploadFileCommand>()
-                .ForMember(model => model.File,
-                    opt => opt.MapFrom(upload => upload.File))
-                .ForMember(model => model.Attributes,
-                    opt => opt.MapFrom(upload => upload.Attributes));
-
-            profile.CreateMap<UploadFileRequestModel, UploadManyFilesArchiveCommand>()
                 .ForMember(model => model.File,
                     opt => opt.MapFrom(upload => upload.File))
                 .ForMember(model => model.Attributes,

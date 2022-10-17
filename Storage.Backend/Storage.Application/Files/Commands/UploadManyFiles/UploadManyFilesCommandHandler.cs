@@ -41,7 +41,7 @@ namespace Storage.Application.Files.Commands.UploadManyFiles
                         OriginalName = file.FileName,
                         SystemName = fileSystemName,
                         Stream = file.OpenReadStream(),
-                        IsAnnotated = request.IsAnnotated,
+                        IsAnnotated = request.IsAnnotated
                     });
                 }
 

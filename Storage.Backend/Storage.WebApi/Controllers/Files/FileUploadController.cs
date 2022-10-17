@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Storage.Application.Common.Models;
 using Storage.Application.Files.Commands.UploadFile;
 using Storage.Application.Files.Commands.UploadManyFiles;
 using Storage.Application.Files.Commands.UploadManyFilesArchive;
 using Storage.WebApi.Common.Exceptions;
 using Storage.WebApi.Models;
+using UploadFileRequestModel = Storage.WebApi.Models.UploadFileRequestModel;
 
 namespace Storage.WebApi.Controllers.Files
 {
@@ -45,9 +47,9 @@ namespace Storage.WebApi.Controllers.Files
         [HttpPost("many/zip")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(UserfriendlyException), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UploadFilesAsync([FromForm] UploadFileRequestModel request)
+        public async Task<IActionResult> UploadFilesAsync([FromForm] UploadArchivesFileRequestModel request)
         {
-            var command = Mapper.Map<UploadFileRequestModel, UploadManyFilesArchiveCommand>(request);
+            var command = Mapper.Map<UploadArchivesFileRequestModel, UploadManyFilesArchiveCommand>(request);
 
             command.UserId = UserId;
 

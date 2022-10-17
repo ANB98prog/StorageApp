@@ -139,7 +139,7 @@ namespace Storage.Application.Common.Services
             }
         }
 
-        public async Task<List<Guid>> UploadArchiveFileAsync(UploadFileRequestModel file, CancellationToken cancellationToken)
+        public async Task<List<Guid>> UploadArchiveFileAsync(UploadFileRequestModel file, List<string> mimeTypes, CancellationToken cancellationToken)
         {
             try
             {
@@ -153,7 +153,7 @@ namespace Storage.Application.Common.Services
                 if (file == null)
                     throw new ArgumentNullException(nameof(file));
 
-                var files = await UploadArchiveFilesAsync(file, cancellationToken);
+                var files = await UploadArchiveFilesAsync(file, mimeTypes, cancellationToken);
 
                 var filesIds = await UploadManyFileAsync(files, cancellationToken);
 
@@ -185,7 +185,7 @@ namespace Storage.Application.Common.Services
         /// <param name="archive">Archive to load</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Loaded files</returns>
-        private async Task<List<UploadFileRequestModel>> UploadArchiveFilesAsync(UploadFileRequestModel archive, CancellationToken cancellationToken)
+        private async Task<List<UploadFileRequestModel>> UploadArchiveFilesAsync(UploadFileRequestModel archive, List<string> mimeTypes, CancellationToken cancellationToken)
         {
             var filesData = new List<UploadFileRequestModel>();
 
@@ -202,25 +202,37 @@ namespace Storage.Application.Common.Services
             /*Need to add attributes to each file*/
             if (files.Any())
             {
+                var supportedExtensions = new List<string>();
+
+                foreach (var mimetype in mimeTypes)
+                {
+                    supportedExtensions.AddRange(MimeTypes.GetMimeTypeExtensions(mimetype)); 
+                }
+
                 foreach (var file in files)
                 {
-                    var stream = await FileHelper.LoadFileAsync(file);
+                    var extension = Path.GetExtension(file).TrimStart('.');
 
-                    var fileId = Guid.NewGuid();
-                    var systemName = $"{fileId.Trunc()}{Path.GetExtension(file)}";
-
-                    filesData.Add(new UploadFileRequestModel
+                    if (supportedExtensions.Contains(extension))
                     {
-                        Id = fileId,
-                        SystemName = systemName,
-                        OriginalName = Path.GetFileName(file),
-                        Attributes = archive.Attributes,
-                        MimeType = FileHelper.GetFileMimeType(file),
-                        IsAnnotated = archive.IsAnnotated,
-                        DepartmentOwnerId = archive.DepartmentOwnerId,
-                        OwnerId = archive.OwnerId,
-                        Stream = stream
-                    });
+                        var stream = await FileHelper.LoadFileAsync(file);
+
+                        var fileId = Guid.NewGuid();
+                        var systemName = $"{fileId.Trunc()}{Path.GetExtension(file)}";
+
+                        filesData.Add(new UploadFileRequestModel
+                        {
+                            Id = fileId,
+                            SystemName = systemName,
+                            OriginalName = Path.GetFileName(file),
+                            Attributes = archive.Attributes,
+                            MimeType = FileHelper.GetFileMimeType(file),
+                            IsAnnotated = archive.IsAnnotated,
+                            DepartmentOwnerId = archive.DepartmentOwnerId,
+                            OwnerId = archive.OwnerId,
+                            Stream = stream
+                        }); 
+                    }
                 }
             }
 

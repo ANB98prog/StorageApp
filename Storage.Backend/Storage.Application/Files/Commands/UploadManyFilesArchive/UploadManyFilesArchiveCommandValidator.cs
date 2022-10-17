@@ -9,15 +9,13 @@ namespace Storage.Application.Files.Commands.UploadManyFilesArchive
         public UploadManyFilesArchiveCommandValidator()
         {
             RuleFor(uploadManyCommand =>
-            uploadManyCommand.File).NotNull().NotEmpty();
-            RuleFor(uploadManyCommand =>
-            uploadManyCommand.File.FileName).NotNull().NotEmpty();
-            RuleFor(uploadManyCommand =>
-            uploadManyCommand.File.Length).GreaterThan(0);
-            RuleFor(uploadManyCommand =>
-            uploadManyCommand.File.FileName).Must(file =>
+            uploadManyCommand.Files).NotNull().NotEmpty();
+            RuleForEach(uploadManyCommand =>
+            uploadManyCommand.Files).NotNull().NotEmpty();
+            RuleForEach(uploadManyCommand =>
+            uploadManyCommand.Files).Must(file =>
             {
-                return new string[] { ".zip", ".rar" }.Contains(Path.GetExtension(file));
+                return new string[] { ".zip", ".rar" }.Contains(Path.GetExtension(file.FileName));
 
             }).WithMessage("Тип загружаемого файла должен быть 'Архив (rar, zip)'");
         }

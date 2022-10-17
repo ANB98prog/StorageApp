@@ -9,14 +9,8 @@ namespace Storage.WebApi.Models
     /// <summary>
     /// Upload many files request
     /// </summary>
-    public class UploadManyFilesRequestModel : IMapWith<UploadFileCommand>
+    public class UploadManyFilesRequestModel : BaseUploadFileModel, IMapWith<UploadFileCommand>
     {
-        /// <summary>
-        /// File attributes
-        /// </summary>
-        [JsonProperty("attributes")]
-        public List<string> Attributes { get; set; }
-
         /// <summary>
         /// Is data annotated
         /// </summary>

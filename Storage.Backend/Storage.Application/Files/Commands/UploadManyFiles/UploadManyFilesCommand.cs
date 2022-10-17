@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Storage.Application.Common;
+using Storage.Application.Common.Exceptions;
 using Storage.Application.Common.Models;
 using System;
 using System.Collections.Generic;
@@ -8,21 +10,16 @@ namespace Storage.Application.Files.Commands.UploadManyFiles
     /// <summary>
     /// Upload many files command
     /// </summary>
-    public class UploadManyFilesCommand : BaseCommand<List<Guid>>
+    public class UploadManyFilesCommand : BaseUploadCommand<List<Guid>>
     {
-        /// <summary>
-        /// Files attributes
-        /// </summary>
-        public List<string> Attributes { get; set; } = new List<string>();
-
-        /// <summary>
-        /// Is files annotated
-        /// </summary>
-        public bool IsAnnotated { get; set; } = false;
-
         /// <summary>
         /// Files data
         /// </summary>
         public IList<IFormFile> Files { get; set; }
+
+        /// <summary>
+        /// Mime type
+        /// </summary>
+        public List<string> MimeTypes { get; set; } =  new List<string>();
     }
 }

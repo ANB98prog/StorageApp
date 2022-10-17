@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Storage.Application.Common.Models
 {
@@ -16,27 +15,5 @@ namespace Storage.Application.Common.Models
         /// </summary>
         public bool IsAnnotated { get; set; } = false;
 
-        /// <summary>
-        /// File data
-        /// </summary>
-        public IFormFile File { get; set; }
-
-        /// <summary>
-        /// File data mime type
-        /// </summary>
-        public string MimeType
-        {
-            get
-            {
-                if (File != null
-                    && !string.IsNullOrEmpty(File.FileName)
-                        && MimeTypes.TryGetMimeType(File.FileName, out var mimeType))
-                {
-                    return mimeType;
-                }
-
-                return Constants.DEFAULT_MIME_TYPE;
-            }
-        }
     }
 }

@@ -40,9 +40,10 @@ namespace Storage.Application.Interfaces
         /// Uploads archived file
         /// </summary>
         /// <param name="file">File to upload</param>
+        /// <param name="mimeTypes">Uploading files mime types</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Uploaded files ids</returns>
-        public Task<List<Guid>> UploadArchiveFileAsync(UploadFileRequestModel file, CancellationToken cancellationToken);
+        public Task<List<Guid>> UploadArchiveFileAsync(UploadFileRequestModel file, List<string> mimeTypes, CancellationToken cancellationToken);
 
         /// <summary>
         /// Downloads large file

@@ -133,5 +133,10 @@ namespace Storage.Application.Common.Exceptions
         /// <param name="format">Correct format</param>
         /// <returns><Error message/returns>
         public static string WrongParameterFormatErrorMessage(string parameter, string paramValue, string format) => $"Parameter '{parameter}' with value '{paramValue}' has wrong format. Correct format is '{format}'";
+
+        /// <summary>
+        /// Unsupported mime type error message
+        /// </summary>
+        public const string UNSUPPORTED_MIME_TYPE_ERROR_MESSAGE = "Unsupported mime type.";
     }
 }
