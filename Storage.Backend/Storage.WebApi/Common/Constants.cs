@@ -14,5 +14,10 @@
         /// Describes two gigabyte in bytes
         /// </summary>
         public static long TWO_GIGABYTE_IN_BYTES = 2147483648;
+
+        /// <summary>
+        /// Describes ten gigabytes in bytes
+        /// </summary>
+        public static long TEN_GIGABYTE_IN_BYTES = 10000000000;
     }
 }

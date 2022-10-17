@@ -1,4 +1,5 @@
 using Mapper;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Serilog;
 using Storage.Application;
@@ -74,7 +75,12 @@ namespace Storage.WebApi
             services.Configure<KestrelServerOptions>(options =>
             {
                 // Application will receive this amount of data per request
-                options.Limits.MaxRequestBodySize = Constants.ONE_GIGABYTE_IN_BYTES;
+                options.Limits.MaxRequestBodySize = Constants.TEN_GIGABYTE_IN_BYTES;
+            });
+
+            services.Configure<FormOptions>(opt =>
+            {
+                opt.MultipartBodyLengthLimit = Constants.TEN_GIGABYTE_IN_BYTES;
             });
 
             services.AddCors(options =>
