@@ -36,43 +36,45 @@ namespace Storage.Application.DataConverters
             {
                 var annotation = new Dictionary<Guid, AnnotationMetadata>();
 
-                /*Получаем классы*/
-                var classesFile = files.FirstOrDefault(f => f.OriginalName.ToLower().Equals(ConvertersConstants.CLASSES_FILE_NAME));
-
-                if (classesFile == null)
+                if (files != null
+                    && files.Any())
                 {
-                    throw new AnnotationConvertionException(ConvertersErrorMessages.CLASSES_FILE_NOT_FOUND_ERROR_MESSAGE);
-                }
+                    /*Получаем классы*/
+                    var classesFile = files.FirstOrDefault(f => f.OriginalName.ToLower().Equals(ConvertersConstants.CLASSES_FILE_NAME));
 
-                var classes = await GetClassesFromFileAsync(classesFile.Stream);
-
-                /*Получаем картинки*/
-                var imagesFiles = files.Where(f =>
-                                        ImagesExtensions.Contains(Path.GetExtension(f.OriginalName)));
-
-                /*обрабатываем картинки и их текстовики*/
-                /*Получаем разрешение картинки*/
-                /*Получаем классы и bboxes*/
-
-                foreach (var image in imagesFiles)
-                {
-                    var bountingBoxesFiles = files.FirstOrDefault(b =>
-                                            b.OriginalName.Equals($"{Path.GetFileNameWithoutExtension(image.OriginalName)}.txt"));
-
-                    if (bountingBoxesFiles == null)
-                        continue;
-
-                    var bboxes = await GetBoundingBoxesFromFileAsync(bountingBoxesFiles.Stream);
-
-                    var imageInfo = GetImageInfo(image.Stream);
-
-                    var annotations = GetAnnotations(imageInfo, bboxes);
-
-                    annotation.Add(image.Id, new AnnotationMetadata
+                    if (classesFile == null)
                     {
-                        Classes = classes,
-                        Annotations = annotations
-                    });
+                        throw new AnnotationConvertionException(ConvertersErrorMessages.CLASSES_FILE_NOT_FOUND_ERROR_MESSAGE);
+                    }
+
+                    var classes = await GetClassesFromFileAsync(classesFile.Stream);
+
+                    if (classes.Any())
+                    {
+                        var imagesFiles = files.Where(f =>
+                                                            ImagesExtensions.Contains(Path.GetExtension(f.OriginalName)));
+
+                        foreach (var image in imagesFiles)
+                        {
+                            var bountingBoxesFiles = files.FirstOrDefault(b =>
+                                                    b.OriginalName.Equals($"{Path.GetFileNameWithoutExtension(image.OriginalName)}.txt"));
+
+                            if (bountingBoxesFiles == null)
+                                continue;
+
+                            var bboxes = await GetBoundingBoxesFromFileAsync(bountingBoxesFiles.Stream);
+
+                            var imageInfo = GetImageInfo(image.Stream);
+
+                            var annotations = GetAnnotations(imageInfo, bboxes);
+
+                            annotation.Add(image.Id, new AnnotationMetadata
+                            {
+                                Classes = classes,
+                                Annotations = annotations
+                            });
+                        }  
+                    }
                 }
 
                 return annotation;
