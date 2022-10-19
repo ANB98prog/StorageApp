@@ -28,4 +28,71 @@
     <ProjectReference Include="..\Storage.Application\Storage.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Resource Include="AnnotationConvertersTests\AnnotationConvertersTests.cs" />
+    <Resource Include="AnnotationConvertersTests\TestData\bird_one_class\76965_original-1.jpg" />
+    <Resource Include="AnnotationConvertersTests\TestData\bird_one_class\76965_original-1.txt" />
+    <Resource Include="AnnotationConvertersTests\TestData\bird_one_class\classes.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="AnnotationConvertersTests\TestData\bird_one_class\76965_original-1.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="AnnotationConvertersTests\TestData\bird_one_class\76965_original-1.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="AnnotationConvertersTests\TestData\bird_one_class\classes.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="AnnotationConvertersTests\TestData\bird_three_classes\76965_original-1.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="AnnotationConvertersTests\TestData\bird_three_classes\76965_original-1.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="AnnotationConvertersTests\TestData\bird_three_classes\classes.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="AnnotationConvertersTests\TestData\invalid_coords\classes.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="AnnotationConvertersTests\TestData\invalid_coords\pwa_list_rect_1024_885f19e530dd3f714f711ea145ef9e81.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="AnnotationConvertersTests\TestData\invalid_coords\pwa_list_rect_1024_885f19e530dd3f714f711ea145ef9e81.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="AnnotationConvertersTests\TestData\no_annotation_files\classes.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="AnnotationConvertersTests\TestData\no_annotation_files\pwa_list_rect_1024_885f19e530dd3f714f711ea145ef9e81.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="AnnotationConvertersTests\TestData\no_classes\pwa_list_rect_1024_885f19e530dd3f714f711ea145ef9e81.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="AnnotationConvertersTests\TestData\no_classes_in_file\classes.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="AnnotationConvertersTests\TestData\no_images\classes.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="AnnotationConvertersTests\TestData\two_images\classes.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="AnnotationConvertersTests\TestData\two_images\pwa_list_rect_1024_885f19e530dd3f714f711ea145ef9e81.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="AnnotationConvertersTests\TestData\two_images\pwa_list_rect_1024_885f19e530dd3f714f711ea145ef9e81.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="AnnotationConvertersTests\TestData\two_images\Без названия.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="AnnotationConvertersTests\TestData\two_images\Без названия.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
