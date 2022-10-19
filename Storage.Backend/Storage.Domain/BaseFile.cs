@@ -173,7 +173,7 @@ namespace Storage.Domain
         /// Bounding box
         /// </summary>
         [JsonProperty("bboxes")]
-        public BoudingBox Bboxes { get; set; }
+        public BoudingBox Bbox { get; set; }
     }
 
     /// <summary>

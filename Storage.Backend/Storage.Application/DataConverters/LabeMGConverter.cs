@@ -6,6 +6,7 @@ using Storage.Application.Interfaces;
 using Storage.Domain;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -100,7 +101,8 @@ namespace Storage.Application.DataConverters
 
                 await classesStream.ReadAsync(bytes);
 
-                var classesFromFile = Encoding.UTF8.GetString(bytes).Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+                var classesFromFile = Encoding.UTF8.GetString(bytes)
+                    .Split(new string[] { Environment.NewLine, "\n" }, StringSplitOptions.RemoveEmptyEntries);
 
                 for (int i = 0; i < classesFromFile.Length; i++)
                 {
@@ -137,7 +139,8 @@ namespace Storage.Application.DataConverters
 
                 await dataStream.ReadAsync(bytes);
 
-                var bboxes = Encoding.UTF8.GetString(bytes).Split(Environment.NewLine);
+                var bboxes = Encoding.UTF8.GetString(bytes)
+                    .Split(new string[]{ Environment.NewLine, "\n" }, StringSplitOptions.RemoveEmptyEntries);
 
                 _logger.Information($"Bounding boxes were got. Bboxes count: '{bboxes.Length}'");
 
@@ -188,15 +191,15 @@ namespace Storage.Application.DataConverters
                     try
                     {
                         int classIndex = int.Parse(splited[0]);
-                        float x = float.Parse(splited[1]);
-                        float y = float.Parse(splited[2]);
-                        float w = float.Parse(splited[3]);
-                        float h = float.Parse(splited[4]);
+                        float x = float.Parse(splited[1], CultureInfo.InvariantCulture);
+                        float y = float.Parse(splited[2], CultureInfo.InvariantCulture);
+                        float w = float.Parse(splited[3], CultureInfo.InvariantCulture);
+                        float h = float.Parse(splited[4], CultureInfo.InvariantCulture);
 
                         annotations.Add(new Annotation()
                         {
                             ClassIndex = classIndex,
-                            Bboxes = new BoudingBox(imageInfo, new RelativeAnnotationBbox(x, y, w, h))
+                            Bbox = new BoudingBox(imageInfo, new RelativeAnnotationBbox(x, y, w, h))
                         });
                     }
                     catch (Exception ex)
