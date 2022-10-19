@@ -5,6 +5,7 @@ using Serilog;
 using Storage.Application.Common.Exceptions;
 using Storage.Application.Common.Helpers;
 using Storage.Application.Common.Models;
+using Storage.Application.DataConverters;
 using Storage.Application.Interfaces;
 using Storage.Domain;
 using System;
@@ -40,6 +41,8 @@ namespace Storage.Application.Common.Services
         /// </summary>
         private readonly IStorageDataService _storageDataService;
 
+        private Dictionary<AnnotationFormats, IAnnotatedDataProcessor> _annotationsFormatsProcessor;
+
         /// <summary>
         /// Directory for temporary files
         /// </summary>
@@ -61,6 +64,8 @@ namespace Storage.Application.Common.Services
 
             if (!Directory.Exists(TEMP_DIR))
                 Directory.CreateDirectory(TEMP_DIR);
+
+            _annotationsFormatsProcessor = InitializeAnnotationsProcessors();
         }
 
         public async Task<FileStream> DownloadFileAsync(string filePath, CancellationToken cancellationToken)
@@ -156,6 +161,8 @@ namespace Storage.Application.Common.Services
                 var files = await UploadArchiveFilesAsync(file, mimeTypes, cancellationToken);
 
                 var filesIds = await UploadManyFileAsync(files, cancellationToken);
+
+                files.ForEach(f => f.Stream.Dispose());
 
                 _logger.Information($"Archive file were successfully uploaded. Files count: {filesIds.Count}");
 
@@ -297,6 +304,8 @@ namespace Storage.Application.Common.Services
                 {
                     ids.Add(await UploadFileToStorageAsync(file, cancellationToken));
                 }
+
+                files.ForEach(f => f.Stream.Dispose());
 
                 _logger.Information($"Files uploaded successfully.");
 

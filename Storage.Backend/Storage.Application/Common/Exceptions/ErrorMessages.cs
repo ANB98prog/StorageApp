@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Storage.Domain;
+using System;
 
 namespace Storage.Application.Common.Exceptions
 {
@@ -138,5 +139,11 @@ namespace Storage.Application.Common.Exceptions
         /// Unsupported mime type error message
         /// </summary>
         public const string UNSUPPORTED_MIME_TYPE_ERROR_MESSAGE = "Unsupported mime type.";
+
+        /// <summary>
+        /// Unsupported annotation format error message
+        /// </summary>
+        public static string UNSUPORTED_ANNOTATION_FORMAT_ERROR_MESSAGE => $"Unsupported annotation format.";
+
     }
 }

@@ -1,11 +1,12 @@
 ﻿using Storage.Application.Common.Exceptions;
 using Storage.Application.Common.Models;
+using Storage.Application.DataConverters;
+using Storage.Application.Interfaces;
 using Storage.Domain;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,17 +14,17 @@ namespace Storage.Application.Common.Services
 {
     public partial class FileHandlerService
     {
-        private List<string> _annotationMimeTypes = new List<string>()
+        /// <summary>
+        /// Initializes annotations processors
+        /// </summary>
+        /// <returns></returns>
+        private Dictionary<AnnotationFormats, IAnnotatedDataProcessor> InitializeAnnotationsProcessors()
         {
-            "image/gif",
-            "image/png",
-            "text/plain",
-            "image/tiff",
-            "image/jpeg",
-            "application/xml",
-            "application/json",
-            "image/bmp"
-        };
+            return new Dictionary<AnnotationFormats, IAnnotatedDataProcessor>
+            {
+                { AnnotationFormats.labelMG, new LabelMGConverter(_logger)}
+            };
+        }
 
         public async Task<List<Guid>> UploadAnnotatedFileAsync(UploadFileRequestModel file, AnnotationFormats annotationFormat, CancellationToken cancellationToken)
         {
@@ -34,29 +35,49 @@ namespace Storage.Application.Common.Services
                                     $"File name '{file.OriginalName}'"
                                         : string.Empty;
 
-                _logger.Information($"Try to upload archive file. {fileName}");
+                _logger.Information($"Try to upload archive file with annotated files. {fileName}");
 
                 if (file == null)
                     throw new ArgumentNullException(nameof(file));
 
-                var files = await UploadArchiveFilesAsync(file, _annotationMimeTypes, cancellationToken);
+                var files = await UploadArchiveFilesAsync(file, Constants.ANNOTATION_MIMETYPES, cancellationToken);
 
                 /*
                  Process annotated files
                  */
+                if(_annotationsFormatsProcessor.TryGetValue(annotationFormat, out var processor))
+                {
+                    var annotations = await processor.ProcessAnnotatedDataAsync(files);
 
+                    if (annotations != null
+                        && annotations.Any())
+                    {
+                        foreach (var annotation in annotations)
+                        {
+                            var image = files.FirstOrDefault(f => f.Id.Equals(annotation.Key));
 
+                            if(image != null)
+                            {
+                                image.Annotation = annotation.Value;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    throw new FileHandlerServiceException(ErrorMessages.UNSUPORTED_ANNOTATION_FORMAT_ERROR_MESSAGE);
+                }
 
                 /*
-                 Just an image
-                    I
-                    I
-                    V
+                 * Upload only images
                  */
+                var filesIds = await UploadManyFileAsync(
+                                        files.Where(im => Constants.IMAGES_MIMETYPES.Contains(im.MimeType)).ToList(),
+                                            cancellationToken);
 
-                var filesIds = await UploadManyFileAsync(files, cancellationToken);
+                files.ForEach(f => f.Stream.Dispose());
 
-                _logger.Information($"Archive file were successfully uploaded. Files count: {filesIds.Count}");
+                _logger.Information($"Archive with annotated files were successfully uploaded. Files count: {filesIds.Count}");
 
                 return filesIds;
 
@@ -75,6 +96,10 @@ namespace Storage.Application.Common.Services
             {
                 _logger.Error(ex, ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_ARCHIVE_FILE_MESSAGE);
                 throw new FileHandlerServiceException(ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_ARCHIVE_FILE_MESSAGE, ex);
+            }
+            finally
+            {
+
             }
         }
     }

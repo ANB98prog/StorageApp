@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Storage.Application.DataConverters
 {
-    public class LabeMGConverter : IAnnotatedDataProcessor
+    public class LabelMGConverter : IAnnotatedDataProcessor
     {
         private ILogger _logger;
 
@@ -25,7 +25,7 @@ namespace Storage.Application.DataConverters
 
         public AnnotationFormats AnnotationFormat => AnnotationFormats.labelMG;
 
-        public LabeMGConverter(ILogger logger)
+        public LabelMGConverter(ILogger logger)
         {
             _logger = logger;
         }

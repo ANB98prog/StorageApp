@@ -1,6 +1,8 @@
 ﻿using Storage.Application.Common.Models;
+using Storage.Domain;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -44,6 +46,15 @@ namespace Storage.Application.Interfaces
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Uploaded files ids</returns>
         public Task<List<Guid>> UploadArchiveFileAsync(UploadFileRequestModel file, List<string> mimeTypes, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Uploads archive with annotated files
+        /// </summary>
+        /// <param name="file">File to upload</param>
+        /// <param name="annotationFormat">Annotation format</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Uploaded files ids</returns>
+        public Task<List<Guid>> UploadAnnotatedFileAsync(UploadFileRequestModel file, AnnotationFormats annotationFormat, CancellationToken cancellationToken);
 
         /// <summary>
         /// Downloads large file
