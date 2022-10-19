@@ -9,6 +9,8 @@
     <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="FluentValidation" Version="11.2.1" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.2.1" />
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="12.2.0" />
+    <PackageReference Include="Magick.NET.Core" Version="12.2.0" />
     <PackageReference Include="MediatR" Version="10.0.1" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
@@ -25,10 +27,6 @@
     <ProjectReference Include="..\Elasticsearch\Elasticsearch.csproj" />
     <ProjectReference Include="..\Mapper\Mapper.csproj" />
     <ProjectReference Include="..\Storage.Domain\Storage.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="DataConverters\" />
   </ItemGroup>
 
 </Project>

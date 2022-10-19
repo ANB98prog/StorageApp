@@ -18,7 +18,7 @@ using FileAttributes = Storage.Application.Common.Models.FileAttributes;
 
 namespace Storage.Application.Common.Services
 {
-    public class FileHandlerService : IFileHandlerService
+    public partial class FileHandlerService : IFileHandlerService
     {
         /// <summary>
         /// Logger

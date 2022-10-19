@@ -92,7 +92,7 @@ namespace Storage.Domain
         /// <summary>
         /// File annotation
         /// </summary>
-        [JsonProperty("Annotation", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("annotation")]
         public AnnotationMetadata Annotation { get; set; }
     }
 
