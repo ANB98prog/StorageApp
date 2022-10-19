@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Storage.WebApi.Models;
 using Storage.Domain;
+using Storage.Application.Files.Commands.UploadAnnotatedFiles;
 
 namespace Storage.WebApi.Controllers.AnnotatedFiles
 {
@@ -19,10 +20,14 @@ namespace Storage.WebApi.Controllers.AnnotatedFiles
         /// </summary>
         /// <param name="request">Upload request</param>
         /// <returns></returns>
-        [HttpPut("upload")]
-        public async Task<ActionResult> UploadAnnotatedDataAsync([FromBody] UploadAnnotatedDataRequestModel request)
+        [HttpPost("upload")]
+        public async Task<ActionResult> UploadAnnotatedDataAsync([FromForm] UploadAnnotatedDataRequestModel request)
         {
-            return Created("", "");
+            var command = Mapper.Map<UploadAnnotatedDataRequestModel, UploadAnnotatedFilesCommand>(request);
+
+            var annotatedFilesIds = await Mediator.Send(command);
+
+            return Created("", annotatedFilesIds);
         }
 
         /// <summary>

@@ -26,6 +26,14 @@ namespace Storage.Application.Common.Services
             };
         }
 
+        /// <summary>
+        /// Uploads archive with annotated files
+        /// </summary>
+        /// <param name="file">File to upload</param>
+        /// <param name="annotationFormat">Annotation format</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Uploaded files ids</returns>
+        /// <exception cref="FileHandlerServiceException"></exception>
         public async Task<List<Guid>> UploadAnnotatedFileAsync(UploadFileRequestModel file, AnnotationFormats annotationFormat, CancellationToken cancellationToken)
         {
             try

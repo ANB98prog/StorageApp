@@ -54,6 +54,7 @@ namespace Storage.Application.Interfaces
         /// <param name="annotationFormat">Annotation format</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Uploaded files ids</returns>
+        /// <exception cref="FileHandlerServiceException"></exception>
         public Task<List<Guid>> UploadAnnotatedFileAsync(UploadFileRequestModel file, AnnotationFormats annotationFormat, CancellationToken cancellationToken);
 
         /// <summary>

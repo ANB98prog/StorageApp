@@ -1,15 +1,16 @@
-﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Storage.Application.Files.Commands.UploadManyFiles;
+using Storage.Domain;
 
 namespace Storage.Application.Files.Commands.UploadAnnotatedFiles
 {
-    public class UploadAnnotatedFilesCommand : IRequest
+    /// <summary>
+    /// Command for uploading annotated files
+    /// </summary>
+    public class UploadAnnotatedFilesCommand : UploadManyFilesCommand
     {
-
+        /// <summary>
+        /// Annotation format
+        /// </summary>
+        public AnnotationFormats AnnotationFormat { get; set; }
     }
 }
