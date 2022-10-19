@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Mapper;
+using Newtonsoft.Json;
 using Storage.Application.Common;
 using Storage.Domain;
 using System;
@@ -73,6 +74,12 @@ namespace Storage.Application.Files.Queries.Models
         /// </summary>
         public bool IsAnnotated { get; set; }
 
+        /// <summary>
+        /// File annotation
+        /// </summary>
+        [JsonProperty("annotation")]
+        public AnnotationMetadata Annotation { get; set; }
+
         public void Mapping(Profile profile)
         {
             profile.CreateMap<BaseFile, FileVm>()
@@ -93,7 +100,9 @@ namespace Storage.Application.Files.Queries.Models
                  .ForMember(model => model.FileUrl,
                      opt => opt.MapFrom(upload => upload.FileUrl))
                  .ForMember(model => model.IsAnnotated,
-                     opt => opt.MapFrom(upload => upload.IsAnnotated));
+                     opt => opt.MapFrom(upload => upload.IsAnnotated))
+                 .ForMember(model => model.Annotation,
+                     opt => opt.MapFrom(upload => upload.Annotation));
         }
     }
 }
