@@ -17,6 +17,8 @@ namespace Storage.Tests.Common
 
         protected readonly Mock<IStorageDataService> StorageDataServiceMock;
 
+        protected readonly string PathToTestFiles;
+
         public TestServicesFixture()
         {
             var ioCModule = new IoCModule();
@@ -33,6 +35,8 @@ namespace Storage.Tests.Common
             FileHandlerService = Kernel.Get<IFileHandlerService>();
 
             Mapper = Kernel.Get<IMapper>();
+
+            PathToTestFiles = Path.Combine(Directory.GetCurrentDirectory(), "FileHandlerServiceTests", "TestData");
         }
 
         public void Dispose()

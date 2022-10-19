@@ -93,6 +93,12 @@
     <None Update="AnnotationConvertersTests\TestData\two_images\Без названия.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="FileHandlerServiceTests\TestData\bird_one_class.rar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="FileHandlerServiceTests\TestData\two_images.rar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

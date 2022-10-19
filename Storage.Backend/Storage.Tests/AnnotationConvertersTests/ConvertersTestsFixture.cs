@@ -16,9 +16,9 @@ namespace Storage.Tests.AnnotationConvertersTests
             Logger = new Mock<ILogger>();
         }
 
-        public LabeMGConverter GetLabelMGConverter()
+        public LabelMGConverter GetLabelMGConverter()
         {
-            return new LabeMGConverter(Logger.Object);
+            return new LabelMGConverter(Logger.Object);
         }
 
         public void Dispose()
