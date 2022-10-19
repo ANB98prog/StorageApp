@@ -30,6 +30,12 @@ namespace Storage.Application.DataConverters
             _logger = logger;
         }
 
+        /// <summary>
+        /// Processes annotated data
+        /// </summary>
+        /// <param name="files">Files data</param>
+        /// <returns>Processed data</returns>
+        /// <exception cref="AnnotationConvertionException"></exception>
         public async Task<Dictionary<Guid, AnnotationMetadata>> ProcessAnnotatedDataAsync(List<UploadFileRequestModel> files)
         {
             try
@@ -81,13 +87,11 @@ namespace Storage.Application.DataConverters
             }
             catch (AnnotationConvertionException ex)
             {
-                _logger.Error(ex, ex.UserFriendlyMessage);
                 throw ex;
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, ConvertersErrorMessages.UNEXPECTED_ERROR_WHILE_CONVERT_ANNOTATION_DATA);
-                throw new AnnotationConvertionException(ConvertersErrorMessages.UNEXPECTED_ERROR_WHILE_CONVERT_ANNOTATION_DATA);
+                throw new AnnotationConvertionException(ConvertersErrorMessages.UNEXPECTED_ERROR_WHILE_CONVERT_ANNOTATION_DATA, ex);
             }
         }
 

@@ -40,32 +40,27 @@ namespace Storage.Application.Common.Services
                 if (file == null)
                     throw new ArgumentNullException(nameof(file));
 
-                var files = await UploadArchiveFilesAsync(file, Constants.ANNOTATION_MIMETYPES, cancellationToken);
-
-                /*
-                 Process annotated files
-                 */
-                if(_annotationsFormatsProcessor.TryGetValue(annotationFormat, out var processor))
-                {
-                    var annotations = await processor.ProcessAnnotatedDataAsync(files);
-
-                    if (annotations != null
-                        && annotations.Any())
-                    {
-                        foreach (var annotation in annotations)
-                        {
-                            var image = files.FirstOrDefault(f => f.Id.Equals(annotation.Key));
-
-                            if(image != null)
-                            {
-                                image.Annotation = annotation.Value;
-                            }
-                        }
-                    }
-                }
-                else
+                if (!_annotationsFormatsProcessor.TryGetValue(annotationFormat, out var processor))
                 {
                     throw new FileHandlerServiceException(ErrorMessages.UNSUPORTED_ANNOTATION_FORMAT_ERROR_MESSAGE);
+                }
+
+                var files = await UploadArchiveFilesAsync(file, Constants.ANNOTATION_MIMETYPES, cancellationToken);
+
+                var annotations = await processor.ProcessAnnotatedDataAsync(files);
+
+                if (annotations != null
+                    && annotations.Any())
+                {
+                    foreach (var annotation in annotations)
+                    {
+                        var image = files.FirstOrDefault(f => f.Id.Equals(annotation.Key));
+
+                        if (image != null)
+                        {
+                            image.Annotation = annotation.Value;
+                        }
+                    }
                 }
 
                 /*
@@ -75,7 +70,7 @@ namespace Storage.Application.Common.Services
                                         files.Where(im => Constants.IMAGES_MIMETYPES.Contains(im.MimeType)).ToList(),
                                             cancellationToken);
 
-                files.ForEach(f => f.Stream.Dispose());
+                files.ForEach(async f => await f.Stream.DisposeAsync());
 
                 _logger.Information($"Archive with annotated files were successfully uploaded. Files count: {filesIds.Count}");
 
@@ -92,6 +87,11 @@ namespace Storage.Application.Common.Services
                 _logger.Error(ex, ErrorMessages.FileNotFoundErrorMessage(ex.FileName));
                 throw new FileHandlerServiceException(ErrorMessages.FileNotFoundErrorMessage(ex.FileName), ex);
             }
+            catch (AnnotationConvertionException ex)
+            {
+                _logger.Error(ex, ex.UserFriendlyMessage);
+                throw new FileHandlerServiceException(ex.UserFriendlyMessage, ex);
+            }
             catch (Exception ex)
             {
                 _logger.Error(ex, ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_ARCHIVE_FILE_MESSAGE);
@@ -99,7 +99,7 @@ namespace Storage.Application.Common.Services
             }
             finally
             {
-
+                await file.Stream.DisposeAsync();
             }
         }
     }

@@ -162,7 +162,7 @@ namespace Storage.Application.Common.Services
 
                 var filesIds = await UploadManyFileAsync(files, cancellationToken);
 
-                files.ForEach(f => f.Stream.Dispose());
+                files.ForEach(async f => await f.Stream.DisposeAsync());
 
                 _logger.Information($"Archive file were successfully uploaded. Files count: {filesIds.Count}");
 
@@ -305,7 +305,7 @@ namespace Storage.Application.Common.Services
                     ids.Add(await UploadFileToStorageAsync(file, cancellationToken));
                 }
 
-                files.ForEach(f => f.Stream.Dispose());
+                files.ForEach(async f => await f.Stream.DisposeAsync());
 
                 _logger.Information($"Files uploaded successfully.");
 
@@ -359,6 +359,8 @@ namespace Storage.Application.Common.Services
 
             // Index file in db
             var indexedDataId = await _storageDataService.AddDataToStorageAsync<BaseFile>(upload);
+
+            await upload.Stream.DisposeAsync();
 
             return indexedDataId;
         }
