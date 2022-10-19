@@ -99,7 +99,9 @@ namespace Storage.Application.Files.Queries.GetFilesList
                 .ForMember(model => model.FileUrl,
                 opt => opt.MapFrom(p => p.Document.FileUrl))
                 .ForMember(model => model.IsAnnotated,
-                opt => opt.MapFrom(p => p.Document.IsAnnotated));
+                opt => opt.MapFrom(p => p.Document.IsAnnotated))
+                .ForMember(model => model.Annotation,
+                opt => opt.MapFrom(p => p.Document.Annotation));
         }
     }
 }

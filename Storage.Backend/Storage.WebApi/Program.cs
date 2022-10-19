@@ -1,6 +1,8 @@
 using Mapper;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Serilog;
 using Storage.Application;
 using Storage.Application.Interfaces;
@@ -52,7 +54,10 @@ namespace Storage.WebApi
         private static void ConfigureAppServices(IServiceCollection services, IConfiguration configuration, ILogger Logger)
         {
             services.AddControllers()
-                .AddNewtonsoftJson()
+                .AddNewtonsoftJson(opt =>
+                {
+                    opt.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                })
                 .AddJsonOptions(opt =>
                 {
                     opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());

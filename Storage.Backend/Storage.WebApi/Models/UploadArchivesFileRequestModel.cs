@@ -20,8 +20,6 @@ namespace Storage.Application.Common.Models
             profile.CreateMap<UploadArchivesFileRequestModel, UploadManyFilesArchiveCommand>()
                 .ForMember(model => model.Files,
                     opt => opt.MapFrom(upload => upload.Files))
-                .ForMember(model => model.IsAnnotated,
-                    opt => opt.MapFrom(upload => upload.isAnnotated))
                 .ForMember(model => model.Attributes,
                     opt => opt.MapFrom(upload => upload.Attributes));
         }

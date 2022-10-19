@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Mapper;
+using Newtonsoft.Json;
 using Storage.Application.Files.Commands.UploadAnnotatedFiles;
 using Storage.Domain;
 
@@ -13,6 +14,7 @@ namespace Storage.WebApi.Models
         /// <summary>
         /// Annotation format
         /// </summary>
+        [JsonProperty("annotationFormat")]
         public AnnotationFormats AnnotationFormat { get; set; }
 
         public void Mapping(Profile profile)
@@ -20,8 +22,6 @@ namespace Storage.WebApi.Models
             profile.CreateMap<UploadAnnotatedDataRequestModel, UploadAnnotatedFilesCommand>()
                 .ForMember(model => model.Files,
                     opt => opt.MapFrom(upload => upload.Files))
-                .ForMember(model => model.IsAnnotated,
-                    opt => opt.MapFrom(upload => upload.isAnnotated))
                 .ForMember(model => model.Attributes,
                     opt => opt.MapFrom(upload => upload.Attributes))
                 .ForMember(model => model.AnnotationFormat,

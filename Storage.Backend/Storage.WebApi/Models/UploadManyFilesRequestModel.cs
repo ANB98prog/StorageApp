@@ -12,12 +12,6 @@ namespace Storage.WebApi.Models
     public class UploadManyFilesRequestModel : BaseUploadFileModel, IMapWith<UploadFileCommand>
     {
         /// <summary>
-        /// Is data annotated
-        /// </summary>
-        [JsonProperty("is_annotated")]
-        public bool isAnnotated { get; set; }
-
-        /// <summary>
         /// Files
         /// </summary>
         [JsonProperty("file")]
@@ -28,8 +22,6 @@ namespace Storage.WebApi.Models
             profile.CreateMap<UploadManyFilesRequestModel, UploadManyFilesCommand>()
                 .ForMember(model => model.Files,
                     opt => opt.MapFrom(upload => upload.Files))
-                .ForMember(model => model.IsAnnotated,
-                    opt => opt.MapFrom(upload => upload.isAnnotated))
                 .ForMember(model => model.Attributes,
                     opt => opt.MapFrom(upload => upload.Attributes));
         }
