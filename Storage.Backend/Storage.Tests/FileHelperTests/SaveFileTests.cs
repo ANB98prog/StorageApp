@@ -34,8 +34,9 @@ namespace Storage.Tests.FileHelperTests
         public async Task SaveFile_Error_IfStreamAreNull()
         {
             var saveTo = Path.Combine(TestFilesDirectory, "saved.txt");
+            Stream st = null;
 
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await FileHelper.SaveFileAsync(null,
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await FileHelper.SaveFileAsync(st,
                         saveTo, CancellationToken.None));
 
         }
@@ -47,7 +48,8 @@ namespace Storage.Tests.FileHelperTests
         [InlineData(" ")]
         public async Task SaveFile_Error_IfFilePathAreEmpty(string filePath)
         {
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await FileHelper.SaveFileAsync(null,
+            Stream st = null;
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await FileHelper.SaveFileAsync(st,
                         filePath, CancellationToken.None));
 
         }
@@ -56,8 +58,9 @@ namespace Storage.Tests.FileHelperTests
         public async Task SaveFile_Error_IfFilePathNotContainsFileName()
         {
             var saveTo = Path.Combine(TestFilesDirectory, "saved.txt");
+            Stream st = null;
 
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await FileHelper.SaveFileAsync(null,
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await FileHelper.SaveFileAsync(st,
                         saveTo, CancellationToken.None));
 
         }

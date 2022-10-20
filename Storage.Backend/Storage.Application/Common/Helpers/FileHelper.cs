@@ -42,6 +42,24 @@ namespace Storage.Application.Common.Helpers
                 throw new FileNotFoundException($"Could not find file: '{filePath}'", fileName);
             }
 
+            /*
+             Если текстовый файл имеет кодировку не utf-8 (например он на русском)
+             */
+            var textFilesExtensions = new string[] { ".txt", ".json" };
+            if (textFilesExtensions.Contains(Path.GetExtension(filePath)))
+            {
+                try
+                {
+                    var bytes = File.ReadAllBytes(filePath);
+                    bytes = Encoding.Convert(Encoding.GetEncoding(1251), Encoding.UTF8, bytes);
+
+                    await File.WriteAllBytesAsync(filePath, bytes);
+                }
+                catch (Exception)
+                {
+                }
+            }
+
             return new FileStream(filePath, FileMode.Open, FileAccess.Read);
 
         }

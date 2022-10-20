@@ -280,11 +280,11 @@ namespace Storage.Application.DataConverters
                                 annotationText.AppendLine($"{a.ClassIndex} {a.Bbox.RelativeAnnotation}");
                             }
 
-                            await File.WriteAllTextAsync(
-                                Path.Combine(annotationPath, 
-                                    $"{Path.GetFileNameWithoutExtension(item.Name)}.txt"),
-                                        annotationText.ToString(), cancellationToken);
-
+                            await FileHelper.SaveFileAsync(
+                                    annotationText.ToString(), 
+                                        Path.Combine(annotationPath,
+                                            $"{Path.GetFileNameWithoutExtension(item.Name)}.txt"),
+                                                cancellationToken);
                         }
                     }
                 }

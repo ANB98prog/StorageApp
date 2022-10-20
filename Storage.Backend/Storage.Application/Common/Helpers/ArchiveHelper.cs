@@ -6,8 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Storage.Application.Common.Helpers
 {
@@ -21,7 +19,7 @@ namespace Storage.Application.Common.Helpers
             {
                 if (!Directory.Exists(destPath))
                     Directory.CreateDirectory(destPath);
-
+                                
                 using (var archive = RarArchive.Open(archPath))
                 {
                     foreach (var entry in archive.Entries.Where(entry => !entry.IsDirectory))
