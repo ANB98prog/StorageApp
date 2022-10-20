@@ -58,7 +58,7 @@ namespace Storage.Application.DataConverters
                     if (classes.Any())
                     {
                         var imagesFiles = files.Where(f =>
-                                                            ImagesExtensions.Contains(Path.GetExtension(f.OriginalName)));
+                                               ImagesExtensions.Contains(Path.GetExtension(f.OriginalName)));
 
                         foreach (var image in imagesFiles)
                         {
@@ -169,8 +169,12 @@ namespace Storage.Application.DataConverters
         /// <returns>Image file info</returns>
         private AnnotationImageInfo GetImageInfo(Stream imageStream)
         {
-            var imageFile = new MagickImageInfo(imageStream);
-
+            var copy = new MemoryStream();
+            imageStream.CopyTo(copy);
+            imageStream.Position = 0;
+            copy.Position = 0;
+            var imageFile = new MagickImageInfo(copy);
+            
             return new AnnotationImageInfo(imageFile.Width, imageFile.Height);
         }
 
