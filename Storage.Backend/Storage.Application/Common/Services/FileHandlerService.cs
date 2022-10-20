@@ -16,7 +16,7 @@ using FileAttributes = Storage.Application.Common.Models.FileAttributes;
 
 namespace Storage.Application.Common.Services
 {
-    public partial class FileHandlerService : IFileHandlerService
+    public partial class FileHandlerService : IFileHandlerService, IDisposable
     {
         /// <summary>
         /// Logger
@@ -38,6 +38,9 @@ namespace Storage.Application.Common.Services
         /// </summary>
         private readonly IStorageDataService _storageDataService;
 
+        /// <summary>
+        /// Annotation format processors
+        /// </summary>
         private Dictionary<AnnotationFormats, IAnnotatedDataProcessor> _annotationsFormatsProcessor;
 
         /// <summary>
@@ -380,7 +383,7 @@ namespace Storage.Application.Common.Services
                     throw new ArgumentNullException(nameof(id));
                 }
 
-                var file = await _storageDataService.GetFileInfoAsync(id);
+                var file = await _storageDataService.GetFileInfoAsync<FileInfoModel>(id);
 
                 if(file != null
                     && !string.IsNullOrWhiteSpace(file.FilePath))
@@ -468,7 +471,7 @@ namespace Storage.Application.Common.Services
 
                 if (ids.Any())
                 {
-                    var files = await _storageDataService.GetFilesInfoAsync(ids);
+                    var files = await _storageDataService.GetFilesInfoAsync<FileInfoModel>(ids);
 
                     if (files.Any())
                     {
@@ -511,6 +514,14 @@ namespace Storage.Application.Common.Services
             {
                 _logger.Error(ex, ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_FILES_MESSAGE);
                 throw new FileHandlerServiceException(ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_FILES_MESSAGE, ex);
+            }
+        }
+
+        public void Dispose()
+        {
+            foreach (var processor in _annotationsFormatsProcessor)
+            {
+                processor.Value.Dispose();
             }
         }
     }

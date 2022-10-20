@@ -22,7 +22,7 @@ namespace Storage.Application.Common.Services
         {
             return new Dictionary<AnnotationFormats, IAnnotatedDataProcessor>
             {
-                { AnnotationFormats.labelMG, new LabelMGConverter(_logger)}
+                { AnnotationFormats.labelMG, new LabelMGConverter(_logger, TEMP_DIR)}
             };
         }
 
@@ -114,5 +114,63 @@ namespace Storage.Application.Common.Services
                 await file.Stream.DisposeAsync();
             }
         }
+
+        /// <summary>
+        /// Uploads archive with annotated files
+        /// </summary>
+        /// <param name="file">File to upload</param>
+        /// <param name="annotationFormat">Annotation format</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Uploaded files ids</returns>
+        /// <exception cref="FileHandlerServiceException"></exception>
+        //public async Task<FileStream> DownloadAnnotatedFileAsync(List<Guid> filesIds, AnnotationFormats annotationFormat, CancellationToken cancellationToken)
+        //{
+        //    try
+        //    {
+        //        _logger.Information($"Try to download annotated files. Files count: {filesIds}");
+
+        //        if (filesIds.Any())
+        //        {
+        //            if (!_annotationsFormatsProcessor.TryGetValue(annotationFormat, out var processor))
+        //            {
+        //                throw new FileHandlerServiceException(ErrorMessages.UNSUPORTED_ANNOTATION_FORMAT_ERROR_MESSAGE);
+        //            }
+
+        //            var annotatedFilesInfos = await _storageDataService.GetFilesInfoAsync<AnnotationFileInfo>(filesIds);
+
+        //            if (annotatedFilesInfos != null
+        //                && annotatedFilesInfos.Any())
+        //            {
+        //                /*
+        //                 * Необходимо разделить по группам т.к. набор классов может отличаться
+        //                 */
+        //            }
+
+        //        }
+        //    }
+        //    catch (ArgumentNullException ex)
+        //    {
+        //        _logger.Error(ex, ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName));
+        //        throw new FileHandlerServiceException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
+        //    }
+        //    catch (FileNotFoundException ex)
+        //    {
+        //        _logger.Error(ex, ErrorMessages.FileNotFoundErrorMessage(ex.FileName));
+        //        throw new FileHandlerServiceException(ErrorMessages.FileNotFoundErrorMessage(ex.FileName), ex);
+        //    }
+        //    catch (AnnotationConvertionException ex)
+        //    {
+        //        _logger.Error(ex, ex.UserFriendlyMessage);
+        //        throw new FileHandlerServiceException(ex.UserFriendlyMessage, ex);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.Error(ex, ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_ARCHIVE_FILE_MESSAGE);
+        //        throw new FileHandlerServiceException(ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_ARCHIVE_FILE_MESSAGE, ex);
+        //    }
+        //    finally
+        //    {
+        //    }
+        //}
     }
 }

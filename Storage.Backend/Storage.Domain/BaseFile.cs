@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 
 namespace Storage.Domain
@@ -339,7 +340,7 @@ namespace Storage.Domain
         /// <returns>"X Y W H"</returns>
         public override string ToString()
         {
-            return $"{X} {Y} {W} {H}";
+            return $"{X.ToString(CultureInfo.InvariantCulture)} {Y.ToString(CultureInfo.InvariantCulture)} {W.ToString(CultureInfo.InvariantCulture)} {H.ToString(CultureInfo.InvariantCulture)}";
         }
     }
 
