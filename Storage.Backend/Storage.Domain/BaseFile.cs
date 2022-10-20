@@ -332,6 +332,15 @@ namespace Storage.Domain
         {
             return new PolygonAnnotationBbox( new float[] {0f, 0f, 0f, 0f});
         }
+
+        /// <summary>
+        /// Converts to string
+        /// </summary>
+        /// <returns>"X Y W H"</returns>
+        public override string ToString()
+        {
+            return $"{X} {Y} {W} {H}";
+        }
     }
 
     /// <summary>

@@ -1,6 +1,7 @@
 ﻿using ImageMagick;
 using Serilog;
 using Storage.Application.Common.Exceptions;
+using Storage.Application.Common.Helpers;
 using Storage.Application.Common.Models;
 using Storage.Application.Interfaces;
 using Storage.Domain;
@@ -10,6 +11,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Storage.Application.DataConverters
@@ -18,6 +20,8 @@ namespace Storage.Application.DataConverters
     {
         private ILogger _logger;
 
+        private readonly string _tempDir;
+
         private readonly string[] ImagesExtensions = new string[]
         {
             ".jpg", ".jpeg", ".png", ".gif", ".tif", ".tiff", ".svg"
@@ -25,9 +29,13 @@ namespace Storage.Application.DataConverters
 
         public AnnotationFormats AnnotationFormat => AnnotationFormats.labelMG;
 
-        public LabelMGConverter(ILogger logger)
+        public LabelMGConverter(ILogger logger, string tempDir)
         {
             _logger = logger;
+            _tempDir = Path.Combine(tempDir, "annotation");
+
+            if (!Directory.Exists(_tempDir))
+                Directory.CreateDirectory(_tempDir);
         }
 
         /// <summary>
@@ -79,7 +87,7 @@ namespace Storage.Application.DataConverters
                                 Classes = classes,
                                 Annotations = annotations
                             });
-                        }  
+                        }
                     }
                 }
 
@@ -95,6 +103,13 @@ namespace Storage.Application.DataConverters
             }
         }
 
+        #region Private methods
+        /// <summary>
+        /// Gets classes from file
+        /// </summary>
+        /// <param name="classesStream">File stream</param>
+        /// <returns>Annotation classes</returns>
+        /// <exception cref="AnnotationConvertionException"></exception>
         private async Task<List<AnnotatedClass>> GetClassesFromFileAsync(Stream classesStream)
         {
             try
@@ -146,7 +161,7 @@ namespace Storage.Application.DataConverters
                 await dataStream.ReadAsync(bytes);
 
                 var bboxes = Encoding.UTF8.GetString(bytes)
-                    .Split(new string[]{ Environment.NewLine, "\n" }, StringSplitOptions.RemoveEmptyEntries);
+                    .Split(new string[] { Environment.NewLine, "\n" }, StringSplitOptions.RemoveEmptyEntries);
 
                 _logger.Information($"Bounding boxes were got. Bboxes count: '{bboxes.Length}'");
 
@@ -174,7 +189,7 @@ namespace Storage.Application.DataConverters
             imageStream.Position = 0;
             copy.Position = 0;
             var imageFile = new MagickImageInfo(copy);
-            
+
             return new AnnotationImageInfo(imageFile.Width, imageFile.Height);
         }
 
@@ -196,7 +211,7 @@ namespace Storage.Application.DataConverters
                 /*
                  * 'class index' 'X' 'Y' 'W' 'H'
                  */
-                if(splited.Length == 5)
+                if (splited.Length == 5)
                 {
                     try
                     {
@@ -221,10 +236,73 @@ namespace Storage.Application.DataConverters
 
             return annotations;
         }
+        #endregion
 
-        public void ConvertAnnotatedData(List<BaseFile> files, AnnotationFormats requiredFormat)
+        /// <summary>
+        /// Converts annotated data
+        /// </summary>
+        /// <param name="annotationInfo">Annotation info</param>
+        /// <param name="groupName">Annotation files group</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Path to directory with annotated files info</returns>
+        /// <remarks>
+        /// groupName is needed if annotated files are from different data sets and has different classes
+        /// </remarks>
+        /// <exception cref="AnnotationConvertionException"></exception>
+        public async Task<string?> ConvertAnnotatedDataAsync(List<AnnotationFileInfo> annotationInfo, string groupName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            try
+            {
+                string annotationPath = null;
+
+                if (annotationInfo != null
+                    && annotationInfo.Any())
+                {
+                    annotationPath = Path.Combine(_tempDir, groupName);
+
+                    if (!Directory.Exists(annotationPath))
+                        Directory.CreateDirectory(annotationPath);
+
+                    var classes = annotationInfo
+                                    .FirstOrDefault()
+                                        .Annotation.Classes
+                                            .Select(c => c.ClassName);
+
+                    await FileHelper.SaveFileAsync(string.Join(Environment.NewLine, classes), Path.Combine(annotationPath, ConvertersConstants.CLASSES_FILE_NAME), cancellationToken);
+
+                    foreach (var item in annotationInfo)
+                    {
+                        if (item.Annotation.Annotations.Any())
+                        {
+                            var annotationText = new StringBuilder();
+                            foreach (var a in item.Annotation.Annotations)
+                            {
+                                annotationText.AppendLine($"{a.ClassIndex} {a.Bbox.RelativeAnnotation}");
+                            }
+
+                            await File.WriteAllTextAsync(
+                                Path.Combine(annotationPath, 
+                                    $"{Path.GetFileNameWithoutExtension(item.Name)}.txt"),
+                                        annotationText.ToString(), cancellationToken);
+
+                        }
+                    }
+                }
+
+                return annotationPath;
+            }
+            catch (AnnotationConvertionException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new AnnotationConvertionException(ConvertersErrorMessages.UNEXPECTED_ERROR_WHILE_CONVERT_ANNOTATION_DATA, ex);
+            }
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

@@ -84,6 +84,36 @@ namespace Storage.Application.Common.Helpers
         }
 
         /// <summary>
+        /// Saves file
+        /// </summary>
+        /// <param name="data">File data</param>
+        /// <param name="filePath">File path to save</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static async Task SaveFileAsync(string data, string filePath, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrEmpty(data))
+            {
+                throw new ArgumentNullException(nameof(data), "File data cannot be empty!");
+            }
+
+            if (string.IsNullOrWhiteSpace(filePath))
+                throw new ArgumentNullException(nameof(filePath));
+
+            if (string.IsNullOrEmpty(Path.GetExtension(filePath)))
+                throw new ArgumentException("Path does not contains file name!", nameof(filePath));
+
+            var directory = Directory.GetParent(filePath);
+
+            if (directory != null
+                && !Directory.Exists(directory.FullName))
+                Directory.CreateDirectory(directory.FullName);
+
+            await File.WriteAllTextAsync(filePath, data, cancellationToken);
+        }
+
+        /// <summary>
         /// Copies several files to another directory
         /// </summary>
         /// <param name="sourceFiles">Files to move</param>
@@ -238,7 +268,7 @@ namespace Storage.Application.Common.Helpers
                 var archiveName = Path.GetFileNameWithoutExtension(sourcePath);
                 archivePath = Path.Combine(Path.GetFullPath(archivePath), $"{archiveName}.zip");
                 ZipFile.CreateFromDirectory(sourcePath, archivePath);
-
+                
                 return archivePath;
             }
             catch (ArgumentNullException ex)
