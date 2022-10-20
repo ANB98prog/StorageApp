@@ -1,11 +1,8 @@
 ﻿using AutoMapper;
-using Elasticsearch.Exceptions;
-using Nest;
 using Serilog;
 using Storage.Application.Common.Exceptions;
 using Storage.Application.Common.Helpers;
 using Storage.Application.Common.Models;
-using Storage.Application.DataConverters;
 using Storage.Application.Interfaces;
 using Storage.Domain;
 using System;
@@ -234,7 +231,6 @@ namespace Storage.Application.Common.Services
                             OriginalName = Path.GetFileName(file),
                             Attributes = archive.Attributes,
                             MimeType = FileHelper.GetFileMimeType(file),
-                            IsAnnotated = archive.IsAnnotated,
                             DepartmentOwnerId = archive.DepartmentOwnerId,
                             OwnerId = archive.OwnerId,
                             Stream = stream

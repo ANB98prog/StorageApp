@@ -66,6 +66,10 @@ namespace Storage.Application.Common.Services
 
                         if (image != null)
                         {
+                            /*
+                             * Mark as annotated
+                             */
+                            image.IsAnnotated = true;
                             image.Annotation = annotation.Value;
                         }
                     }
