@@ -87,7 +87,7 @@ namespace Storage.Application.Common.Services
             }
         }
 
-        public async Task<FileInfoModel?> GetFileInfoAsync(Guid id)
+        public async Task<T> GetFileInfoAsync<T>(Guid id) where T : class
         {
             try
             {
@@ -98,7 +98,7 @@ namespace Storage.Application.Common.Services
                     throw new ArgumentNullException(nameof(id));
                 }
 
-                var result = await _elasticClient.GetByIdAsync<FileInfoModel>(_index, id.ToString());
+                var result = await _elasticClient.GetByIdAsync<T>(_index, id.ToString());
                 
                 if(result == null)
                 {
@@ -133,18 +133,18 @@ namespace Storage.Application.Common.Services
             }
         }
 
-        public async Task<List<FileInfoModel>> GetFilesInfoAsync(List<Guid> ids)
+        public async Task<List<T>> GetFilesInfoAsync<T>(List<Guid> ids) where T : class
         {
             try
             {
                 _logger.Information($"Try to get files info from elastic. Files count: '{ids.Count}'");
 
-                var infos = new List<FileInfoModel>();
+                var infos = new List<T>();
 
                 if (ids.Any())
                 {
                     infos = await _elasticClient
-                                .GetManyByIdsAsync<FileInfoModel>(_index, ids.Select(id => id.ToString())
+                                .GetManyByIdsAsync<T>(_index, ids.Select(id => id.ToString())
                                     .ToList());
 
                     _logger.Information($"Files info successfully got. Files found: '{infos.Count}'");

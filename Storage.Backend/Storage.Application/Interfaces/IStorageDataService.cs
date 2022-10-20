@@ -23,7 +23,7 @@ namespace Storage.Application.Interfaces
         /// </summary>
         /// <param name="id">File id</param>
         /// <returns>File info</returns>
-        public Task<FileInfoModel?> GetFileInfoAsync(Guid id);
+        public Task<T> GetFileInfoAsync<T>(Guid id) where T : class;
 
         /// <summary>
         /// Gets files infos
@@ -31,7 +31,7 @@ namespace Storage.Application.Interfaces
         /// <param name="ids">Files ids</param>
         /// <exception cref="ElasticStorageServiceException"></exception>
         /// <returns>Files infos</returns>
-        public Task<List<FileInfoModel>> GetFilesInfoAsync(List<Guid> ids);
+        public Task<List<T>> GetFilesInfoAsync<T>(List<Guid> ids) where T : class;
 
         /// <summary>
         /// Removes file from storage
