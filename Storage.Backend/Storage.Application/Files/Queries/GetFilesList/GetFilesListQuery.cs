@@ -32,6 +32,11 @@ namespace Storage.Application.Files.Queries.GetFilesList
         /// </summary>
         public DateTime? CreatedTo { get; set; }
 
+        /// <summary>
+        /// Is data annotated
+        /// </summary>
+        public bool? IsAnnotated { get; set; }
+
         const int maxPageSize = Constants.MAX_PAGE_SIZE;
 
         private int _pageNumber = Constants.DEFAULT_PAGE_NUMBER;

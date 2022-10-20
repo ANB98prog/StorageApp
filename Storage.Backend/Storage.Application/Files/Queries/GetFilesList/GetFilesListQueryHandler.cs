@@ -148,6 +148,18 @@ namespace Storage.Application.Files.Queries.GetFilesList
             }
             #endregion
 
+            #region IsAnnotated
+            if (request.IsAnnotated.HasValue
+                && request.IsAnnotated.Value)
+            {
+                filterQueries.Add(new TermQuery
+                {
+                    Field = new Field(ElasticHelper.GetFormattedPropertyName(nameof(BaseFile.IsAnnotated))),
+                    Value = request.IsAnnotated.Value
+                });
+            }
+            #endregion
+
             var from = request.PageNumber * request.PageSize;
             var take = request.PageSize;
 
