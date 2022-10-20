@@ -43,8 +43,7 @@ namespace Storage.Application.Files.Commands.UploadManyFilesArchive
                             Attributes = request.Attributes,
                             OriginalName = archive.FileName,
                             SystemName = fileSystemName,
-                            Stream = archive.OpenReadStream(),
-                            IsAnnotated = request.IsAnnotated,
+                            Stream = archive.OpenReadStream()
                         };
 
                         uploadedFilesIds.AddRange(await _fileHandlerService.UploadArchiveFileAsync(uploadRequest, request.MimeTypes, cancellationToken));

@@ -46,7 +46,6 @@ namespace Storage.Application.Files.Commands.UploadAnnotatedFiles
                                 OriginalName = archive.FileName,
                                 SystemName = fileSystemName,
                                 Stream = archive.OpenReadStream(),
-                                IsAnnotated = request.IsAnnotated,
                             };
 
                             uploadedFilesIds.AddRange(await _fileHandlerService.UploadAnnotatedFileAsync(uploadRequest, request.AnnotationFormat, cancellationToken));

@@ -37,8 +37,7 @@ namespace Storage.Application.Files.Commands.UploadFile
                     MimeType = request.MimeType,
                     OriginalName = request.File.FileName,
                     SystemName = fileSystemName,
-                    Stream = request.File.OpenReadStream(),
-                    IsAnnotated = request.IsAnnotated,
+                    Stream = request.File.OpenReadStream()
                 };
 
                 var uploadedFileId = await _fileHandlerService.UploadFileAsync(uploadRequest, cancellationToken);

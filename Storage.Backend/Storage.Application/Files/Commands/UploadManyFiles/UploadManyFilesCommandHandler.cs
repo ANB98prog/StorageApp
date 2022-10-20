@@ -40,8 +40,7 @@ namespace Storage.Application.Files.Commands.UploadManyFiles
                         MimeType = FileHelper.GetFileMimeType(file.FileName),
                         OriginalName = file.FileName,
                         SystemName = fileSystemName,
-                        Stream = file.OpenReadStream(),
-                        IsAnnotated = request.IsAnnotated
+                        Stream = file.OpenReadStream()
                     });
                 }
 
