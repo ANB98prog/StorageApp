@@ -22,7 +22,7 @@ namespace Storage.Application.Common.Services
         {
             return new Dictionary<AnnotationFormats, IAnnotatedDataProcessor>
             {
-                { AnnotationFormats.labelMG, new LabelMGConverter(_logger, TEMP_DIR)}
+                { AnnotationFormats.yolo, new YoloAnnotationConverter(_logger, TEMP_DIR)}
             };
         }
 

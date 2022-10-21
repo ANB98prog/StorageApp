@@ -33,7 +33,7 @@ namespace Storage.Tests.FileHandlerServiceTests
                 .AddDataToStorageAsync<BaseFile>(It.IsAny<BaseFile>()))
                     .ReturnsAsync(Guid.NewGuid());
 
-            var result = await FileHandlerService.UploadAnnotatedFileAsync(file, Domain.AnnotationFormats.labelMG, CancellationToken.None);
+            var result = await FileHandlerService.UploadAnnotatedFileAsync(file, Domain.AnnotationFormats.yolo, CancellationToken.None);
 
             Assert.NotNull(result);
 
@@ -61,7 +61,7 @@ namespace Storage.Tests.FileHandlerServiceTests
                 .AddDataToStorageAsync<BaseFile>(It.IsAny<BaseFile>()))
                     .ReturnsAsync(Guid.NewGuid());
 
-            var result = await FileHandlerService.UploadAnnotatedFileAsync(file, Domain.AnnotationFormats.labelMG, CancellationToken.None);
+            var result = await FileHandlerService.UploadAnnotatedFileAsync(file, Domain.AnnotationFormats.yolo, CancellationToken.None);
 
             Assert.NotNull(result);
 

@@ -14,12 +14,6 @@ namespace Storage.Domain
         yolo,
 
         /// <summary>
-        /// Label MG format
-        /// </summary>
-        [Description("LabelMG")]
-        labelMG,
-
-        /// <summary>
         /// Cvat format
         /// </summary>
         [Description("cvat")]

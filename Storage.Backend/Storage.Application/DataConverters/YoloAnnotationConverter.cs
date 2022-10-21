@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Storage.Application.DataConverters
 {
-    public class LabelMGConverter : IAnnotatedDataProcessor
+    public class YoloAnnotationConverter : IAnnotatedDataProcessor
     {
         private ILogger _logger;
 
@@ -27,9 +27,9 @@ namespace Storage.Application.DataConverters
             ".jpg", ".jpeg", ".png", ".gif", ".tif", ".tiff", ".svg"
         };
 
-        public AnnotationFormats AnnotationFormat => AnnotationFormats.labelMG;
+        public AnnotationFormats AnnotationFormat => AnnotationFormats.yolo;
 
-        public LabelMGConverter(ILogger logger, string tempDir)
+        public YoloAnnotationConverter(ILogger logger, string tempDir)
         {
             _logger = logger;
             _tempDir = Path.Combine(tempDir, "annotation");

@@ -12,11 +12,11 @@ using System.Threading.Tasks;
 namespace Storage.Tests.AnnotationConvertersTests
 {
     [Collection("AnnotatedDataConvertersCollection")]
-    public class LabelMGDataConverterTests
+    public class YoloDataConverterTests
     {
         private readonly ConvertersTestsFixture _fixture;
 
-        public LabelMGDataConverterTests(ConvertersTestsFixture fixture)
+        public YoloDataConverterTests(ConvertersTestsFixture fixture)
         {
             _fixture = fixture;
         }

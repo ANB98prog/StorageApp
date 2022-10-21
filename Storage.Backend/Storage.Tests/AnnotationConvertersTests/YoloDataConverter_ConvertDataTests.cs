@@ -1,19 +1,14 @@
 ﻿using Storage.Application.Common.Models;
 using Storage.Application.DataConverters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Storage.Tests.AnnotationConvertersTests
 {
     [Collection("AnnotatedDataConvertersCollection")]
-    public class LabelMGDataConverter_ConvertDataTests
+    public class YoloDataConverter_ConvertDataTests
     {
         private readonly ConvertersTestsFixture _fixture;
 
-        public LabelMGDataConverter_ConvertDataTests(ConvertersTestsFixture fixture)
+        public YoloDataConverter_ConvertDataTests(ConvertersTestsFixture fixture)
         {
             _fixture = fixture;
         }
@@ -68,7 +63,7 @@ namespace Storage.Tests.AnnotationConvertersTests
 
             var converter = _fixture.GetLabelMGConverter();
 
-            var groupName = "succes_1";
+            var groupName = "succes_1_2";
             var result = await converter.ConvertAnnotatedDataAsync(annotationDataInfo, groupName, CancellationToken.None);
 
             Assert.NotNull(result);

@@ -21,9 +21,9 @@ namespace Storage.Tests.AnnotationConvertersTests
             Logger = new Mock<ILogger>();
         }
 
-        public LabelMGConverter GetLabelMGConverter()
+        public YoloAnnotationConverter GetLabelMGConverter()
         {
-            return new LabelMGConverter(Logger.Object, PathToTempFiles);
+            return new YoloAnnotationConverter(Logger.Object, PathToTempFiles);
         }
 
         public void Dispose()
