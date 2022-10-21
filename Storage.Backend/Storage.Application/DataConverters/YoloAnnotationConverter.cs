@@ -20,8 +20,6 @@ namespace Storage.Application.DataConverters
     {
         private ILogger _logger;
 
-        private readonly string _tempDir;
-
         private readonly string[] ImagesExtensions = new string[]
         {
             ".jpg", ".jpeg", ".png", ".gif", ".tif", ".tiff", ".svg"
@@ -29,13 +27,9 @@ namespace Storage.Application.DataConverters
 
         public AnnotationFormats AnnotationFormat => AnnotationFormats.yolo;
 
-        public YoloAnnotationConverter(ILogger logger, string tempDir)
+        public YoloAnnotationConverter(ILogger logger)
         {
             _logger = logger;
-            _tempDir = Path.Combine(tempDir, "annotation");
-
-            if (!Directory.Exists(_tempDir))
-                Directory.CreateDirectory(_tempDir);
         }
 
         /// <summary>
@@ -241,15 +235,15 @@ namespace Storage.Application.DataConverters
         /// <summary>
         /// Converts annotated data
         /// </summary>
-        /// <param name="annotationInfo">Annotation info</param>
-        /// <param name="groupName">Annotation files group</param>
+        /// <param name="annotatedData">Annotation info</param>
+        /// <param name="groupPath">Annotation files group path</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Path to directory with annotated files info</returns>
         /// <remarks>
         /// groupName is needed if annotated files are from different data sets and has different classes
         /// </remarks>
         /// <exception cref="AnnotationConvertionException"></exception>
-        public async Task<string?> ConvertAnnotatedDataAsync(List<AnnotationFileInfo> annotationInfo, string groupName, CancellationToken cancellationToken)
+        public async Task<string?> ConvertAnnotatedDataAsync(List<AnnotatedFileData> annotatedData, string groupPath, CancellationToken cancellationToken)
         {
             try
             {
@@ -257,15 +251,15 @@ namespace Storage.Application.DataConverters
 
                 string annotationPath = null;
 
-                if (annotationInfo != null
-                    && annotationInfo.Any())
+                if (annotatedData != null
+                    && annotatedData.Any())
                 {
-                    annotationPath = Path.Combine(_tempDir, groupName);
+                    annotationPath = groupPath;
 
                     if (!Directory.Exists(annotationPath))
                         Directory.CreateDirectory(annotationPath);
 
-                    var classes = annotationInfo
+                    var classes = annotatedData
                                     .FirstOrDefault()
                                         .Annotation.Classes
                                             .Select(c => c.ClassName);
@@ -275,7 +269,7 @@ namespace Storage.Application.DataConverters
                     {
                         await FileHelper.SaveFileAsync(string.Join(Environment.NewLine, classes), Path.Combine(annotationPath, ConvertersConstants.CLASSES_FILE_NAME), cancellationToken);
 
-                        foreach (var item in annotationInfo)
+                        foreach (var item in annotatedData)
                         {
                             if (item.Annotation.Annotations.Any())
                             {

@@ -30,6 +30,15 @@ namespace Storage.Application.Interfaces
         public Task<UploadedFileModel> UploadFileAsync(FileModel file, CancellationToken cancellationToken);
 
         /// <summary>
+        /// Uploads temporary file
+        /// </summary>
+        /// <param name="file">Upload file model</param>
+        /// <returns>
+        /// Path to saved file
+        /// </returns>
+        public Task<UploadedFileModel> UploadTemporaryFileAsync(FileStream file, CancellationToken cancellationToken);
+
+        /// <summary>
         /// Download file
         /// </summary>
         /// <param name="filePath">Path to file</param>
@@ -42,6 +51,13 @@ namespace Storage.Application.Interfaces
         /// <param name="filesPath">Path to file</param>
         /// <returns>Zip file stream</returns>
         public Task<FileStream> DownloadManyFilesAsync(List<string> filesPath, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Downloads files from local storage as separate files
+        /// </summary>
+        /// <param name="filesPath">Files path</param>
+        /// <returns>Files</returns>
+        public Task<List<FileStream>> DownloadManyFilesSeparateAsync(List<string> filesPath);
 
         /// <summary>
         /// Deletes file from storage

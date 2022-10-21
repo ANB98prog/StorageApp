@@ -24,14 +24,14 @@ namespace Storage.Application.Interfaces
         /// <summary>
         /// Converts annotated data
         /// </summary>
-        /// <param name="annotationInfo">Annotation info</param>
-        /// <param name="groupName">Annotation files group</param>
+        /// <param name="annotationData">Annotation data</param>
+        /// <param name="groupPath">Annotation group files path</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Path to directory with annotated files info</returns>
         /// <remarks>
         /// groupName is needed if annotated files are from different data sets and has different classes
         /// </remarks>
         /// <exception cref="AnnotationConvertionException"></exception>
-        public Task<string?> ConvertAnnotatedDataAsync(List<AnnotationFileInfo> annotationInfo, string groupName, CancellationToken cancellationToken);
+        public Task<string?> ConvertAnnotatedDataAsync(List<AnnotatedFileData> annotationData, string groupPath, CancellationToken cancellationToken);
     }
 }

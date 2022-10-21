@@ -20,6 +20,11 @@ namespace Storage.Application.Common
         public const int DEFAULT_PAGE_NUMBER = 0;
 
         /// <summary>
+        /// Annotation data processing step
+        /// </summary>
+        public const int ANNOTATED_DATA_PROCESSING_STEP = 10;
+
+        /// <summary>
         /// Default mime type
         /// </summary>
         public const string DEFAULT_MIME_TYPE = "plain/text";

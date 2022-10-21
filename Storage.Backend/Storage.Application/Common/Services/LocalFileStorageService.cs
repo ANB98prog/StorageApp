@@ -130,6 +130,36 @@ namespace Storage.Application.Common.Services
         }
 
         /// <summary>
+        /// Downloads files from local storage as separate files
+        /// </summary>
+        /// <param name="filesPath">Files path</param>
+        /// <returns>Files</returns>
+        public async Task<List<FileStream>> DownloadManyFilesSeparateAsync(List<string> filesPath)
+        {
+            if (filesPath == null
+                || !filesPath.Any())
+            {
+                throw new ArgumentNullException(nameof(filesPath));
+            }
+
+            var files = new List<FileStream>();
+
+            foreach (var file in filesPath)
+            {
+                try
+                {
+                    files.Add(await FileHelper.LoadFileAsync(file));
+                }
+                catch (Exception)
+                {
+                    continue;
+                }
+            }
+
+            return files;
+        }
+
+        /// <summary>
         /// Uploads many files to storage
         /// </summary>
         /// <param name="file">Files to upload</param>
@@ -242,6 +272,45 @@ namespace Storage.Application.Common.Services
             catch (Exception ex)
             {
                 throw new LocalStorageException("Unexpected error occured while file removing.", ex.InnerException);
+            }
+        }
+
+        /// <summary>
+        /// Upload file to storage
+        /// </summary>
+        /// <param name="file">File to upload</param>
+        /// <returns>Uploaded file path</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="LocalStorageException"></exception>
+        public async Task<UploadedFileModel> UploadTemporaryFileAsync(FileStream fileStream, CancellationToken cancellationToken)
+        {
+            try
+            {
+                if(fileStream == null)
+                {
+                    throw new ArgumentNullException(nameof(fileStream));
+                }
+
+                // Copy files to temporary directory
+                var randomName = Path.GetRandomFileName().Replace(".", string.Empty);
+                var relativePath = Path.Combine(randomName, fileStream.Name);
+                var absolutePath = Path.Combine(_tempDir, relativePath);
+
+                await FileHelper.SaveFileAsync(fileStream, absolutePath, cancellationToken);
+
+                return new UploadedFileModel
+                {
+                    FullPath = absolutePath,
+                    RelativePath = relativePath,
+                };
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new LocalStorageException("Unexpected error occured while file uploading.", ex.InnerException);
             }
         }
 

@@ -300,6 +300,38 @@ namespace Storage.Application.Common.Helpers
         }
 
         /// <summary>
+        /// Archives files
+        /// </summary>
+        /// <param name="sourcePath">Source directory path</param>
+        /// <param name="archivePath">Archive file path</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static FileStream ArchiveFolderStream(string sourcePath, string archivePath = null)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(sourcePath))
+                    throw new ArgumentNullException(nameof(sourcePath));
+                if (string.IsNullOrWhiteSpace(archivePath))
+                    archivePath = Directory.GetParent(sourcePath)?.FullName;
+
+                var archiveName = Path.GetFileNameWithoutExtension(sourcePath);
+                archivePath = Path.Combine(Path.GetFullPath(archivePath), $"{archiveName}.zip");
+                ZipFile.CreateFromDirectory(sourcePath, archivePath);
+
+                return new FileStream(archivePath, FileMode.Open, FileAccess.ReadWrite);
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Unexpected error occured while archive files", ex);
+            }
+        }
+
+        /// <summary>
         /// Unzipping file
         /// </summary>
         /// <param name="archivePath">Archive file</param>

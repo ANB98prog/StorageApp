@@ -42,7 +42,7 @@ namespace Storage.Domain
         /// File Mime type
         /// </summary>
         [JsonProperty("mimeType")]
-        public string MimeType { get; set;}
+        public string MimeType { get; set; }
 
         /// <summary>
         /// File path
@@ -54,7 +54,8 @@ namespace Storage.Domain
         /// File url
         /// </summary>
         [JsonProperty("fileUrl")]
-        public string FileUrl { 
+        public string FileUrl
+        {
             get
             {
                 if (!string.IsNullOrWhiteSpace(FilePath))
@@ -118,7 +119,7 @@ namespace Storage.Domain
     /// <summary>
     /// Annotation metadata
     /// </summary>
-    public class AnnotationMetadata
+    public class AnnotationMetadata : IEquatable<AnnotationMetadata>
     {
         /// <summary>
         /// Annotation classes
@@ -131,6 +132,12 @@ namespace Storage.Domain
         /// </summary>
         [JsonProperty("annotations")]
         public List<Annotation> Annotations { get; set; }
+
+        public bool Equals(AnnotationMetadata other)
+        {
+            return JsonConvert.SerializeObject(this.Classes)
+                .Equals(JsonConvert.SerializeObject(other.Classes));
+        }
     }
 
     /// <summary>
@@ -312,7 +319,7 @@ namespace Storage.Domain
         /// <returns>Bbox with pixels coordinates</returns>
         public PixelsAnnotationBbox ConvertToPixels(AnnotationImageInfo imageInfo)
         {
-            int x1 = (int)Math.Ceiling((X-(W/2))*imageInfo.Width);
+            int x1 = (int)Math.Ceiling((X - (W / 2)) * imageInfo.Width);
             int y1 = (int)Math.Ceiling((Y - (H / 2)) * imageInfo.Height);
 
             int w = (int)Math.Ceiling(W * imageInfo.Width);
@@ -331,7 +338,7 @@ namespace Storage.Domain
         /// <returns></returns>
         public PolygonAnnotationBbox ConvertToPolygons(AnnotationImageInfo imageInfo)
         {
-            return new PolygonAnnotationBbox( new float[] {0f, 0f, 0f, 0f});
+            return new PolygonAnnotationBbox(new float[] { 0f, 0f, 0f, 0f });
         }
 
         /// <summary>
@@ -427,7 +434,7 @@ namespace Storage.Domain
         /// <param name="points">Polygon points</param>
         public PolygonAnnotationBbox(float[] points)
         {
-           Points = points;
+            Points = points;
         }
 
         /// <summary>

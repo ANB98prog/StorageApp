@@ -14,9 +14,9 @@ namespace Storage.Application.Common.Models
         public Guid Id { get; set; }
 
         /// <summary>
-        /// File name
+        /// System file name
         /// </summary>
-        [JsonProperty("OriginalName")]
+        [JsonProperty("SystemName")]
         public string Name { get; set; }
 
         /// <summary>
