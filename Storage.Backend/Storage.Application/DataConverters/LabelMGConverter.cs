@@ -253,6 +253,8 @@ namespace Storage.Application.DataConverters
         {
             try
             {
+                _logger.Information($"Try to convert annotation data to {AnnotationFormat} format.");
+
                 string annotationPath = null;
 
                 if (annotationInfo != null
@@ -268,25 +270,40 @@ namespace Storage.Application.DataConverters
                                         .Annotation.Classes
                                             .Select(c => c.ClassName);
 
-                    await FileHelper.SaveFileAsync(string.Join(Environment.NewLine, classes), Path.Combine(annotationPath, ConvertersConstants.CLASSES_FILE_NAME), cancellationToken);
-
-                    foreach (var item in annotationInfo)
+                    if (classes != null 
+                        && classes.Any())
                     {
-                        if (item.Annotation.Annotations.Any())
-                        {
-                            var annotationText = new StringBuilder();
-                            foreach (var a in item.Annotation.Annotations)
-                            {
-                                annotationText.AppendLine($"{a.ClassIndex} {a.Bbox.RelativeAnnotation}");
-                            }
+                        await FileHelper.SaveFileAsync(string.Join(Environment.NewLine, classes), Path.Combine(annotationPath, ConvertersConstants.CLASSES_FILE_NAME), cancellationToken);
 
-                            await FileHelper.SaveFileAsync(
-                                    annotationText.ToString(), 
-                                        Path.Combine(annotationPath,
-                                            $"{Path.GetFileNameWithoutExtension(item.Name)}.txt"),
-                                                cancellationToken);
-                        }
+                        foreach (var item in annotationInfo)
+                        {
+                            if (item.Annotation.Annotations.Any())
+                            {
+                                var annotationText = new StringBuilder();
+                                foreach (var a in item.Annotation.Annotations)
+                                {
+                                    annotationText.AppendLine($"{a.ClassIndex} {a.Bbox.RelativeAnnotation}");
+                                }
+
+                                await FileHelper.SaveFileAsync(
+                                        annotationText.ToString(),
+                                            Path.Combine(annotationPath,
+                                                $"{Path.GetFileNameWithoutExtension(item.Name)}.txt"),
+                                                    cancellationToken);
+                            }
+                            else
+                            {
+                                _logger.Warning($"Annotation data for {item.Name} with id {item.Id} are not found.");
+                            }
+                        } 
                     }
+
+                    _logger.Information("Data successfully converted.");
+
+                }
+                else
+                {
+                    _logger.Warning("Classes are not found. Cannot convert.");
                 }
 
                 return annotationPath;
