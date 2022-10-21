@@ -1,6 +1,7 @@
 ﻿using Moq;
 using Serilog;
 using Storage.Application.DataConverters;
+using Storage.Tests.Common;
 
 namespace Storage.Tests.AnnotationConvertersTests
 {
@@ -10,19 +11,24 @@ namespace Storage.Tests.AnnotationConvertersTests
 
         public readonly string PathToTestFiles;
 
+        public readonly string PathToTempFiles;
+
         public ConvertersTestsFixture()
         {
             PathToTestFiles = Path.Combine(Directory.GetCurrentDirectory(), "AnnotationConvertersTests", "TestData");
+            PathToTempFiles = Path.Combine(Directory.GetCurrentDirectory(), "AnnotationConvertersTests", "TempData");
+
             Logger = new Mock<ILogger>();
         }
 
         public LabelMGConverter GetLabelMGConverter()
         {
-            return new LabelMGConverter(Logger.Object);
+            return new LabelMGConverter(Logger.Object, PathToTempFiles);
         }
 
         public void Dispose()
         {
+            TestHelper.RemoveTestData(PathToTempFiles);
         }
     }
 
