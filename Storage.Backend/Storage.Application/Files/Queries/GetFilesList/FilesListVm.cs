@@ -47,8 +47,6 @@ namespace Storage.Application.Files.Queries.GetFilesList
             }
         }
 
-        const int maxPageSize = 100;
-
         /// <summary>
         /// Page number
         /// </summary>
@@ -67,7 +65,7 @@ namespace Storage.Application.Files.Queries.GetFilesList
             }
             set
             {
-                _pageSize = (value > maxPageSize) ? maxPageSize : value;
+                _pageSize = value;
             }
         }
 
