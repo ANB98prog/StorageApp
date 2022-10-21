@@ -37,8 +37,6 @@ namespace Storage.Application.Files.Queries.GetFilesList
         /// </summary>
         public bool? IsAnnotated { get; set; }
 
-        const int maxPageSize = Constants.MAX_PAGE_SIZE;
-
         private int _pageNumber = Constants.DEFAULT_PAGE_NUMBER;
 
         /// <summary>
@@ -74,7 +72,7 @@ namespace Storage.Application.Files.Queries.GetFilesList
             }
             set
             {
-                _pageSize = (value > maxPageSize) ? maxPageSize : value;
+                _pageSize = value;
             }
         }
     }
