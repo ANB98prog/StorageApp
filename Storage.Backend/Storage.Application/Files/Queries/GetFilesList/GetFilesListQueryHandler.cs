@@ -149,8 +149,7 @@ namespace Storage.Application.Files.Queries.GetFilesList
             #endregion
 
             #region IsAnnotated
-            if (request.IsAnnotated.HasValue
-                && request.IsAnnotated.Value)
+            if (request.IsAnnotated.HasValue)
             {
                 filterQueries.Add(new TermQuery
                 {
