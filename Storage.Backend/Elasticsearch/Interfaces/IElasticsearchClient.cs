@@ -175,5 +175,21 @@ namespace Elasticsearch.Interfaces
 
         #endregion
 
+        #region Update
+        /// <summary>
+        /// Updates document
+        /// </summary>
+        /// <typeparam name="TDocument">Document type</typeparam>
+        /// <param name="index">Documents' index</param>
+        /// <param name="id">Document id</param>
+        /// <param name="document">Document to update</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Acknowledged</returns>
+        public Task<bool> UpdateAsync<TDocument>(string index, string id, TDocument document, CancellationToken cancellationToken = default) where TDocument : class;
+
+
+        public Task<UpdateManyResponse> BulkUpdateAsync<TDocument>(string index, List<TDocument> documents, CancellationToken cancellationToken = default) where TDocument : class;
+        #endregion
+
     }
 }

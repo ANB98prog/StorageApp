@@ -9,31 +9,31 @@ namespace Storage.Domain
     public class BaseFile
     {
         /// <summary>
-        /// Image id
+        /// File id
         /// </summary>
         [JsonProperty("id")]
         public Guid Id { get; set; }
 
         /// <summary>
-        /// Image owner id
+        /// File owner id
         /// </summary>
         [JsonProperty("ownerId")]
         public Guid OwnerId { get; set; }
 
         /// <summary>
-        /// Image department owner id
+        /// File department owner id
         /// </summary>
         [JsonProperty("departmentOwnerId")]
         public Guid DepartmentOwnerId { get; set; }
 
         /// <summary>
-        /// Original image name
+        /// Original file name
         /// </summary>
         [JsonProperty("originalName")]
         public string OriginalName { get; set; }
 
         /// <summary>
-        /// System image name
+        /// System file name
         /// </summary>
         [JsonProperty("systemName")]
         public string SystemName { get; set; }
