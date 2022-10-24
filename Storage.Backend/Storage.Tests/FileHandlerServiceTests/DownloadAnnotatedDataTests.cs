@@ -22,7 +22,7 @@ namespace Storage.Tests.FileHandlerServiceTests
                 new AnnotationFileInfo
                 {
                     Id = Guid.NewGuid(),
-                    Name = "File_1_1.txt",
+                    SystemName = "File_1_1.txt",
                     Annotation = new Domain.AnnotationMetadata
                     {
                         Classes = new List<Domain.AnnotatedClass>
@@ -35,7 +35,7 @@ namespace Storage.Tests.FileHandlerServiceTests
                 new AnnotationFileInfo
                 {
                     Id = Guid.NewGuid(),
-                    Name = "File_1_1.txt",
+                    SystemName = "File_1_1.txt",
                     Annotation = new Domain.AnnotationMetadata
                     {
                         Classes = new List<Domain.AnnotatedClass>
@@ -47,7 +47,7 @@ namespace Storage.Tests.FileHandlerServiceTests
                 },new AnnotationFileInfo
                 {
                     Id = Guid.NewGuid(),
-                    Name = "File_2_1.txt",
+                    SystemName = "File_2_1.txt",
                     Annotation = new Domain.AnnotationMetadata
                     {
                         Classes = new List<Domain.AnnotatedClass>
@@ -60,7 +60,7 @@ namespace Storage.Tests.FileHandlerServiceTests
                 new AnnotationFileInfo
                 {
                     Id = Guid.NewGuid(),
-                    Name = "File_2_1.txt",
+                    SystemName = "File_2_1.txt",
                     Annotation = new Domain.AnnotationMetadata
                     {
                         Classes = new List<Domain.AnnotatedClass>

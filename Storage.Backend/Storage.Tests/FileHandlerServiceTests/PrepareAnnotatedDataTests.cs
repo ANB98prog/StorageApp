@@ -37,7 +37,7 @@ namespace Storage.Tests.FileHandlerServiceTests
                 {
                     Id = ids.First(),
                     FilePath = testImage,
-                    Name = imageName,
+                    SystemName = imageName,
                     Annotation = new AnnotationMetadata
                     {
                         Classes = new List<AnnotatedClass>
@@ -102,7 +102,7 @@ namespace Storage.Tests.FileHandlerServiceTests
                 {
                     Id = Guid.NewGuid(),
                     FilePath = file,
-                    Name = file,
+                    SystemName = file,
                     Annotation = new AnnotationMetadata
                     {
                         Classes = new List<AnnotatedClass>
@@ -173,7 +173,7 @@ namespace Storage.Tests.FileHandlerServiceTests
                 {
                     Id = Guid.NewGuid(),
                     FilePath = file,
-                    Name = file,
+                    SystemName = file,
                     Annotation = new AnnotationMetadata
                     {
                         Classes = new List<AnnotatedClass>

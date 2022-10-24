@@ -24,7 +24,7 @@ namespace Storage.Tests.AnnotationConvertersTests
                 {
                     Id = Guid.NewGuid(),
                     FilePath = "some path",
-                    Name = imageFileName,
+                    SystemName = imageFileName,
                     Annotation = new Domain.AnnotationMetadata
                     {
                         Classes = new List<Domain.AnnotatedClass>
@@ -95,7 +95,7 @@ namespace Storage.Tests.AnnotationConvertersTests
                 {
                     Id = Guid.NewGuid(),
                     FilePath = "some path",
-                    Name = firstImage,
+                    SystemName = firstImage,
                     Annotation = new Domain.AnnotationMetadata
                     {
                         Classes = new List<Domain.AnnotatedClass>
@@ -134,7 +134,7 @@ namespace Storage.Tests.AnnotationConvertersTests
                 {
                     Id = Guid.NewGuid(),
                     FilePath = "some path",
-                    Name = secondImage,
+                    SystemName = secondImage,
                     Annotation = new Domain.AnnotationMetadata
                     {
                         Classes = new List<Domain.AnnotatedClass>
@@ -207,7 +207,7 @@ namespace Storage.Tests.AnnotationConvertersTests
                 {
                     Id = Guid.NewGuid(),
                     FilePath = "some path",
-                    Name = firstImage,
+                    SystemName = firstImage,
                     Annotation = new Domain.AnnotationMetadata
                     {
                         Classes = new List<Domain.AnnotatedClass>(),
@@ -265,7 +265,7 @@ namespace Storage.Tests.AnnotationConvertersTests
                 {
                     Id = Guid.NewGuid(),
                     FilePath = "some path",
-                    Name = firstImage,
+                    SystemName = firstImage,
                     Annotation = new Domain.AnnotationMetadata
                     {
                         Classes = new List<Domain.AnnotatedClass>()
