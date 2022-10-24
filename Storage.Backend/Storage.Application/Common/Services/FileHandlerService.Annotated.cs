@@ -23,7 +23,7 @@ namespace Storage.Application.Common.Services
         {
             return new Dictionary<AnnotationFormats, IAnnotatedDataProcessor>
             {
-                { AnnotationFormats.yolo, new YoloAnnotationConverter(_logger, TEMP_DIR)}
+                { AnnotationFormats.yolo, new YoloAnnotationConverter(_logger)}
             };
         }
 
@@ -146,34 +146,44 @@ namespace Storage.Application.Common.Services
 
                         var convertedDataPath = Path.Combine(TEMP_DIR, Guid.NewGuid().Trunc());
 
+                        var groupsPath = new List<string>();
+
                         foreach (var group in groups)
                         {
                             int from = 0;
                             int take = Constants.ANNOTATED_DATA_PROCESSING_STEP;
-                            
-                            while(from > group.Value.Count)
+
+                            while (from > group.Value.Count)
                             {
                                 /*Берем часть файлов*/
                                 var filesFromGroup = group.Value.Skip(from).Take(take);
                                 var files = await _fileService.DownloadManyFilesSeparateAsync(filesFromGroup.Select(f => f.FilePath).ToList());
 
-                                var mapped = _mapper.Map<List<AnnotationFileInfo>, List<AnnotatedFileData>>(filesFromGroup.ToList());
-
-                                /*Добавляем файловый поток к аннотации*/
-                                mapped.ForEach(m =>
-                                {
-                                    var found = files.FirstOrDefault(f => f.Name.Equals(m.Name));
-
-                                    if (found != null)
-                                    {
-                                        m.File = found;
-                                    }
-                                });
-
                                 try
                                 {
                                     /*Преобразовываем*/
-                                    await processor.ConvertAnnotatedDataAsync(mapped, Path.Combine(convertedDataPath, group.Key.Trunc()), cancellationToken);
+                                    var processedGroupPath = await processor.ConvertAnnotatedDataAsync(filesFromGroup.ToList(), Path.Combine(convertedDataPath, group.Key.Trunc()), cancellationToken);
+
+                                    if (!string.IsNullOrEmpty(processedGroupPath))
+                                    {
+                                        /*Необходимо изображения скопировать в директорию с разметкой*/
+                                        files.ForEach(async f =>
+                                        {
+                                            try
+                                            {
+                                                await FileHelper.SaveFileAsync(f, processedGroupPath, cancellationToken);
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                _logger.Error(ex, ErrorMessages.ErrorWhileSaveAnnotatedFileErrorMessage(f.Name));
+                                            }
+                                        });
+
+                                        if (!groupsPath.Contains(processedGroupPath))
+                                        {
+                                            groupsPath.Add(processedGroupPath);
+                                        }
+                                    }
                                 }
                                 catch (Exception ex)
                                 {
@@ -184,15 +194,13 @@ namespace Storage.Application.Common.Services
                             }
                         }
 
-                        /*
-                         * Need to delete groups files
-                         */
-
                         var preparedArchive = FileHelper.ArchiveFolderStream(convertedDataPath);
 
-                        var path = await _fileService.UploadTemporaryFileAsync(preparedArchive, cancellationToken);
+                        /* Необходимо удалить директории груп т.к. они уже не нужны */
+                        groupsPath.ForEach(gp => FileHelper.RemoveDirectory(gp));
 
-                        return path.RelativePath;
+                        return (await _fileService.UploadTemporaryFileAsync(preparedArchive, cancellationToken)).RelativePath;
+
                     }
                 }
 

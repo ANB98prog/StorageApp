@@ -32,6 +32,6 @@ namespace Storage.Application.Interfaces
         /// groupName is needed if annotated files are from different data sets and has different classes
         /// </remarks>
         /// <exception cref="AnnotationConvertionException"></exception>
-        public Task<string?> ConvertAnnotatedDataAsync(List<AnnotatedFileData> annotationData, string groupPath, CancellationToken cancellationToken);
+        public Task<string?> ConvertAnnotatedDataAsync(List<AnnotationFileInfo> annotationData, string groupPath, CancellationToken cancellationToken);
     }
 }

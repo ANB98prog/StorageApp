@@ -65,6 +65,13 @@ namespace Storage.Application.Common.Exceptions
         public static string FILE_NOT_FOUND_ERROR_MESSAGE => "File not found!";
 
         /// <summary>
+        /// Error message occured while saving annotated file
+        /// </summary>
+        /// <param name="fileName">Saving file name</param>
+        /// <returns>Error message</returns>
+        public static string ErrorWhileSaveAnnotatedFileErrorMessage(string fileName) => $"Error occured while annotation file saving. File name '{fileName}'";
+
+        /// <summary>
         /// Error message if required parameter are empty
         /// </summary>
         public static string EmptyRequiredParameterErrorMessage(string paramName) => $"Required paramenter cannot be empty. Parameter name: '{paramName}'";
