@@ -27,6 +27,8 @@ namespace Storage.Tests.FileHandlerServiceTests
                     FileStream = stream
                 }, CancellationToken.None);
 
+            stream.Dispose();
+
             var result = await FileHandlerService.DownloadFileAsync(fileToDownloadPath.FullPath, CancellationToken.None);
 
             Assert.NotNull(result);

@@ -23,7 +23,7 @@ namespace Storage.Tests.AnnotationConvertersTests
 
         public YoloAnnotationConverter GetLabelMGConverter()
         {
-            return new YoloAnnotationConverter(Logger.Object, PathToTempFiles);
+            return new YoloAnnotationConverter(Logger.Object);
         }
 
         public void Dispose()
