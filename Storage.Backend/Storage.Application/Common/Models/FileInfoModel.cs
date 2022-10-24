@@ -16,8 +16,7 @@ namespace Storage.Application.Common.Models
         /// <summary>
         /// System file name
         /// </summary>
-        [JsonProperty("SystemName")]
-        public string Name { get; set; }
+        public string SystemName { get; set; }
 
         /// <summary>
         /// File path
