@@ -79,8 +79,6 @@ namespace Storage.Application.Common.Helpers
                 throw new ArgumentNullException(nameof(stream), "File stream cannot be empty!");
             }
 
-            var saveStream = stream;
-
             if (string.IsNullOrWhiteSpace(filePath))
                 throw new ArgumentNullException(nameof(filePath));
 
@@ -95,10 +93,9 @@ namespace Storage.Application.Common.Helpers
 
             using (var file = File.OpenWrite(filePath))
             {
-                await saveStream.CopyToAsync(file, cancellationToken);
+                await stream.CopyToAsync(file, cancellationToken);
+                stream.Position = 0;
             }
-
-            await saveStream.DisposeAsync();
         }
 
         /// <summary>
