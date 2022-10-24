@@ -58,6 +58,16 @@ namespace Storage.Application.Interfaces
         public Task<List<Guid>> UploadAnnotatedFileAsync(UploadFileRequestModel file, AnnotationFormats annotationFormat, CancellationToken cancellationToken);
 
         /// <summary>
+        /// Prepares annotated files for downloading
+        /// </summary>
+        /// <param name="filesIds">Annotated files ids</param>
+        /// <param name="annotationFormat">Annotation format</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Prepared files archive path</returns>
+        /// <exception cref="FileHandlerServiceException"></exception>
+        public Task<string> PrepareAnnotatedFileAsync(List<Guid> filesIds, AnnotationFormats annotationFormat, CancellationToken cancellationToken);
+
+        /// <summary>
         /// Downloads large file
         /// </summary>
         /// <param name="files">Files to download</param>

@@ -134,6 +134,7 @@ namespace Storage.Application.Common.Exceptions
         /// <returns>Error message</returns>
         public static string RemovingItemFromStorageErrorMessage(string id) => $"Cannot remove item with id '{id}'";
 
+        #region Annotation
         /// <summary>
         /// Wrong parameter format error message
         /// </summary>
@@ -150,7 +151,23 @@ namespace Storage.Application.Common.Exceptions
         /// <summary>
         /// Unsupported annotation format error message
         /// </summary>
-        public static string UNSUPORTED_ANNOTATION_FORMAT_ERROR_MESSAGE => $"Unsupported annotation format.";
+        public const string UNSUPORTED_ANNOTATION_FORMAT_ERROR_MESSAGE = "Unsupported annotation format.";
 
+        /// <summary>
+        /// Error message if annotation files ids are not set
+        /// </summary>
+        public const string ANNOTATED_FILES_IDS_NOT_SET_ERROR_MESSAGE = "Annotation files ids are not set.";
+
+        /// <summary>
+        /// Error message if annotation files data are not found
+        /// </summary>
+        public const string ANNOTATED_FILES_INFO_NOT_FOUND_ERROR_MESSAGE = "Annotation data is not found.";
+
+        /// <summary>
+        /// Error message if unexpected error occured while preparing annotation data
+        /// </summary>
+        public const string UNEXPECTED_ERROR_OCCURED_WHILE_PREPARING_ANNOTATION_DATA_ERROR_MESSAGE = "Unexpected error occured while preparing annotation data.";
+
+        #endregion
     }
 }

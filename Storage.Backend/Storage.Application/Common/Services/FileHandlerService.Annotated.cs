@@ -130,82 +130,99 @@ namespace Storage.Application.Common.Services
             {
                 _logger.Information($"Try to download annotated files. Annotation format: {annotationFormat}. Files count: {filesIds}");
 
-                if (filesIds.Any())
+                if (filesIds == null
+                    || !filesIds.Any())
                 {
-                    if (!_annotationsFormatsProcessor.TryGetValue(annotationFormat, out var processor))
+                    throw new FileHandlerServiceException(ErrorMessages.ANNOTATED_FILES_IDS_NOT_SET_ERROR_MESSAGE);
+                }
+
+                if (!_annotationsFormatsProcessor.TryGetValue(annotationFormat, out var processor))
+                {
+                    throw new FileHandlerServiceException(ErrorMessages.UNSUPORTED_ANNOTATION_FORMAT_ERROR_MESSAGE);
+                }
+
+                var annotatedFilesInfos = await _storageDataService.GetFilesInfoAsync<AnnotationFileInfo>(filesIds);
+
+                if (annotatedFilesInfos == null
+                    || !annotatedFilesInfos.Any())
+                {
+                    throw new FileHandlerServiceException(ErrorMessages.ANNOTATED_FILES_INFO_NOT_FOUND_ERROR_MESSAGE);
+                }
+
+                var groups = SplitAnnotationByGroups(annotatedFilesInfos);
+
+                var convertedDataPath = Path.Combine(TEMP_DIR, Guid.NewGuid().Trunc());
+
+                var groupsPath = new List<string>();
+
+                foreach (var group in groups)
+                {
+                    int from = 0;
+                    int take = Constants.ANNOTATED_DATA_PROCESSING_STEP;
+
+                    while (from < group.Value.Count)
                     {
-                        throw new FileHandlerServiceException(ErrorMessages.UNSUPORTED_ANNOTATION_FORMAT_ERROR_MESSAGE);
-                    }
+                        /*Берем часть файлов*/
+                        var filesFromGroup = group.Value.Skip(from).Take(take);
+                        var files = await _fileService.DownloadManyFilesSeparateAsync(filesFromGroup.Select(f => f.FilePath).ToList());
 
-                    var annotatedFilesInfos = await _storageDataService.GetFilesInfoAsync<AnnotationFileInfo>(filesIds);
-
-                    if (annotatedFilesInfos != null
-                        && annotatedFilesInfos.Any())
-                    {
-                        var groups = SplitAnnotationByGroups(annotatedFilesInfos);
-
-                        var convertedDataPath = Path.Combine(TEMP_DIR, Guid.NewGuid().Trunc());
-
-                        var groupsPath = new List<string>();
-
-                        foreach (var group in groups)
+                        try
                         {
-                            int from = 0;
-                            int take = Constants.ANNOTATED_DATA_PROCESSING_STEP;
+                            /*Преобразовываем*/
+                            var processedGroupPath = await processor.ConvertAnnotatedDataAsync(filesFromGroup.ToList(), Path.Combine(convertedDataPath, group.Key.Trunc()), cancellationToken);
 
-                            while (from > group.Value.Count)
+                            if (!string.IsNullOrEmpty(processedGroupPath))
                             {
-                                /*Берем часть файлов*/
-                                var filesFromGroup = group.Value.Skip(from).Take(take);
-                                var files = await _fileService.DownloadManyFilesSeparateAsync(filesFromGroup.Select(f => f.FilePath).ToList());
-
-                                try
+                                /*Необходимо изображения скопировать в директорию с разметкой*/
+                                foreach (var file in files)
                                 {
-                                    /*Преобразовываем*/
-                                    var processedGroupPath = await processor.ConvertAnnotatedDataAsync(filesFromGroup.ToList(), Path.Combine(convertedDataPath, group.Key.Trunc()), cancellationToken);
-
-                                    if (!string.IsNullOrEmpty(processedGroupPath))
+                                    try
                                     {
-                                        /*Необходимо изображения скопировать в директорию с разметкой*/
-                                        files.ForEach(async f =>
-                                        {
-                                            try
-                                            {
-                                                await FileHelper.SaveFileAsync(f, processedGroupPath, cancellationToken);
-                                            }
-                                            catch (Exception ex)
-                                            {
-                                                _logger.Error(ex, ErrorMessages.ErrorWhileSaveAnnotatedFileErrorMessage(f.Name));
-                                            }
-                                        });
-
-                                        if (!groupsPath.Contains(processedGroupPath))
-                                        {
-                                            groupsPath.Add(processedGroupPath);
-                                        }
+                                        await FileHelper.SaveFileAsync(file, Path.Combine(processedGroupPath, Path.GetFileName(file.Name)), cancellationToken);
+                                        await file.DisposeAsync();
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        _logger.Error(ex, ErrorMessages.ErrorWhileSaveAnnotatedFileErrorMessage(file.Name));
                                     }
                                 }
-                                catch (Exception ex)
-                                {
-                                    _logger.Error(ex, "Error while converting batch of data. Continue processing...");
-                                }
 
-                                from += take + 1;
+                                if (!groupsPath.Contains(processedGroupPath))
+                                {
+                                    groupsPath.Add(processedGroupPath);
+                                }
                             }
                         }
+                        catch (Exception ex)
+                        {
+                            _logger.Error(ex, "Error while converting batch of data. Continue processing...");
+                        }
 
-                        var preparedArchive = FileHelper.ArchiveFolderStream(convertedDataPath);
-
-                        /* Необходимо удалить директории груп т.к. они уже не нужны */
-                        groupsPath.ForEach(gp => FileHelper.RemoveDirectory(gp));
-
-                        return (await _fileService.UploadTemporaryFileAsync(preparedArchive, cancellationToken)).RelativePath;
-
+                        from += Constants.ANNOTATED_DATA_PROCESSING_STEP;
                     }
                 }
 
-                return null;
+                try
+                {
+                    /* Если группы были обработаны */
+                    if (!Directory.Exists(convertedDataPath))
+                    {
+                        throw new FileHandlerServiceException(ErrorMessages.UNEXPECTED_ERROR_OCCURED_WHILE_PREPARING_ANNOTATION_DATA_ERROR_MESSAGE);
+                    }
 
+                    var preparedArchive = FileHelper.ArchiveFolderStream(convertedDataPath);
+
+                    var archivePath = await _fileService.UploadTemporaryFileAsync(preparedArchive, cancellationToken);
+                    await preparedArchive.DisposeAsync();
+
+                    return archivePath.RelativePath;
+                }
+                finally
+                {
+                    /* Необходимо удалить директории груп т.к. они уже не нужны */
+                    groupsPath.ForEach(gp => FileHelper.RemoveDirectory(gp));
+                    FileHelper.RemoveDirectory(convertedDataPath);
+                }
             }
             catch (ArgumentNullException ex)
             {
@@ -222,13 +239,14 @@ namespace Storage.Application.Common.Services
                 _logger.Error(ex, ex.UserFriendlyMessage);
                 throw new FileHandlerServiceException(ex.UserFriendlyMessage, ex);
             }
+            catch (FileHandlerServiceException ex)
+            {
+                throw ex;
+            }
             catch (Exception ex)
             {
                 _logger.Error(ex, ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_ARCHIVE_FILE_MESSAGE);
                 throw new FileHandlerServiceException(ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_ARCHIVE_FILE_MESSAGE, ex);
-            }
-            finally
-            {
             }
         }
 
@@ -254,11 +272,11 @@ namespace Storage.Application.Common.Services
                 temp.Remove(group);
 
                 var groupItems = temp.Where(x => x.Annotation.Equals(group.Annotation)).ToList();
+                groupItems.Add(group);
 
                 if (groupItems != null
                     && groupItems.Any())
                 {
-                    groupItems.Add(group);
                     groups.Add(group.Id, groupItems);
                 }
 
