@@ -142,9 +142,13 @@ namespace Storage.Application.Common.Services
                 throw new ArgumentNullException(nameof(filesPath));
             }
 
+            /* Необходимо добавить приставку пути хранилища */
+            var converted = new List<string>();
+            filesPath.ForEach(f => converted.Add(Path.Combine(_localStorageDir, f)));
+
             var files = new List<FileStream>();
 
-            foreach (var file in filesPath)
+            foreach (var file in converted)
             {
                 try
                 {
@@ -301,7 +305,7 @@ namespace Storage.Application.Common.Services
                 return new UploadedFileModel
                 {
                     FullPath = absolutePath,
-                    RelativePath = relativePath,
+                    RelativePath = Path.Combine(new DirectoryInfo(_tempDir).Name, relativePath),
                 };
             }
             catch (ArgumentNullException ex)
