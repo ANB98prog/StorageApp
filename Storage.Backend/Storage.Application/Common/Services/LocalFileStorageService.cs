@@ -293,7 +293,7 @@ namespace Storage.Application.Common.Services
 
                 // Copy files to temporary directory
                 var randomName = Path.GetRandomFileName().Replace(".", string.Empty);
-                var relativePath = Path.Combine(randomName, fileStream.Name);
+                var relativePath = Path.Combine(randomName, Path.GetFileName(fileStream.Name));
                 var absolutePath = Path.Combine(_tempDir, relativePath);
 
                 await FileHelper.SaveFileAsync(fileStream, absolutePath, cancellationToken);
