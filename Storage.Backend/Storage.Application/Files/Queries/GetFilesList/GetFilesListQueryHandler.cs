@@ -170,6 +170,7 @@ namespace Storage.Application.Files.Queries.GetFilesList
 
             return new SearchRequest<BaseFile>(ElasticIndices.FILES_INDEX)
             {
+                TrackTotalHits = true,
                 Query = queryContainer,
                 From = from,
                 Size = take
