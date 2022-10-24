@@ -38,7 +38,7 @@ namespace Storage.WebApi.Controllers.AnnotatedFiles
         /// <returns>Path to zip archive to download</returns>
         [HttpPost("prepare")]
         [Produces("text/plain")]
-        public async Task<ActionResult<string>> PrepareAnnotatedDataAsync([FromForm] PrepareAnnotatedDataRequestModel request)
+        public async Task<ActionResult<string>> PrepareAnnotatedDataAsync([FromBody] PrepareAnnotatedDataRequestModel request)
         {
             var command = Mapper.Map<PrepareAnnotatedDataRequestModel, PrepareAnnotatedFilesCommand>(request);
             command.UserId = UserId;
