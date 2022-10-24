@@ -71,7 +71,7 @@ namespace Storage.Tests.FileHandlerServiceTests
             Assert.NotNull(result);
             ZipArchive.IsZipFile(result);
 
-            var archive = ZipArchive.Open(Path.Combine(TestConstants.StorageDirectory, "temp", result));
+            var archive = ZipArchive.Open(Path.Combine(TestConstants.StorageDirectory, result));
 
             Assert.Equal(3, archive.Entries.Count);
 
@@ -136,7 +136,7 @@ namespace Storage.Tests.FileHandlerServiceTests
             Assert.NotNull(result);
             ZipArchive.IsZipFile(result);
 
-            var archive = ZipArchive.Open(Path.Combine(TestConstants.StorageDirectory, "temp", result));
+            var archive = ZipArchive.Open(Path.Combine(TestConstants.StorageDirectory, result));
 
             Assert.Equal(7, archive.Entries.Count);
 
@@ -207,7 +207,7 @@ namespace Storage.Tests.FileHandlerServiceTests
             Assert.NotNull(result);
             ZipArchive.IsZipFile(result);
 
-            var archive = ZipArchive.Open(Path.Combine(TestConstants.StorageDirectory, "temp", result));
+            var archive = ZipArchive.Open(Path.Combine(TestConstants.StorageDirectory, result));
 
             try
             {
