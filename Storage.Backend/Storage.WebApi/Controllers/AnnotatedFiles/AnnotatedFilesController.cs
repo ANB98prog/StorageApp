@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Storage.WebApi.Models;
 using Storage.Domain;
 using Storage.Application.Files.Commands.UploadAnnotatedFiles;
+using Storage.Application.Files.Commands.PrepareAnnotatedFiles;
 
 namespace Storage.WebApi.Controllers.AnnotatedFiles
 {
@@ -31,20 +32,20 @@ namespace Storage.WebApi.Controllers.AnnotatedFiles
         }
 
         /// <summary>
-        /// Downloads annotated data
+        /// Prepares annotated data
         /// </summary>
         /// <param name="ids">Annotated files ids</param>
-        /// <returns>Zip archive</returns>
-        [HttpPost("download")]
-        [Produces("application/zip")]
-        public async Task<FileContentResult> DownloadAnnotatedDataAsync([FromBody] string[] ids)
+        /// <returns>Path to zip archive to download</returns>
+        [HttpPost("prepare")]
+        [Produces("text/plain")]
+        public async Task<ActionResult<string>> PrepareAnnotatedDataAsync([FromForm] PrepareAnnotatedDataRequestModel request)
         {
-            using(var file = System.IO.File.Create("temp.zip"))
-            {
-            }
+            var command = Mapper.Map<PrepareAnnotatedDataRequestModel, PrepareAnnotatedFilesCommand>(request);
+            command.UserId = UserId;
 
-            return File(System.IO.File.ReadAllBytes("temp.zip"),  "application/zip", "annotatedData.zip");
+            var preparedFilePath = await Mediator.Send(command);
 
+            return Created("", preparedFilePath);
         }
 
         /// <summary>
