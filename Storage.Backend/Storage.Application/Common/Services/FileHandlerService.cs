@@ -285,6 +285,14 @@ namespace Storage.Application.Common.Services
                 _logger.Error(ex, ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_FILE_MESSAGE);
                 throw new FileHandlerServiceException(ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_FILE_MESSAGE, ex);
             }
+            finally
+            {
+                if(file != null 
+                    && file.Stream != null)
+                {
+                    await file.Stream.DisposeAsync();
+                }
+            }
         }
 
         public async Task<List<Guid>> UploadManyFileAsync(List<UploadFileRequestModel> files, CancellationToken cancellationToken)
