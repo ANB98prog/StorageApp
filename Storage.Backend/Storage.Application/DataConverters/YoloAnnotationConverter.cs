@@ -282,12 +282,12 @@ namespace Storage.Application.DataConverters
                                 await FileHelper.SaveFileAsync(
                                         annotationText.ToString(),
                                             Path.Combine(annotationPath,
-                                                $"{Path.GetFileNameWithoutExtension(item.Name)}.txt"),
+                                                $"{Path.GetFileNameWithoutExtension(item.SystemName)}.txt"),
                                                     cancellationToken);
                             }
                             else
                             {
-                                _logger.Warning($"Annotation data for {item.Name} with id {item.Id} are not found.");
+                                _logger.Warning($"Annotation data for {item.SystemName} with id {item.Id} are not found.");
                             }
                         } 
                     }
