@@ -2,6 +2,7 @@
 using Storage.Application.Common.Exceptions;
 using Storage.Application.Interfaces;
 using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -30,7 +31,8 @@ namespace Storage.Application.Files.Commands.PrepareAnnotatedFiles
             {
                 var preparedFilePath = await _fileHandlerService.PrepareAnnotatedFileAsync(request.AnnotatedFilesIds, request.AnnotationFormat, cancellationToken);
 
-                return preparedFilePath;
+                return string.Join("/", (preparedFilePath.Split(Path.DirectorySeparatorChar)));
+
             }
             catch (ArgumentNullException ex)
             {
