@@ -20,7 +20,7 @@ namespace Storage.Application.Common.Models
         /// <summary>
         /// Deleting errors
         /// </summary>
-        [JsonProperty("errors", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("errors")]
         public List<DeleteErrorModel> Errors { get; set; }
 
         public void Mapping(Profile profile)
