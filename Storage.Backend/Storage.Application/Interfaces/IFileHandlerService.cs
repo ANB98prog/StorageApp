@@ -80,13 +80,31 @@ namespace Storage.Application.Interfaces
         /// </summary>
         /// <param name="id">File id</param>
         /// <returns>Acknowledged</returns>
-        public Task<DeleteFileModel> RemoveFileAsync(Guid id);
+        public Task<DeleteFileResponseModel> RemoveFileAsync(Guid id);
 
         /// <summary>
         /// Removes file
         /// </summary>
         /// <param name="ids">Files ids</param>
         /// <returns>Acknowledged</returns>
-        public Task<DeleteFilesModel> RemoveFilesAsync(List<Guid> ids);
+        public Task<DeleteFilesResponseModel> RemoveFilesAsync(List<Guid> ids);
+
+        /// <summary>
+        /// Updates file
+        /// </summary>
+        /// <param name="update">Update</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Update action result</returns>
+        /// <exception cref="FileHandlerServiceException"></exception>
+        public Task<UpdatedFileAttributesResponseModel> UpdateFileAsync(UpdateFileAttributesModel update, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Updates bulk of files
+        /// </summary>
+        /// <param name="updates">Updates</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Update action result</returns>
+        /// <exception cref="FileHandlerServiceException"></exception>
+        public Task<UpdateBulkFilesAttributesModel> UpdateBulkFilesAsync(List<UpdateFileAttributesModel> updates, CancellationToken cancellationToken);
     }
 }

@@ -8,7 +8,7 @@ namespace Storage.Application.Files.Commands.DeleteFiles
     /// <summary>
     /// Delete files command
     /// </summary>
-    public class DeleteFilesCommand : IRequest<DeleteFilesModel>
+    public class DeleteFilesCommand : IRequest<DeleteFilesResponseModel>
     {
         /// <summary>
         /// Files ids

@@ -7,7 +7,7 @@ namespace Storage.Application.Files.Commands.DeleteFile
     /// <summary>
     /// Delete file command
     /// </summary>
-    public class DeleteFileCommand : IRequest<DeleteFileModel>
+    public class DeleteFileCommand : IRequest<DeleteFileResponseModel>
     {
         /// <summary>
         /// User that make request

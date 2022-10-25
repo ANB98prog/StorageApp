@@ -181,6 +181,10 @@ namespace Storage.Application.Common.Exceptions
         /// </summary>
         public const string UNEXPECTED_ERROR_WHILE_UPDATE_ITEMS_IN_STORAGE_MESSAGE = "Unexpected error occured while update items in elastic storage.";
 
+        /// <summary>
+        /// If passed empty updating attributes
+        /// </summary>
+        public const string EMPTY_FILE_ATTRIBUTES_ERROR_MESSAGE = "Empty file's update attributes.";
         #endregion
     }
 }

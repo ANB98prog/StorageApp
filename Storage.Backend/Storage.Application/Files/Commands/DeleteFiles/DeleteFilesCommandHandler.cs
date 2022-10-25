@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Storage.Application.Files.Commands.DeleteFiles
 {
     public class DeleteFilesCommandHandler
-        : IRequestHandler<DeleteFilesCommand, DeleteFilesModel>
+        : IRequestHandler<DeleteFilesCommand, DeleteFilesResponseModel>
     {
         private readonly IFileHandlerService _fileHandlerService;
 
@@ -20,7 +20,7 @@ namespace Storage.Application.Files.Commands.DeleteFiles
             _fileHandlerService = fileHandlerService;
         }
 
-        public async Task<DeleteFilesModel> Handle(DeleteFilesCommand request, CancellationToken cancellationToken)
+        public async Task<DeleteFilesResponseModel> Handle(DeleteFilesCommand request, CancellationToken cancellationToken)
         {
             try
             {
