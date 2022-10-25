@@ -23,7 +23,7 @@ namespace Storage.WebApi.Controllers.Files
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(UserfriendlyException), StatusCodes.Status400BadRequest)]
-        public async Task<DeleteFileModel> RemoveFileByIdAsync([FromRoute] Guid id)
+        public async Task<DeleteFileResponseModel> RemoveFileByIdAsync([FromRoute] Guid id)
         {
             var command = new DeleteFileCommand()
             {
@@ -42,9 +42,9 @@ namespace Storage.WebApi.Controllers.Files
         /// <response code="200">Successfully</response>
         /// <response code="400">BadRequest</response>
         [HttpDelete("delete")]
-        [ProducesResponseType(typeof(DeleteFilesModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(DeleteFilesResponseModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(UserfriendlyException), StatusCodes.Status400BadRequest)]
-        public async Task<DeleteFilesModel> RemoveFilesAsync([FromBody] string[] ids)
+        public async Task<DeleteFilesResponseModel> RemoveFilesAsync([FromBody] string[] ids)
         {
             var command = new DeleteFilesCommand()
             {

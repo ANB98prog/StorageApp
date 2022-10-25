@@ -376,15 +376,15 @@ namespace Storage.Application.Common.Services
         /// Removes file
         /// </summary>
         /// <param name="id">File id to remove</param>
-        /// <returns><see cref="DeleteFileModel"/></returns>
+        /// <returns><see cref="DeleteFileResponseModel"/></returns>
         /// <exception cref="FileHandlerServiceException"></exception>
-        public async Task<DeleteFileModel> RemoveFileAsync(Guid id)
+        public async Task<DeleteFileResponseModel> RemoveFileAsync(Guid id)
         {
             try
             {
                 _logger.Information($"Try to remove file. File id: {id}");
 
-                var result = new DeleteFileModel();
+                var result = new DeleteFileResponseModel();
 
                 if (id == Guid.Empty)
                 {
@@ -469,13 +469,13 @@ namespace Storage.Application.Common.Services
             }
         }
 
-        public async Task<DeleteFilesModel> RemoveFilesAsync(List<Guid> ids)
+        public async Task<DeleteFilesResponseModel> RemoveFilesAsync(List<Guid> ids)
         {
             try
             {
                 _logger.Information($"Try to remove files. Files count: {ids.Count}");
 
-                var result = new DeleteFilesModel();
+                var result = new DeleteFilesResponseModel();
 
                 if (ids.Any())
                 {

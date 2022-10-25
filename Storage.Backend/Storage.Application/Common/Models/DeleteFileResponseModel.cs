@@ -5,7 +5,7 @@ namespace Storage.Application.Common.Models
     /// <summary>
     /// Delete file model
     /// </summary>
-    public class DeleteFileModel : BaseDeleteFileModel
+    public class DeleteFileResponseModel : BaseDeleteFileModel
     {
         /// <summary>
         /// Error

@@ -70,6 +70,6 @@ namespace Storage.Application.Interfaces
         /// Deletes files from storage
         /// </summary>
         /// <param name="filesPath">Files paths</param>
-        public DeleteFilesModel DeleteFiles(List<string> filesPath);
+        public DeleteFilesResponseModel DeleteFiles(List<string> filesPath);
     }
 }

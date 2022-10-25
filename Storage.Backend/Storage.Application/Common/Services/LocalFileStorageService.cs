@@ -318,11 +318,11 @@ namespace Storage.Application.Common.Services
             }
         }
 
-        public DeleteFilesModel DeleteFiles(List<string> filesPath)
+        public DeleteFilesResponseModel DeleteFiles(List<string> filesPath)
         {
             try
             {
-                var result = new DeleteFilesModel();
+                var result = new DeleteFilesResponseModel();
 
                 if (filesPath.Any())
                 {
