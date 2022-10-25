@@ -1,4 +1,5 @@
-﻿using Elasticsearch.Exceptions;
+﻿using AutoMapper;
+using Elasticsearch.Exceptions;
 using Elasticsearch.Interfaces;
 using Serilog;
 using Storage.Application.Common.Exceptions;
@@ -16,7 +17,7 @@ namespace Storage.Application.Common.Services
     /// <summary>
     /// Service to work with Elastic storage
     /// </summary>
-    public class ElasticStorageService
+    public partial class ElasticStorageService
         : IStorageDataService
     {
         /// <summary>
@@ -35,16 +36,23 @@ namespace Storage.Application.Common.Services
         private readonly ILogger _logger;
 
         /// <summary>
+        /// Contract mapper
+        /// </summary>
+        private readonly IMapper _mapper;
+
+        /// <summary>
         /// Initializes class instance of <see cref="ElasticStorageService"/>
         /// </summary>
         /// <param name="index">Elasticsearch index</param>
         /// <param name="logger">Logger</param>
+        /// <param name="mapper">Mapper</param>
         /// <param name="elasticClient">Elasticsearch client</param>
-        public ElasticStorageService(string index, ILogger logger, IElasticsearchClient elasticClient)
+        public ElasticStorageService(string index, ILogger logger, IMapper mapper, IElasticsearchClient elasticClient)
         {
             _index = index;
             _elasticClient = elasticClient;
             _logger = logger;
+            _mapper = mapper;
         }
 
         /// <summary>

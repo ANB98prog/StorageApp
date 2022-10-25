@@ -169,5 +169,18 @@ namespace Storage.Application.Common.Exceptions
         public const string UNEXPECTED_ERROR_OCCURED_WHILE_PREPARING_ANNOTATION_DATA_ERROR_MESSAGE = "Unexpected error occured while preparing annotation data.";
 
         #endregion
+
+        #region Update
+        /// <summary>
+        /// Unexpected error message while update item in elastic storage
+        /// </summary>
+        public const string UNEXPECTED_ERROR_WHILE_UPDATE_ITEM_IN_STORAGE_MESSAGE = "Unexpected error occured while update item in elastic storage.";
+
+        /// <summary>
+        /// Unexpected error message while update items in elastic storage
+        /// </summary>
+        public const string UNEXPECTED_ERROR_WHILE_UPDATE_ITEMS_IN_STORAGE_MESSAGE = "Unexpected error occured while update items in elastic storage.";
+
+        #endregion
     }
 }

@@ -64,7 +64,7 @@ namespace Storage.Application
             services.AddTransient<IElasticsearchClient>(s => new Elasticsearch.ElasticClient(s.GetService<Nest.IElasticClient>()));
 
             services.AddTransient<IStorageDataService>(s =>
-                new ElasticStorageService(ElasticIndices.FILES_INDEX, s.GetService<ILogger>(), s.GetService<IElasticsearchClient>()));
+                new ElasticStorageService(ElasticIndices.FILES_INDEX, s.GetService<ILogger>(), s.GetService<IMapper>(), s.GetService<IElasticsearchClient>()));
 
             services.AddTransient<IFileHandlerService>(s => new FileHandlerService(s.GetService<ILogger>(), s.GetService<IMapper>(), s.GetService<IFileService>(), s.GetService<IStorageDataService>()));
 

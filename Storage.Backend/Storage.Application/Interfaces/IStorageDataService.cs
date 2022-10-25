@@ -1,6 +1,7 @@
 ﻿using Storage.Application.Common.Models;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Storage.Application.Interfaces
@@ -50,5 +51,23 @@ namespace Storage.Application.Interfaces
         /// <param name="id">File id</param>
         /// <returns>Acknowledged</returns>
         public Task<bool> RemoveFilesFromStorageAsync(List<Guid> id);
+
+        /// <summary>
+        /// Updates file's attributes
+        /// </summary>
+        /// <param name="update">Update model</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Updated result</returns>
+        /// <exception cref="ElasticStorageServiceException"></exception>
+        public Task<UpdatedFileAttributesResponseModel> UpdateFileAttributesAsync(UpdateFileAttributesModel update, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Updates bulk files attributes
+        /// </summary>
+        /// <param name="updates">Bulk updates</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Updated result</returns>
+        /// <exception cref="ElasticStorageServiceException"></exception>
+        public Task<UpdateBulkFilesAttributesModel> UpdateBulkFilesAttributesAsync(List<UpdateFileAttributesModel> updates, CancellationToken cancellationToken);
     }
 }
