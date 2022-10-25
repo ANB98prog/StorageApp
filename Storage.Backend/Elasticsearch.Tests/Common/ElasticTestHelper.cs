@@ -201,6 +201,7 @@ namespace Elasticsearch.Tests.Common
 
         #endregion
 
+        #region Search
         public static FakeResponse SearchSuccessfulResponse()
         {
             var response = new
@@ -338,5 +339,42 @@ namespace Elasticsearch.Tests.Common
                 StatusCode = (int)HttpStatusCode.NotFound,
             };
         }
+        #endregion
+
+        #region Update
+        public static FakeResponse GetSuccessUpdateResponse(string id, string index)
+        {
+            var response = new
+            {
+                _index = index,
+                _id = id,
+                result = "updated"
+            };
+
+            return new FakeResponse
+            {
+                Body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(response)),
+                StatusCode = (int)HttpStatusCode.OK,
+            };
+        }
+
+        public static FakeResponse GetBulkUpdateResponse(string index)
+        {
+            //var response = "{\r\n  \"took\": 200,\r\n  \"errors\": false,\r\n  \"items\": [\r\n    {\r\n      \"update\": {\r\n        \"_index\": \"simple\",\r\n        \"_id\": \"11\",\r\n        \"_version\": 3,\r\n        \"result\": \"updated\",\r\n        \"_shards\": {\r\n          \"total\": 2,\r\n          \"successful\": 1,\r\n          \"failed\": 0\r\n        },\r\n        \"_seq_no\": 7,\r\n        \"_primary_term\": 2,\r\n        \"status\": 200\r\n      }\r\n    },\r\n    {\r\n      \"update\": {\r\n        \"_index\": \"simple\",\r\n        \"_id\": \"22\",\r\n        \"_version\": 3,\r\n        \"result\": \"updated\",\r\n        \"_shards\": {\r\n          \"total\": 2,\r\n          \"successful\": 1,\r\n          \"failed\": 0\r\n        },\r\n        \"_seq_no\": 8,\r\n        \"_primary_term\": 2,\r\n        \"status\": 200\r\n      }\r\n    }\r\n  ]\r\n}";
+
+            var response = new
+            {
+                took = 1,
+                errors = false
+            };
+
+            return new FakeResponse
+            {
+                Body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(response)),
+                StatusCode = (int)HttpStatusCode.OK,
+            };
+        }
+        #endregion
+
     }
 }
