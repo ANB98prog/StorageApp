@@ -55,7 +55,8 @@ namespace Storage.Application
                 ?? throw new ArgumentNullException("Elastic password");
 
             var settings = new ConnectionSettings(new Uri(elasticUrl))
-                                .BasicAuthentication(elasticUser, elasticPassword);
+                                .BasicAuthentication(elasticUser, elasticPassword)
+                                .EnableApiVersioningHeader();
 
             var nestClient = new Nest.ElasticClient(settings);
 
