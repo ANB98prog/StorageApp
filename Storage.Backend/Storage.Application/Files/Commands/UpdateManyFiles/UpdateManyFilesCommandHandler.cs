@@ -40,14 +40,7 @@ namespace Storage.Application.Files.Commands.UpdateManyFiles
             {
                 var updatedResult = await _fileHandlerService.UpdateBulkFilesAsync(_mapper.Map<List<FileUpdateData>, List<UpdateFileAttributesModel>>(request.Updates), cancellationToken);
 
-                var casted = updatedResult as UpdatedManyVm;
-
-                if (casted == null)
-                {
-                    casted = new UpdatedManyVm(false);
-                }
-
-                return casted;
+                return _mapper.Map<UpdateBulkFilesAttributesModel, UpdatedManyVm>(updatedResult);
 
             }
             catch (ArgumentNullException ex)

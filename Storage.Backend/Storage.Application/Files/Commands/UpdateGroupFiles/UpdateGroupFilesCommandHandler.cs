@@ -46,14 +46,7 @@ namespace Storage.Application.Files.Commands.UpdateGroupFiles
                 var updates = ConvertUpdates(request);
                 var updatedResult = await _fileHandlerService.UpdateBulkFilesAsync(updates, cancellationToken);
 
-                var casted = updatedResult as UpdatedManyVm;
-
-                if (casted == null)
-                {
-                    casted = new UpdatedManyVm(false);
-                }
-
-                return casted;
+                return _mapper.Map<UpdateBulkFilesAttributesModel, UpdatedManyVm>(updatedResult);
 
             }
             catch (ArgumentNullException ex)
