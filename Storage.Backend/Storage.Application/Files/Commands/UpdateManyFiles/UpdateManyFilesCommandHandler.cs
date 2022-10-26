@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Storage.Application.Files.Commands.UpdateManyFiles
 {
     public class UpdateManyFilesCommandHandler
-        : IRequestHandler<UpdateManyFilesCommand, UpdateManyVm>
+        : IRequestHandler<UpdateManyFilesCommand, UpdatedManyVm>
     {
         /// <summary>
         /// File handler service
@@ -34,17 +34,17 @@ namespace Storage.Application.Files.Commands.UpdateManyFiles
             _mapper = mapper;
         }
 
-        public async Task<UpdateManyVm> Handle(UpdateManyFilesCommand request, CancellationToken cancellationToken)
+        public async Task<UpdatedManyVm> Handle(UpdateManyFilesCommand request, CancellationToken cancellationToken)
         {
             try
             {
                 var updatedResult = await _fileHandlerService.UpdateBulkFilesAsync(_mapper.Map<List<FileUpdateData>, List<UpdateFileAttributesModel>>(request.Updates), cancellationToken);
 
-                var casted = updatedResult as UpdateManyVm;
+                var casted = updatedResult as UpdatedManyVm;
 
                 if (casted == null)
                 {
-                    casted = new UpdateManyVm(false);
+                    casted = new UpdatedManyVm(false);
                 }
 
                 return casted;

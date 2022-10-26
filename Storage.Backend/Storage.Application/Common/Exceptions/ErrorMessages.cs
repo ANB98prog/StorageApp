@@ -185,6 +185,11 @@ namespace Storage.Application.Common.Exceptions
         /// If passed empty updating attributes
         /// </summary>
         public const string EMPTY_FILE_ATTRIBUTES_ERROR_MESSAGE = "Empty file's update attributes.";
+
+        /// <summary>
+        /// If passed empty updating files ids
+        /// </summary>
+        public const string EMPTY_FILES_IDS_ERROR_MESSAGE = "Empty update files' ids.";
         #endregion
     }
 }

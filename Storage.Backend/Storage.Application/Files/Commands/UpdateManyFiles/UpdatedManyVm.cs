@@ -5,9 +5,13 @@ namespace Storage.Application.Files.Commands.UpdateManyFiles
     /// <summary>
     /// Update many files view model
     /// </summary>
-    public class UpdateManyVm : UpdateBulkFilesAttributesModel
+    public class UpdatedManyVm : UpdateBulkFilesAttributesModel
     {
-        public UpdateManyVm(bool ack)
+        public UpdatedManyVm()
+        {
+        }
+
+        public UpdatedManyVm(bool ack)
         {
             Acknowledged = ack;
         }

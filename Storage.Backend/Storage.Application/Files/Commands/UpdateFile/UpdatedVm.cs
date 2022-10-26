@@ -9,6 +9,10 @@ namespace Storage.Application.Files.Commands.UpdateFile
     /// </summary>
     public class UpdatedVm : BaseFileActionModel
     {
+        public UpdatedVm()
+        {
+        }
+
         public UpdatedVm(bool ack)
         {
             Acknowledged = ack;

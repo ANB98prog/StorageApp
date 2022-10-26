@@ -12,7 +12,7 @@ namespace Storage.Application.Files.Commands.UpdateManyFiles
     /// Update list of files command
     /// </summary>
     public class UpdateManyFilesCommand
-        : IRequest<UpdateManyVm>
+        : IRequest<UpdatedManyVm>
     {
         /// <summary>
         /// User id
