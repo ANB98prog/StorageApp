@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Storage.Application.Common.Helpers
@@ -41,6 +42,16 @@ namespace Storage.Application.Common.Helpers
             var letters = text.ToCharArray();
 
             return $"{letters[0].ToString().ToLowerInvariant()}{string.Join("",letters.Skip(1))}";
+        }
+
+        /// <summary>
+        /// Converts directory path to url format
+        /// </summary>
+        /// <param name="path">Path to convert</param>
+        /// <returns>Url</returns>
+        public static string ConvertPathToUrl(this string path)
+        {
+            return string.Join("/", (path.Split(Path.DirectorySeparatorChar)));
         }
     }
 }

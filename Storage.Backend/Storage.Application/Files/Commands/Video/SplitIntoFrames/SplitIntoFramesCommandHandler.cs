@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Storage.Application.Common.Exceptions;
+using Storage.Application.Common.Helpers;
 using Storage.Application.Interfaces;
 using System;
 using System.Threading;
@@ -31,7 +32,9 @@ namespace Storage.Application.Files.Commands.Video.SplitIntoFrames
         {
             try
             {
-                return await _videoFilesService.SplitIntoFramesAsync(request.VideoFileId, request.FramesStep, cancellationToken);
+                var framesArchivePath = await _videoFilesService.SplitIntoFramesAsync(request.VideoFileId, request.FramesStep, cancellationToken);
+
+                return framesArchivePath.ConvertPathToUrl();
             }
             catch (ArgumentNullException ex)
             {

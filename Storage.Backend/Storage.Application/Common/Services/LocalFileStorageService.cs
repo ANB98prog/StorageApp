@@ -371,12 +371,14 @@ namespace Storage.Application.Common.Services
                     throw new ArgumentNullException(nameof(fileRelativePath));
                 }
 
-                if (!File.Exists(fileRelativePath))
+                var absolutePath = Path.Combine(_localStorageDir, fileRelativePath);
+
+                if (!File.Exists(absolutePath))
                 {
                     throw new LocalStorageException($"File not found by path: '{fileRelativePath}'");
                 }
                 
-                return Path.Combine(_localStorageDir, fileRelativePath);
+                return absolutePath;
             }
             catch (ArgumentNullException ex)
             {

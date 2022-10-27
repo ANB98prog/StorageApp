@@ -85,6 +85,8 @@ namespace Storage.Application
 
             services.AddTransient<IFileHandlerService>(s => new FileHandlerService(temporaryFilesDir, s.GetService<ILogger>(), s.GetService<IMapper>(), s.GetService<IFileService>(), s.GetService<IStorageDataService>()));
 
+            services.AddTransient<IVideoFilesService>(s => new VideoFilesService(temporaryFilesDir, s.GetService<ILogger>(), s.GetService<IFileService>(), s.GetService<IStorageDataService>()));
+
             return services;
         }
     }

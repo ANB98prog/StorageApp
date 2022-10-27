@@ -58,6 +58,7 @@ namespace Storage.WebApi.Middleware
                     code = HttpStatusCode.BadRequest;
                     result = JsonSerializer.Serialize(new UserfriendlyException(invalidSearchRequestException.UserFriendlyMessage));
                     break;
+                
             }
 
             context.Response.ContentType = "application/json";
