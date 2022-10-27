@@ -12,14 +12,27 @@ using ErrorMessages = Storage.Application.Common.Exceptions.ErrorMessages;
 
 namespace Storage.Application.Files.Queries.GetFile
 {
+    /// <summary>
+    /// Get by id file query handler
+    /// </summary>
     public class GetFileByIdQueryHandler
         : IRequestHandler<GetFileByIdQuery, FileVm>
     {
-
+        /// <summary>
+        /// Elastic service
+        /// </summary>
         private readonly IElasticsearchClient _elasticService;
 
+        /// <summary>
+        /// Contract mapper
+        /// </summary>
         private readonly IMapper _mapper;
 
+        /// <summary>
+        /// Initializes class instance of <see cref="GetFileByIdQueryHandler"/>
+        /// </summary>
+        /// <param name="elasticService">Elastic service</param>
+        /// <param name="mapper">Contract mapper</param>
         public GetFileByIdQueryHandler(IElasticsearchClient elasticService, IMapper mapper)
         {
             _elasticService = elasticService;
@@ -42,7 +55,7 @@ namespace Storage.Application.Files.Queries.GetFile
             }
             catch (ArgumentNullException ex)
             {
-                throw new ServiceArgumentException(ex.Message, ErrorMessages.ArgumentNullExeptionMessage(ex.ParamName));
+                throw new UserException(ex.Message, ErrorMessages.ArgumentNullExeptionMessage(ex.ParamName));
             }
             catch (ItemNotFoundException ex)
             {
@@ -54,11 +67,11 @@ namespace Storage.Application.Files.Queries.GetFile
             }
             catch (BaseServiceException ex)
             {
-                throw new UnexpectedStorageException(ex.UserFriendlyMessage, ErrorMessages.UNEXPECTED_ERROR_WHILE_GET_FILES_BY_ID_MESSAGE);
+                throw new CommandExecutionException(ex.UserFriendlyMessage, ErrorMessages.UNEXPECTED_ERROR_WHILE_GET_FILES_BY_ID_MESSAGE);
             }
             catch (Exception ex)
             {
-                throw new UnexpectedStorageException(ex.Message, ErrorMessages.UNEXPECTED_ERROR_WHILE_GET_FILES_BY_ID_MESSAGE);
+                throw new CommandExecutionException(ex.Message, ErrorMessages.UNEXPECTED_ERROR_WHILE_GET_FILES_BY_ID_MESSAGE);
             }
         }
     }

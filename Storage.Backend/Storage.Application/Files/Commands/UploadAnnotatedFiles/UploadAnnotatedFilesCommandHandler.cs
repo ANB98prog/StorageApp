@@ -61,15 +61,15 @@ namespace Storage.Application.Files.Commands.UploadAnnotatedFiles
             }
             catch (ArgumentNullException ex)
             {
-                throw new FileHandlerServiceException(ex.Message, ErrorMessages.ArgumentNullExeptionMessage(ex.ParamName));
+                throw new UserException(ex.Message, ErrorMessages.ArgumentNullExeptionMessage(ex.ParamName));
             }
             catch (FileHandlerServiceException ex)
             {
-                throw ex;
+                throw new CommandExecutionException(ex.UserFriendlyMessage, ex);
             }
             catch (Exception ex)
             {
-                throw new FileHandlerServiceException(ex.Message, ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_FILE_MESSAGE);
+                throw new CommandExecutionException(ex.Message, ErrorMessages.UNEXPECTED_ERROR_WHILE_UPLOAD_FILE_MESSAGE);
             }
         }
     }

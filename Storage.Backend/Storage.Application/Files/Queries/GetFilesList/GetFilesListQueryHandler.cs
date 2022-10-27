@@ -1,30 +1,41 @@
 ﻿using AutoMapper;
-using Elasticsearch;
 using Elasticsearch.Exceptions;
 using Elasticsearch.Interfaces;
 using MediatR;
 using Nest;
-using Newtonsoft.Json;
 using Storage.Application.Common.Exceptions;
 using Storage.Application.Common.Helpers;
 using Storage.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using ErrorMessages = Storage.Application.Common.Exceptions.ErrorMessages;
 
 namespace Storage.Application.Files.Queries.GetFilesList
 {
+    /// <summary>
+    /// Get files list query handler
+    /// </summary>
     public class GetFilesListQueryHandler
         : IRequestHandler<GetFilesListQuery, FilesListVm>
     {
+        /// <summary>
+        /// Elastic service
+        /// </summary>
         private readonly IElasticsearchClient _elasticService;
 
+        /// <summary>
+        /// Contract mapper
+        /// </summary>
         private readonly IMapper _mapper;
 
+        /// <summary>
+        /// Initializes class instance of <see cref="GetFilesListQueryHandler"/>
+        /// </summary>
+        /// <param name="elasticService">Elastic service</param>
+        /// <param name="mapper">Contract mapper</param>
         public GetFilesListQueryHandler(IElasticsearchClient elasticService, IMapper mapper)
         {
             _elasticService = elasticService;
@@ -55,7 +66,7 @@ namespace Storage.Application.Files.Queries.GetFilesList
             }
             catch (ArgumentNullException ex)
             {
-                throw new ServiceArgumentException(ex.Message, ErrorMessages.ArgumentNullExeptionMessage(ex.ParamName));
+                throw new UserException(ex.Message, ErrorMessages.ArgumentNullExeptionMessage(ex.ParamName));
             }
             catch (IndexNotFoundException)
             {
@@ -71,11 +82,11 @@ namespace Storage.Application.Files.Queries.GetFilesList
             }
             catch (BaseServiceException ex)
             {
-                throw new UnexpectedStorageException(ex.UserFriendlyMessage, ErrorMessages.UNEXPECTED_ERROR_WHILE_SEARCH_FILES_MESSAGE);
+                throw new CommandExecutionException(ex.UserFriendlyMessage, ErrorMessages.UNEXPECTED_ERROR_WHILE_SEARCH_FILES_MESSAGE);
             }
             catch (Exception ex)
             {
-                throw new UnexpectedStorageException(ex.Message, ErrorMessages.UNEXPECTED_ERROR_WHILE_SEARCH_FILES_MESSAGE);
+                throw new CommandExecutionException(ex.Message, ErrorMessages.UNEXPECTED_ERROR_WHILE_SEARCH_FILES_MESSAGE);
             }
         }
 

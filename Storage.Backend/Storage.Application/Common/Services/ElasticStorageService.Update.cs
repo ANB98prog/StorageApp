@@ -39,7 +39,7 @@ namespace Storage.Application.Common.Services
             catch (ArgumentNullException ex)
             {
                 _logger.Error(ex, ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName));
-                throw new ElasticStorageServiceException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
+                throw new UserException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
             }
             catch (UnexpectedElasticException ex)
             {
@@ -80,7 +80,7 @@ namespace Storage.Application.Common.Services
             catch (ArgumentNullException ex)
             {
                 _logger.Error(ex, ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName));
-                throw new ElasticStorageServiceException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
+                throw new UserException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
             }
             catch (UnexpectedElasticException ex)
             {
@@ -93,6 +93,5 @@ namespace Storage.Application.Common.Services
                 throw new ElasticStorageServiceException(ErrorMessages.UNEXPECTED_ERROR_WHILE_UPDATE_ITEMS_IN_STORAGE_MESSAGE, ex);
             }
         }
-
     }
 }

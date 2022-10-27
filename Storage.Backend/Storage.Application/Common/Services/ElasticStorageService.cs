@@ -81,7 +81,7 @@ namespace Storage.Application.Common.Services
             catch (ArgumentNullException ex)
             {
                 _logger.Error(ex, ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName));
-                throw new ElasticStorageServiceException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
+                throw new UserException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
             }
             catch (UnexpectedElasticException ex)
             {
@@ -122,7 +122,7 @@ namespace Storage.Application.Common.Services
             catch (ArgumentNullException ex)
             {
                 _logger.Error(ex, ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName));
-                throw new ElasticStorageServiceException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
+                throw new UserException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
             }
             catch (ItemNotFoundException ex)
             {
@@ -163,7 +163,7 @@ namespace Storage.Application.Common.Services
             catch (ArgumentNullException ex)
             {
                 _logger.Error(ex, ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName));
-                throw new ElasticStorageServiceException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
+                throw new UserException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
             }
             catch (UnexpectedElasticException ex)
             {
@@ -213,7 +213,7 @@ namespace Storage.Application.Common.Services
             catch (ArgumentNullException ex)
             {
                 _logger.Error(ex, ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName));
-                throw new ElasticStorageServiceException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
+                throw new UserException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
             }
             catch (DeleteDocumentException ex)
             {
@@ -250,7 +250,7 @@ namespace Storage.Application.Common.Services
             catch (ArgumentNullException ex)
             {
                 _logger.Error(ex, ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName));
-                throw new ElasticStorageServiceException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
+                throw new UserException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
             }
             catch (DeleteDocumentException ex)
             {

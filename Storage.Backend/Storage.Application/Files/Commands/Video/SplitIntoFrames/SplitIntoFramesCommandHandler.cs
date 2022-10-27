@@ -38,11 +38,11 @@ namespace Storage.Application.Files.Commands.Video.SplitIntoFrames
             }
             catch (ArgumentNullException ex)
             {
-                throw new CommandExecutionException(ex.Message, ErrorMessages.ArgumentNullExeptionMessage(ex.ParamName));
+                throw new UserException(ex.Message, ErrorMessages.ArgumentNullExeptionMessage(ex.ParamName));
             }
             catch (FileHandlerServiceException ex)
             {
-                throw ex;
+                throw new CommandExecutionException(ex.UserFriendlyMessage, ex);
             }
             catch (Exception ex)
             {

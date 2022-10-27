@@ -1,6 +1,7 @@
 ﻿using Storage.Application.Common.Exceptions;
 using Storage.WebApi.Common.Exceptions;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 using ValidationException = FluentValidation.ValidationException;
 
@@ -54,11 +55,23 @@ namespace Storage.WebApi.Middleware
                     code = HttpStatusCode.NotFound;
                     result = JsonSerializer.Serialize(new UserfriendlyException(notFoundException.UserFriendlyMessage));
                     break;
+                case FileNotFoundException fileNotFoundException:
+                    code= HttpStatusCode.NotFound;
+                    result = JsonSerializer.Serialize(new UserfriendlyException($"File '{fileNotFoundException.FileName}' is not found!"));
+                    break;
                 case InvalidSearchRequestException invalidSearchRequestException:
                     code = HttpStatusCode.BadRequest;
                     result = JsonSerializer.Serialize(new UserfriendlyException(invalidSearchRequestException.UserFriendlyMessage));
+                    break;                
+                case UserException userException:
+                    code = HttpStatusCode.BadRequest;
+                    result = JsonSerializer.Serialize(new UserfriendlyException(userException.UserFriendlyMessage));
                     break;
-                
+                case CommandExecutionException commandExecutionException:
+                    code = HttpStatusCode.InternalServerError;
+                    result = JsonSerializer.Serialize(new UserfriendlyException(commandExecutionException.UserFriendlyMessage));
+                    break;
+
             }
 
             context.Response.ContentType = "application/json";

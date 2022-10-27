@@ -93,17 +93,22 @@ namespace Storage.Application.Common.Services
             catch (ArgumentNullException ex)
             {
                 _logger.Error(ex, ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName));
-                throw new FileHandlerServiceException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
+                throw new UserException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
             }
             catch (ArgumentException ex)
             {
                 _logger.Error(ex, ErrorMessages.InvalidRequiredParameterErrorMessage(ex.Message));
-                throw new FileHandlerServiceException(ErrorMessages.InvalidRequiredParameterErrorMessage(ex.Message), ex);
+                throw new UserException(ErrorMessages.InvalidRequiredParameterErrorMessage(ex.Message), ex);
             }
             catch (FileNotFoundException ex)
             {
                 _logger.Error(ex, ErrorMessages.FileNotFoundErrorMessage(ex.FileName));
-                throw new FileHandlerServiceException(ErrorMessages.FileNotFoundErrorMessage(ex.FileName), ex);
+                throw ex;
+            }
+            catch (UserException ex)
+            {
+                _logger.Error(ex, ex.UserFriendlyMessage);
+                throw ex;
             }
             catch (Exception ex)
             {
@@ -133,12 +138,17 @@ namespace Storage.Application.Common.Services
             catch (ArgumentNullException ex)
             {
                 _logger.Error(ex, ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName));
-                throw new FileHandlerServiceException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
+                throw new UserException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
             }
             catch (FileNotFoundException ex)
             {
                 _logger.Error(ex, ErrorMessages.FileNotFoundErrorMessage(ex.FileName));
-                throw new FileHandlerServiceException(ErrorMessages.FileNotFoundErrorMessage(ex.FileName), ex);
+                throw ex;
+            }
+            catch (UserException ex)
+            {
+                _logger.Error(ex, ex.UserFriendlyMessage);
+                throw ex;
             }
             catch (Exception ex)
             {
@@ -175,12 +185,17 @@ namespace Storage.Application.Common.Services
             catch (ArgumentNullException ex)
             {
                 _logger.Error(ex, ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName));
-                throw new FileHandlerServiceException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
+                throw new UserException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
             }
             catch (FileNotFoundException ex)
             {
                 _logger.Error(ex, ErrorMessages.FileNotFoundErrorMessage(ex.FileName));
-                throw new FileHandlerServiceException(ErrorMessages.FileNotFoundErrorMessage(ex.FileName), ex);
+                throw ex;
+            }
+            catch (UserException ex)
+            {
+                _logger.Error(ex, ex.UserFriendlyMessage);
+                throw ex;
             }
             catch (Exception ex)
             {
@@ -281,7 +296,12 @@ namespace Storage.Application.Common.Services
             catch (ArgumentNullException ex)
             {
                 _logger.Error(ex, ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName));
-                throw new FileHandlerServiceException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
+                throw new UserException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
+            }
+            catch (UserException ex)
+            {
+                _logger.Error(ex, ex.UserFriendlyMessage);
+                throw ex;
             }
             catch (Exception ex)
             {
@@ -324,7 +344,12 @@ namespace Storage.Application.Common.Services
             catch (ArgumentNullException ex)
             {
                 _logger.Error(ex, ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName));
-                throw new FileHandlerServiceException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
+                throw new UserException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
+            }
+            catch (UserException ex)
+            {
+                _logger.Error(ex, ex.UserFriendlyMessage);
+                throw ex;
             }
             catch (Exception ex)
             {
@@ -458,12 +483,17 @@ namespace Storage.Application.Common.Services
             catch (ArgumentNullException ex)
             {
                 _logger.Error(ex, ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName));
-                throw new FileHandlerServiceException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
+                throw new UserException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
             }
             catch (NotFoundException ex)
             {
                 _logger.Error(ex, ex.Message);
                 throw new NotFoundException(id.ToString());
+            }
+            catch (UserException ex)
+            {
+                _logger.Error(ex, ex.UserFriendlyMessage);
+                throw ex;
             }
             catch (Exception ex)
             {
@@ -519,7 +549,12 @@ namespace Storage.Application.Common.Services
             catch (ArgumentNullException ex)
             {
                 _logger.Error(ex, ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName));
-                throw new FileHandlerServiceException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
+                throw new UserException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
+            }
+            catch(UserException ex)
+            {
+                _logger.Error(ex, ex.UserFriendlyMessage);
+                throw ex;
             }
             catch (Exception ex)
             {

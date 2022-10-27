@@ -41,7 +41,12 @@ namespace Storage.Application.Common.Services
             catch (ArgumentNullException ex)
             {
                 _logger.Error(ex, ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName));
-                throw new FileHandlerServiceException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
+                throw new UserException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
+            }
+            catch (UserException ex)
+            {
+                _logger.Error(ex, ex.UserFriendlyMessage);
+                throw ex;
             }
             catch (FileHandlerServiceException ex)
             {
@@ -110,7 +115,12 @@ namespace Storage.Application.Common.Services
             catch (ArgumentNullException ex)
             {
                 _logger.Error(ex, ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName));
-                throw new FileHandlerServiceException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
+                throw new UserException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
+            }
+            catch (UserException ex)
+            {
+                _logger.Error(ex, ex.UserFriendlyMessage);
+                throw ex;
             }
             catch (FileHandlerServiceException ex)
             {

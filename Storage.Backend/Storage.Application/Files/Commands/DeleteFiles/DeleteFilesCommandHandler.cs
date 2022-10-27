@@ -34,17 +34,21 @@ namespace Storage.Application.Files.Commands.DeleteFiles
 
                 return removeFilesResult;
             }
-            catch (ArgumentNullException ex)
-            {
-                throw new FileHandlerServiceException(ex.Message, ErrorMessages.ArgumentNullExeptionMessage(ex.ParamName));
-            }
-            catch (FileHandlerServiceException ex)
+            catch( ValidationException ex)
             {
                 throw ex;
             }
+            catch (ArgumentNullException ex)
+            {
+                throw new UserException(ex.Message, ErrorMessages.ArgumentNullExeptionMessage(ex.ParamName));
+            }
+            catch (FileHandlerServiceException ex)
+            {
+                throw new CommandExecutionException(ex.UserFriendlyMessage, ex);
+            }
             catch (Exception ex)
             {
-                throw new FileHandlerServiceException(ex.Message, ErrorMessages.UNEXPECTED_ERROR_WHILE_FILES_REMOVE_MESSAGE);
+                throw new CommandExecutionException(ex.Message, ErrorMessages.UNEXPECTED_ERROR_WHILE_FILES_REMOVE_MESSAGE);
             }
         }
 

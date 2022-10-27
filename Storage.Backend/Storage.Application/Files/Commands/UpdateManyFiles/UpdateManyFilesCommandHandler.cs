@@ -45,15 +45,15 @@ namespace Storage.Application.Files.Commands.UpdateManyFiles
             }
             catch (ArgumentNullException ex)
             {
-                throw new FileHandlerServiceException(ex.Message, ErrorMessages.ArgumentNullExeptionMessage(ex.ParamName));
+                throw new UserException(ex.Message, ErrorMessages.ArgumentNullExeptionMessage(ex.ParamName));
             }
             catch (FileHandlerServiceException ex)
             {
-                throw ex;
+                throw new CommandExecutionException(ex.UserFriendlyMessage, ex);
             }
             catch (Exception ex)
             {
-                throw new FileHandlerServiceException(ex.Message, ErrorMessages.UNEXPECTED_ERROR_OCCURED_WHILE_PREPARING_ANNOTATION_DATA_ERROR_MESSAGE);
+                throw new CommandExecutionException(ex.Message, ErrorMessages.UNEXPECTED_ERROR_OCCURED_WHILE_PREPARING_ANNOTATION_DATA_ERROR_MESSAGE);
             }
         }
     }

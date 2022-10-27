@@ -113,7 +113,7 @@ namespace Storage.Application.Common.Services
             catch (ArgumentNullException ex)
             {
                 _logger.Error(ex, ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName));
-                throw new VideoFilesServiceException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
+                throw new UserException(ErrorMessages.EmptyRequiredParameterErrorMessage(ex.ParamName), ex);
             }
             catch (VideoFilesServiceException ex)
             {
