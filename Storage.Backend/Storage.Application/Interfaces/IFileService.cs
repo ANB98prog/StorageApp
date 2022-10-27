@@ -71,5 +71,12 @@ namespace Storage.Application.Interfaces
         /// </summary>
         /// <param name="filesPath">Files paths</param>
         public DeleteFilesResponseModel DeleteFiles(List<string> filesPath);
+
+        /// <summary>
+        /// Gets file's absolute path
+        /// </summary>
+        /// <param name="fileRelativePath">Relative path</param>
+        /// <returns>Absolute file path</returns>
+        public string GetFileAbsolutePath(string fileRelativePath);
     }
 }

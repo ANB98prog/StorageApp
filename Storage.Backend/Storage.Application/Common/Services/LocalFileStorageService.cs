@@ -10,7 +10,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using static System.Net.WebRequestMethods;
 
 namespace Storage.Application.Common.Services
 {
@@ -361,6 +360,31 @@ namespace Storage.Application.Common.Services
             catch (Exception ex)
             {
                 throw new LocalStorageException("Unexpected error occured while file removing.", ex.InnerException);
+            }
+        }
+        public string GetFileAbsolutePath(string fileRelativePath)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(fileRelativePath))
+                {
+                    throw new ArgumentNullException(nameof(fileRelativePath));
+                }
+
+                if (!File.Exists(fileRelativePath))
+                {
+                    throw new LocalStorageException($"File not found by path: '{fileRelativePath}'");
+                }
+                
+                return Path.Combine(_localStorageDir, fileRelativePath);
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new LocalStorageException("Unexpected error occured while get file absolute path.", ex.InnerException);
             }
         }
 
