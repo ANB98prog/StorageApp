@@ -119,7 +119,7 @@ namespace Storage.Tests.VideoFilesServiceTests
 
             var videoService = _fixture.GetVideoService(fileServiceMock);
 
-            var error = await Assert.ThrowsAsync<VideoFilesServiceException>( async () => 
+            var error = await Assert.ThrowsAsync<UserException>( async () => 
                         await videoService.SplitIntoFramesAsync(Guid.Empty, 10, CancellationToken.None));
 
             Assert.Equal(ErrorMessages.EmptyRequiredParameterErrorMessage("Video id"), error.UserFriendlyMessage);

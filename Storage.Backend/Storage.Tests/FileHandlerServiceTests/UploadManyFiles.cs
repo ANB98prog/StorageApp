@@ -62,7 +62,7 @@ namespace Storage.Tests.FileHandlerServiceTests
         [Fact]
         public async Task UploadManyFiles_Error_IfRequestIsNull()
         {
-            var error = await Assert.ThrowsAsync<FileHandlerServiceException>(async () =>
+            var error = await Assert.ThrowsAsync<UserException>(async () =>
                 await FileHandlerService.UploadManyFileAsync(null, CancellationToken.None));
 
             Assert.Equal(ErrorMessages.EmptyRequiredParameterErrorMessage("files"), error.UserFriendlyMessage);
@@ -71,7 +71,7 @@ namespace Storage.Tests.FileHandlerServiceTests
         [Fact]
         public async Task UploadManyFiles_Error_IfFileStreamIsNull()
         {
-             var error = await Assert.ThrowsAsync<FileHandlerServiceException>(async () =>
+             var error = await Assert.ThrowsAsync<UserException>(async () =>
                 await FileHandlerService.UploadManyFileAsync(new List<UploadFileRequestModel>
                 {
                     new UploadFileRequestModel

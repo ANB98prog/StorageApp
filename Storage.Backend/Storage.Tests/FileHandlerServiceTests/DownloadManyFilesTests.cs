@@ -55,7 +55,7 @@ namespace Storage.Tests.FileHandlerServiceTests
         [Fact]
         public async Task DownloadManyFiles_Error_IfFilesPathNull()
         {
-            var error = await Assert.ThrowsAsync<FileHandlerServiceException>(async () =>
+            var error = await Assert.ThrowsAsync<UserException>(async () =>
                 await FileHandlerService.DownloadManyFilesAsync(null, CancellationToken.None));
 
             Assert.Equal(ErrorMessages.EmptyRequiredParameterErrorMessage("filesPath"), error.UserFriendlyMessage);
@@ -64,7 +64,7 @@ namespace Storage.Tests.FileHandlerServiceTests
         [Fact]
         public async Task DownloadManyFiles_Error_IfFilesPathEmpty()
         {
-            var error = await Assert.ThrowsAsync<FileHandlerServiceException>(async () =>
+            var error = await Assert.ThrowsAsync<UserException>(async () =>
                 await FileHandlerService.DownloadManyFilesAsync(new List<string>(), CancellationToken.None));
 
             Assert.Equal(ErrorMessages.EmptyRequiredParameterErrorMessage("filesPath"), error.UserFriendlyMessage);
@@ -74,10 +74,10 @@ namespace Storage.Tests.FileHandlerServiceTests
         public async Task DownloadManyFiles_Error_IfFilesNotFound()
         {
             var filePath = Path.Combine(TestConstants.TestFilesDirectory, "notExisted.txt");
-            var error = await Assert.ThrowsAsync<FileHandlerServiceException>(async () =>
+            var error = await Assert.ThrowsAsync<FileNotFoundException>(async () =>
                 await FileHandlerService.DownloadManyFilesAsync(new List<string>() { filePath }, CancellationToken.None));
 
-            Assert.Equal(ErrorMessages.FileNotFoundErrorMessage(Path.GetFileName(filePath)), error.UserFriendlyMessage);
+            Assert.Equal(Path.GetFileName(filePath), error.FileName);
         }
     }
 }

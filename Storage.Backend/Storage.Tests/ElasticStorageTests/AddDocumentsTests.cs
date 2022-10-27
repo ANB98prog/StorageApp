@@ -60,7 +60,7 @@ namespace Storage.Tests.ElasticStorageTests
             var storage = _fixture.GetElasticStorageService(elasticMock);
 
 
-            var error = await Assert.ThrowsAsync<ElasticStorageServiceException>( async () => await storage.AddDataToStorageAsync<StorageTestData>(null));
+            var error = await Assert.ThrowsAsync<UserException>( async () => await storage.AddDataToStorageAsync<StorageTestData>(null));
 
             Assert.Equal(ErrorMessages.EmptyRequiredParameterErrorMessage("data"), error.UserFriendlyMessage);
 

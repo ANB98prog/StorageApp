@@ -47,7 +47,7 @@ namespace Storage.Tests.FileHandlerServiceTests
         [Fact]
         public async Task UploadArchiveFile_Error_IfArchiveIsNull()
         {
-            var error = await Assert.ThrowsAsync<FileHandlerServiceException>(async () =>
+            var error = await Assert.ThrowsAsync<UserException>(async () =>
                 await FileHandlerService.UploadArchiveFileAsync(null, new List<string> { "plain/text" }, CancellationToken.None));
 
             Assert.Equal(ErrorMessages.EmptyRequiredParameterErrorMessage("file"), error.UserFriendlyMessage);
@@ -56,7 +56,7 @@ namespace Storage.Tests.FileHandlerServiceTests
         [Fact]
         public async Task UploadArchiveFile_Error_IfArchiveStreamIsNull()
         {
-            var error = await Assert.ThrowsAsync<FileHandlerServiceException>(async () =>
+            var error = await Assert.ThrowsAsync<UserException>(async () =>
                 await FileHandlerService.UploadArchiveFileAsync(new UploadFileRequestModel()
                 {
                     SystemName = $"{Guid.NewGuid().Trunc()}.zip",
