@@ -122,6 +122,7 @@ namespace Storage.Application.Common.Exceptions
 
         #endregion
 
+        #region Archives
         /// <summary>
         /// Error message if passed unsupported archive type
         /// </summary>
@@ -133,6 +134,8 @@ namespace Storage.Application.Common.Exceptions
         /// <param name="id">Item id</param>
         /// <returns>Error message</returns>
         public static string RemovingItemFromStorageErrorMessage(string id) => $"Cannot remove item with id '{id}'";
+
+        #endregion
 
         #region Annotation
         /// <summary>
@@ -204,6 +207,8 @@ namespace Storage.Application.Common.Exceptions
         /// <param name="mimeType">Passed mimetype</param>
         /// <returns>Error message</returns>
         public static string NotVideoFileErrorMessage(string mimeType) => $"File is not video file. Passed file with `{mimeType}` mimetype!";
+
+
         #endregion
 
     }
