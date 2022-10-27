@@ -40,12 +40,12 @@ namespace Storage.Application.Common.Exceptions
         /// <summary>
         /// Unexpected error message while remove file
         /// </summary>
-        public static string UNEXPECTED_ERROR_WHILE_FILE_REMOVE_MESSAGE => "Unexpected error occured while remove file.";
+        public const string UNEXPECTED_ERROR_WHILE_FILE_REMOVE_MESSAGE = "Unexpected error occured while remove file.";
 
         /// <summary>
         /// Unexpected error message while remove files
         /// </summary>
-        public static string UNEXPECTED_ERROR_WHILE_FILES_REMOVE_MESSAGE => "Unexpected error occured while remove files.";
+        public const string UNEXPECTED_ERROR_WHILE_FILES_REMOVE_MESSAGE = "Unexpected error occured while remove files.";
 
         /// <summary>
         /// Error message if uploaded not supported file type
@@ -191,5 +191,20 @@ namespace Storage.Application.Common.Exceptions
         /// </summary>
         public const string EMPTY_FILES_IDS_ERROR_MESSAGE = "Empty update files' ids.";
         #endregion
+
+        #region Video files
+        /// <summary>
+        /// Error if unexpected error occured while split video into frames
+        /// </summary>
+        public const string UNEXPECTED_ERROR_OCCURED_WHILE_VIDEO_SPLITTING = "Unexpected error occured while split video into frames.";
+
+        /// <summary>
+        /// Error message if passed not video file
+        /// </summary>
+        /// <param name="mimeType">Passed mimetype</param>
+        /// <returns>Error message</returns>
+        public static string NotVideoFileErrorMessage(string mimeType) => $"File is not video file. Passed file with `{mimeType}` mimetype!";
+        #endregion
+
     }
 }

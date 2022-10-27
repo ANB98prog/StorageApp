@@ -11,6 +11,11 @@
         public const string LOCAL_STORAGE_DIR = "LOCAL_STORAGE_DIR";
 
         /// <summary>
+        /// Environment variable name that stores temporary files directory path
+        /// </summary>
+        public const string TEMPORARY_FILES_DIR = "TEMPORARY_FILES_DIR";
+
+        /// <summary>
         /// Environment variable name that stores elastic url
         /// </summary>
         public const string ELASTIC_URL = "ELASTIC_URL";

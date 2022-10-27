@@ -151,7 +151,7 @@ namespace Storage.Application.Common.Services
 
                 var groups = SplitAnnotationByGroups(annotatedFilesInfos);
 
-                var convertedDataPath = Path.Combine(TEMP_DIR, Guid.NewGuid().Trunc());
+                var convertedDataPath = Path.Combine(_tempDir, Guid.NewGuid().Trunc());
 
                 var groupsPath = new List<string>();
 

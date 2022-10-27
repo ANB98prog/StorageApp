@@ -12,6 +12,7 @@ using Storage.Application.Common.Services;
 using Storage.Application.Interfaces;
 using Storage.Domain;
 using System;
+using System.IO;
 using System.Reflection;
 
 namespace Storage.Application
@@ -45,6 +46,21 @@ namespace Storage.Application
             var localStorageDir = Environment.GetEnvironmentVariable(EnvironmentVariables.LOCAL_STORAGE_DIR)
                 ?? throw new ArgumentNullException("Local storage directory!");
 
+            string temporaryFilesDir = "";
+
+            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+            if(env != null
+                && env.Equals("Development"))
+            {
+                temporaryFilesDir = Path.Combine(Directory.GetCurrentDirectory(), "temp");
+            }
+            else
+            {
+                temporaryFilesDir = Environment.GetEnvironmentVariable(EnvironmentVariables.TEMPORARY_FILES_DIR)
+                ?? throw new ArgumentNullException("Temporary files directory!");
+            }
+
             services.AddTransient<IFileService>(s => new LocalFileStorageService(localStorageDir, s.GetService<ILogger>()));
 
             var elasticUrl = Environment.GetEnvironmentVariable(EnvironmentVariables.ELASTIC_URL)
@@ -67,7 +83,7 @@ namespace Storage.Application
             services.AddTransient<IStorageDataService>(s =>
                 new ElasticStorageService(ElasticIndices.FILES_INDEX, s.GetService<ILogger>(), s.GetService<IMapper>(), s.GetService<IElasticsearchClient>()));
 
-            services.AddTransient<IFileHandlerService>(s => new FileHandlerService(s.GetService<ILogger>(), s.GetService<IMapper>(), s.GetService<IFileService>(), s.GetService<IStorageDataService>()));
+            services.AddTransient<IFileHandlerService>(s => new FileHandlerService(temporaryFilesDir, s.GetService<ILogger>(), s.GetService<IMapper>(), s.GetService<IFileService>(), s.GetService<IStorageDataService>()));
 
             return services;
         }

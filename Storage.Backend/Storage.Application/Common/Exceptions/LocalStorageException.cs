@@ -4,6 +4,10 @@ namespace Storage.Application.Common.Exceptions
 {
     public class LocalStorageException : BaseServiceException
     {
+        public LocalStorageException(string message) : base(message)
+        {
+        }
+
         public LocalStorageException(string message, Exception innerException) : base(message, innerException)
         {
         }

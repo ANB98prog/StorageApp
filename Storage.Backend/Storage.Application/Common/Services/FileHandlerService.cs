@@ -44,26 +44,29 @@ namespace Storage.Application.Common.Services
         private Dictionary<AnnotationFormats, IAnnotatedDataProcessor> _annotationsFormatsProcessor;
 
         /// <summary>
-        /// Directory for temporary files
+        /// Temporary directory
         /// </summary>
-        private readonly string TEMP_DIR = Path.Combine(Environment.CurrentDirectory, "temp");
+        private string _tempDir;
 
         /// <summary>
         /// Initializes class instance of <see cref="FileHandlerService"/>
         /// </summary>
+        /// <param name="tempDir">Temporary directory</param>
         /// <param name="logger">Logger</param>
         /// <param name="mapper">Contract mapper</param>
         /// <param name="fileService">Files service</param>
         /// <param name="storageDataService">Storage data service</param>
-        public FileHandlerService(ILogger logger, IMapper mapper, IFileService fileService, IStorageDataService storageDataService)
+        public FileHandlerService(string tempDir, ILogger logger, IMapper mapper, IFileService fileService, IStorageDataService storageDataService)
         {
             _logger = logger;
             _mapper = mapper;
             _fileService = fileService;
             _storageDataService = storageDataService;
 
-            if (!Directory.Exists(TEMP_DIR))
-                Directory.CreateDirectory(TEMP_DIR);
+            _tempDir = tempDir;
+
+            if (!Directory.Exists(_tempDir))
+                Directory.CreateDirectory(_tempDir);
 
             _annotationsFormatsProcessor = InitializeAnnotationsProcessors();
         }
@@ -196,7 +199,7 @@ namespace Storage.Application.Common.Services
         {
             var filesData = new List<UploadFileRequestModel>();
 
-            var tempPath = Path.Combine(TEMP_DIR, archive.SystemName);
+            var tempPath = Path.Combine(_tempDir, archive.SystemName);
 
             /*Save archive in local storage*/
             await FileHelper.SaveFileAsync(archive.Stream, tempPath, cancellationToken);
