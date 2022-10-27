@@ -435,7 +435,7 @@ namespace Storage.Application.Common.Services
                             result.Acknowledged = false;
                             result.Error = new DeleteErrorModel
                             {
-                                FileId = id,
+                                FileId = id.ToString(),
                                 ErrorMessage = ErrorMessages.RemovingItemFromStorageErrorMessage(id.ToString())
                             };
                         }
@@ -445,7 +445,7 @@ namespace Storage.Application.Common.Services
                         result.Acknowledged = false;
                         result.Error = new DeleteErrorModel
                         {
-                            FileId = id,
+                            FileId = id.ToString(),
                             ErrorMessage = ex.UserFriendlyMessage
                         };
                     }
@@ -454,7 +454,7 @@ namespace Storage.Application.Common.Services
                         result.Acknowledged = false;
                         result.Error = new DeleteErrorModel
                         {
-                            FileId = id,
+                            FileId = id.ToString(),
                             ErrorMessage = ErrorMessages.UNEXPECTED_ERROR_WHILE_FILE_REMOVE_MESSAGE
                         };
                     }
@@ -464,7 +464,7 @@ namespace Storage.Application.Common.Services
                     result.Acknowledged = false;
                     result.Error = new DeleteErrorModel
                     {
-                        FileId = id,
+                        FileId = id.ToString(),
                         ErrorMessage = ErrorMessages.FILE_NOT_FOUND_ERROR_MESSAGE
                     };
                 }
@@ -536,7 +536,7 @@ namespace Storage.Application.Common.Services
                                                         new DeleteErrorModel() 
                                                         { 
                                                             ErrorMessage = error.ErrorMessage,
-                                                            FileId = files.FirstOrDefault(f => f.FilePath.Equals(error.FilePath))?.Id ?? Guid.Empty 
+                                                            FileId = files.FirstOrDefault(f => f.FilePath.Equals(error.FilePath))?.Id.ToString() ?? null 
                                                         }).ToList();                            
                         }
 

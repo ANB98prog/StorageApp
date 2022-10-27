@@ -12,20 +12,32 @@ using System.Threading.Tasks;
 
 namespace Storage.Application.Files.Commands.UploadManyFilesArchive
 {
+    /// <summary>
+    /// Upload many archives file command handler
+    /// </summary>
     public class UploadManyFilesArchiveCommandHandler
-        : IRequestHandler<UploadManyFilesArchiveCommand, List<Guid>>
+        : IRequestHandler<UploadManyFilesArchiveCommand, ManyFilesActionResponse<List<Guid>>>
     {
+        /// <summary>
+        /// File handler service
+        /// </summary>
         private readonly IFileHandlerService _fileHandlerService;
 
+        /// <summary>
+        /// Initializes class instance of <see cref="UploadManyFilesArchiveCommandHandler"/>
+        /// </summary>
+        /// <param name="fileHandlerService">File handler service</param>
         public UploadManyFilesArchiveCommandHandler(IFileHandlerService fileHandlerService)
         {
             _fileHandlerService = fileHandlerService;
         }
 
-        public async Task<List<Guid>> Handle(UploadManyFilesArchiveCommand request, CancellationToken cancellationToken)
+        public async Task<ManyFilesActionResponse<List<Guid>>> Handle(UploadManyFilesArchiveCommand request, CancellationToken cancellationToken)
         {
             try
             {
+                var response = new ManyFilesActionResponse<List<Guid>>();
+                var errors = new List<DeleteErrorModel>();
                 var uploadedFilesIds = new List<Guid>();
 
                 if (request != null
@@ -33,24 +45,38 @@ namespace Storage.Application.Files.Commands.UploadManyFilesArchive
                 {
                     foreach (var archive in request.Files)
                     {
-                        var id = Guid.NewGuid();
-                        var fileSystemName = $"{id.Trunc()}{Path.GetExtension(archive.FileName)}";
-
-                        var uploadRequest = new UploadFileRequestModel
+                        try
                         {
-                            Id = id,
-                            OwnerId = request.UserId,
-                            Attributes = request.Attributes,
-                            OriginalName = archive.FileName,
-                            SystemName = fileSystemName,
-                            Stream = archive.OpenReadStream()
-                        };
+                            var id = Guid.NewGuid();
+                            var fileSystemName = $"{id.Trunc()}{Path.GetExtension(archive.FileName)}";
 
-                        uploadedFilesIds.AddRange(await _fileHandlerService.UploadArchiveFileAsync(uploadRequest, request.MimeTypes, cancellationToken));
+                            var uploadRequest = new UploadFileRequestModel
+                            {
+                                Id = id,
+                                OwnerId = request.UserId,
+                                Attributes = request.Attributes,
+                                OriginalName = archive.FileName,
+                                SystemName = fileSystemName,
+                                Stream = archive.OpenReadStream()
+                            };
+
+                            uploadedFilesIds.AddRange(await _fileHandlerService.UploadArchiveFileAsync(uploadRequest, request.MimeTypes, cancellationToken));
+                        }
+                        catch (FileHandlerServiceException ex)
+                        {
+                            errors.Add(new DeleteErrorModel
+                            {
+                                FilePath = archive.FileName,
+                                ErrorMessage = ex.UserFriendlyMessage
+                            });
+                        }
                     } 
                 }
 
-                return uploadedFilesIds;
+                response.Data = uploadedFilesIds;
+                response.Errors = errors;
+
+                return response;
             }
             catch (ArgumentNullException ex)
             {

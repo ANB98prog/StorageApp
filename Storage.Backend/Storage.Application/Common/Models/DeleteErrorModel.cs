@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Newtonsoft.Json;
 
 namespace Storage.Application.Common.Models
 {
@@ -10,7 +10,8 @@ namespace Storage.Application.Common.Models
         /// <summary>
         /// File id
         /// </summary>
-        public Guid FileId { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string FileId { get; set; }
 
         /// <summary>
         /// File path

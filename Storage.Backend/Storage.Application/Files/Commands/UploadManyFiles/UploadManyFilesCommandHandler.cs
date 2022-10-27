@@ -11,17 +11,27 @@ using System.Threading.Tasks;
 
 namespace Storage.Application.Files.Commands.UploadManyFiles
 {
+    /// <summary>
+    /// Upload many files command handler
+    /// </summary>
     public class UploadManyFilesCommandHandler
-        : IRequestHandler<UploadManyFilesCommand, List<Guid>>
+        : IRequestHandler<UploadManyFilesCommand, ManyFilesActionResponse<List<Guid>>>
     {
+        /// <summary>
+        /// File handler service
+        /// </summary>
         private readonly IFileHandlerService _fileHandlerService;
 
+        /// <summary>
+        /// Initializes class instance of <see cref="UploadManyFilesCommandHandler"/>
+        /// </summary>
+        /// <param name="fileHandlerService">File handler service</param>
         public UploadManyFilesCommandHandler(IFileHandlerService fileHandlerService)
         {
             _fileHandlerService = fileHandlerService;
         }
 
-        public async Task<List<Guid>> Handle(UploadManyFilesCommand request, CancellationToken cancellationToken)
+        public async Task<ManyFilesActionResponse<List<Guid>>> Handle(UploadManyFilesCommand request, CancellationToken cancellationToken)
         {
             try
             {
@@ -46,8 +56,10 @@ namespace Storage.Application.Files.Commands.UploadManyFiles
 
                 var filesIds = await _fileHandlerService.UploadManyFileAsync(files, cancellationToken);
 
-                return filesIds;
-
+                return new ManyFilesActionResponse<List<Guid>>
+                {
+                    Data = filesIds
+                };
             }
             catch (ArgumentNullException ex)
             {

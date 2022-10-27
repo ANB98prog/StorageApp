@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Storage.Application.Common;
-using Storage.Application.Common.Exceptions;
 using Storage.Application.Common.Models;
 using System;
 using System.Collections.Generic;
@@ -10,7 +8,7 @@ namespace Storage.Application.Files.Commands.UploadManyFiles
     /// <summary>
     /// Upload many files command
     /// </summary>
-    public class UploadManyFilesCommand : BaseUploadCommand<List<Guid>>
+    public class UploadManyFilesCommand : BaseUploadCommand<ManyFilesActionResponse<List<Guid>>>
     {
         /// <summary>
         /// Files data

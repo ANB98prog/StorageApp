@@ -12,20 +12,32 @@ using System.Threading.Tasks;
 
 namespace Storage.Application.Files.Commands.UploadAnnotatedFiles
 {
+    /// <summary>
+    /// Upload annotated files command handler
+    /// </summary>
     public class UploadAnnotatedFilesCommandHandler
-        : IRequestHandler<UploadAnnotatedFilesCommand, List<Guid>>
+        : IRequestHandler<UploadAnnotatedFilesCommand, ManyFilesActionResponse<List<Guid>>>
     {
+        /// <summary>
+        /// File handler service
+        /// </summary>
         private readonly IFileHandlerService _fileHandlerService;
 
+        /// <summary>
+        /// Initializes class instance of <see cref="UploadAnnotatedFilesCommandHandler"/>
+        /// </summary>
+        /// <param name="fileHandlerService">File handler service</param>
         public UploadAnnotatedFilesCommandHandler(IFileHandlerService fileHandlerService)
         {
             _fileHandlerService = fileHandlerService;
         }
 
-        public async Task<List<Guid>> Handle(UploadAnnotatedFilesCommand request, CancellationToken cancellationToken)
+        public async Task<ManyFilesActionResponse<List<Guid>>> Handle(UploadAnnotatedFilesCommand request, CancellationToken cancellationToken)
         {
             try
             {
+                var response = new ManyFilesActionResponse<List<Guid>>();
+                var errors = new List<DeleteErrorModel>();
                 var uploadedFilesIds = new List<Guid>();
 
                 if (request != null
@@ -52,12 +64,19 @@ namespace Storage.Application.Files.Commands.UploadAnnotatedFiles
                         }
                         catch (FileHandlerServiceException ex)
                         {
-                            /*TO DO обработку ошибок*/
+                            errors.Add(new DeleteErrorModel
+                            {
+                                FilePath = archive.FileName,
+                                ErrorMessage = ex.UserFriendlyMessage
+                            });
                         }
                     }
                 }
 
-                return uploadedFilesIds;
+                response.Data = uploadedFilesIds;
+                response.Errors = errors;
+
+                return response;
             }
             catch (ArgumentNullException ex)
             {
