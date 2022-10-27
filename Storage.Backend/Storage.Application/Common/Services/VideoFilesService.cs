@@ -57,6 +57,13 @@ namespace Storage.Application.Common.Services
             {
                 _logger.Information($"Try to split video into frames. Frames step: {step}");
 
+                UploadedFileModel cuttedFilesArchivePath;
+
+                if (videoFileId.Equals(Guid.Empty))
+                {
+                    throw new ArgumentNullException("Video id");
+                }
+
                 var fileInfo = await _storageDataService.GetFileInfoAsync<ExtendedFileInfoModel>(videoFileId);
 
                 if(fileInfo == null)
@@ -74,27 +81,33 @@ namespace Storage.Application.Common.Services
                 var filePath = _fileService.GetFileAbsolutePath(fileInfo.FilePath);
 
                 var cutted = CutVideo(filePath, step);
-
-                var archive = FileHelper.ArchiveFolderStream(cutted);
-
-                var uploadedArchive = await _fileService.UploadTemporaryFileAsync(archive, cancellationToken);
-
-                /*Необходимо удалить файлы*/
-                archive.Dispose();
+                var cuttedArchive = Directory.GetParent(cutted).FullName;
 
                 try
                 {
-                    FileHelper.RemoveFile(Path.Combine(Directory.GetParent(cutted).FullName, archive.Name));
-                    FileHelper.RemoveDirectory(cutted);
+                    using (var archive = FileHelper.ArchiveFolderStream(cutted))
+                    {
+                        cuttedArchive = Path.Combine(cuttedArchive, archive.Name);
+                        cuttedFilesArchivePath = await _fileService.UploadTemporaryFileAsync(archive, cancellationToken);
+                    }
                 }
-                catch (Exception ex)
+                finally
                 {
-                    _logger.Warning(ex, ErrorMessages.UNEXPECTED_ERROR_WHILE_FILE_REMOVE_MESSAGE);
-                }
+                    try
+                    {
+                        /*Необходимо удалить файлы*/
+                        FileHelper.RemoveFile(cuttedArchive);
+                        FileHelper.RemoveDirectory(cutted);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Warning(ex, ErrorMessages.UNEXPECTED_ERROR_WHILE_FILE_REMOVE_MESSAGE);
+                    }
+                }                
 
                 _logger.Information($"Video file are successfully splited into frames.");
 
-                return uploadedArchive.RelativePath;
+                return cuttedFilesArchivePath?.RelativePath ?? "";
                
             }
             catch (ArgumentNullException ex)
@@ -128,7 +141,7 @@ namespace Storage.Application.Common.Services
                 var capture = new VideoCapture(filePath);
                 var image = new Mat();
 
-                var pathToSave = Path.Combine(_tempDir, Path.GetRandomFileName());
+                var pathToSave = Path.Combine(_tempDir, Path.GetRandomFileName().Replace(".", string.Empty));
 
                 if (!Directory.Exists(pathToSave))
                     Directory.CreateDirectory(pathToSave);
@@ -138,17 +151,18 @@ namespace Storage.Application.Common.Services
                 var currentStep = i;
                 while (capture.IsOpened())
                 {
+                    capture.Read(image);
+                    if (image.Empty()) break;
+
                     if (currentStep == 0 
                         || currentStep == i)
                     {
-                        capture.Read(image);
-                        if (image.Empty()) break;
                         image.SaveImage(Path.Combine(pathToSave, $"img_{imageCounter}.jpg"));
                         imageCounter++;
+                        currentStep += step;
                     }
 
                     i++;
-                    currentStep += step;
                 }
 
                 return pathToSave;

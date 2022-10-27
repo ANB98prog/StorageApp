@@ -13,6 +13,7 @@ namespace Storage.Application.Interfaces
         /// <param name="step">Frames step</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Path to splited frames</returns>
+        /// <exception cref="VideoFilesServiceException"></exception>
         public Task<string> SplitIntoFramesAsync(Guid videoFileId, int step = 0, CancellationToken cancellationToken = default);
     }
 }
