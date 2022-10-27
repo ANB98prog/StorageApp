@@ -14,12 +14,9 @@ namespace Storage.Tests.Common
     {
         public Mock<IStorageDataService> StorageDataServiceMock;
 
-        public Mock<IFileService> FileServiceMock;
-
         public IoCModule()
         {
             StorageDataServiceMock = new Mock<IStorageDataService>();
-            FileServiceMock = new Mock<IFileService>();
         }
 
         public override void Load()
@@ -49,9 +46,6 @@ namespace Storage.Tests.Common
 
             Bind<IFileHandlerService>()
                 .ToMethod(ctx => new FileHandlerService(TestConstants.StorageDirectory, new Mock<ILogger>().Object, ctx.Kernel.Get<IMapper>(), ctx.Kernel.Get<IFileService>(), ctx.Kernel.Get<IStorageDataService>()));
-
-            Bind<IVideoFilesService>()
-                .ToMethod(ctx => new VideoFilesService(TestConstants.StorageDirectory, new Mock<ILogger>().Object, FileServiceMock.Object, ctx.Kernel.Get<IStorageDataService>()));
         }
     }
 }

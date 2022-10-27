@@ -1,6 +1,7 @@
 ﻿using Moq;
 using Storage.Application.Common.Exceptions;
 using Storage.Application.Common.Models;
+using Storage.Application.Interfaces;
 using Storage.Tests.Common;
 
 namespace Storage.Tests.VideoFilesServiceTests
@@ -18,7 +19,9 @@ namespace Storage.Tests.VideoFilesServiceTests
         [Fact]
         public async Task CutVideoFileToFrames_Success()
         {
-            var videoService = _fixture.VideoFilesService;
+            var fileServiceMock = new Mock<IFileService>();
+
+            var videoService = _fixture.GetVideoService(fileServiceMock);
             var fileId = Guid.NewGuid();
 
             var fileInfo = new ExtendedFileInfoModel
@@ -34,7 +37,7 @@ namespace Storage.Tests.VideoFilesServiceTests
 
             var videoFilePath = Path.Combine(_fixture.PathToTestFiles, "video.mp4");
 
-            _fixture.FileServiceMock.Setup(s => s
+            fileServiceMock.Setup(s => s
                 .GetFileAbsolutePath(It.IsAny<string>()))
                 .Returns(videoFilePath);
 
@@ -44,7 +47,7 @@ namespace Storage.Tests.VideoFilesServiceTests
                 RelativePath = videoFilePath
             };
 
-            _fixture.FileServiceMock.Setup(s => s
+            fileServiceMock.Setup(s => s
                 .UploadTemporaryFileAsync(It.IsAny<FileStream>(), CancellationToken.None))
                 .ReturnsAsync(expectedResult);
 
@@ -55,16 +58,18 @@ namespace Storage.Tests.VideoFilesServiceTests
 
             _fixture.StorageDataServiceMock.Verify(s => s
                .GetFileInfoAsync<ExtendedFileInfoModel>(fileId), Times.Once);
-            _fixture.FileServiceMock.Verify(s => s
+            fileServiceMock.Verify(s => s
                 .GetFileAbsolutePath(It.IsAny<string>()), Times.Once);
-            _fixture.FileServiceMock.Verify(s => s
+            fileServiceMock.Verify(s => s
                 .UploadTemporaryFileAsync(It.IsAny<FileStream>(), CancellationToken.None), Times.Once);
         }
 
         [Fact]
         public async Task CutVideoFileToFrames_WithSteps_Success()
         {
-            var videoService = _fixture.VideoFilesService;
+            var fileServiceMock = new Mock<IFileService>();
+
+            var videoService = _fixture.GetVideoService(fileServiceMock);
             var fileId = Guid.NewGuid();
 
             var fileInfo = new ExtendedFileInfoModel
@@ -80,7 +85,7 @@ namespace Storage.Tests.VideoFilesServiceTests
 
             var videoFilePath = Path.Combine(_fixture.PathToTestFiles, "video.mp4");
 
-            _fixture.FileServiceMock.Setup(s => s
+            fileServiceMock.Setup(s => s
                 .GetFileAbsolutePath(It.IsAny<string>()))
                 .Returns(videoFilePath);
 
@@ -90,7 +95,7 @@ namespace Storage.Tests.VideoFilesServiceTests
                 RelativePath = videoFilePath
             };
 
-            _fixture.FileServiceMock.Setup(s => s
+            fileServiceMock.Setup(s => s
                 .UploadTemporaryFileAsync(It.IsAny<FileStream>(), CancellationToken.None))
                 .ReturnsAsync(expectedResult);
 
@@ -101,16 +106,18 @@ namespace Storage.Tests.VideoFilesServiceTests
 
             _fixture.StorageDataServiceMock.Verify(s => s
                .GetFileInfoAsync<ExtendedFileInfoModel>(fileId), Times.Once);
-            _fixture.FileServiceMock.Verify(s => s
+            fileServiceMock.Verify(s => s
                 .GetFileAbsolutePath(It.IsAny<string>()), Times.Once);
-            _fixture.FileServiceMock.Verify(s => s
+            fileServiceMock.Verify(s => s
                 .UploadTemporaryFileAsync(It.IsAny<FileStream>(), CancellationToken.None), Times.Once);
         }
 
         [Fact]
         public async Task CutVideoFileToFrames_IfEmptyId_Error()
         {
-            var videoService = _fixture.VideoFilesService;
+            var fileServiceMock = new Mock<IFileService>();
+
+            var videoService = _fixture.GetVideoService(fileServiceMock);
 
             var error = await Assert.ThrowsAsync<VideoFilesServiceException>( async () => 
                         await videoService.SplitIntoFramesAsync(Guid.Empty, 10, CancellationToken.None));
@@ -119,16 +126,18 @@ namespace Storage.Tests.VideoFilesServiceTests
 
             _fixture.StorageDataServiceMock.Verify(s => s
                .GetFileInfoAsync<ExtendedFileInfoModel>(It.IsAny<Guid>()), Times.Never);
-            _fixture.FileServiceMock.Verify(s => s
+            fileServiceMock.Verify(s => s
                 .GetFileAbsolutePath(It.IsAny<string>()), Times.Never);
-            _fixture.FileServiceMock.Verify(s => s
+            fileServiceMock.Verify(s => s
                 .UploadTemporaryFileAsync(It.IsAny<FileStream>(), CancellationToken.None), Times.Never);
         }
 
         [Fact]
         public async Task CutVideoFileToFrames_IfFileInfoNotFound_Error()
         {
-            var videoService = _fixture.VideoFilesService;
+            var fileServiceMock = new Mock<IFileService>();
+
+            var videoService = _fixture.GetVideoService(fileServiceMock);
             var fileId = Guid.NewGuid();
 
             var error = await Assert.ThrowsAsync<VideoFilesServiceException>(async () =>
@@ -138,16 +147,18 @@ namespace Storage.Tests.VideoFilesServiceTests
 
             _fixture.StorageDataServiceMock.Verify(s => s
                .GetFileInfoAsync<ExtendedFileInfoModel>(fileId), Times.Once);
-            _fixture.FileServiceMock.Verify(s => s
+            fileServiceMock.Verify(s => s
                 .GetFileAbsolutePath(It.IsAny<string>()), Times.Never);
-            _fixture.FileServiceMock.Verify(s => s
+            fileServiceMock.Verify(s => s
                 .UploadTemporaryFileAsync(It.IsAny<FileStream>(), CancellationToken.None), Times.Never);
         }
 
         [Fact]
         public async Task CutVideoFileToFrames_IfNotVideoFile_Error()
         {
-            var videoService = _fixture.VideoFilesService;
+            var fileServiceMock = new Mock<IFileService>();
+
+            var videoService = _fixture.GetVideoService(fileServiceMock);
             var fileId = Guid.NewGuid();
 
             var fileInfo = new ExtendedFileInfoModel
@@ -168,9 +179,9 @@ namespace Storage.Tests.VideoFilesServiceTests
 
             _fixture.StorageDataServiceMock.Verify(s => s
                .GetFileInfoAsync<ExtendedFileInfoModel>(fileId), Times.Once);
-            _fixture.FileServiceMock.Verify(s => s
+            fileServiceMock.Verify(s => s
                 .GetFileAbsolutePath(It.IsAny<string>()), Times.Never);
-            _fixture.FileServiceMock.Verify(s => s
+            fileServiceMock.Verify(s => s
                 .UploadTemporaryFileAsync(It.IsAny<FileStream>(), CancellationToken.None), Times.Never);
         }
     }

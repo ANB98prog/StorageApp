@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Moq;
 using Ninject;
+using Serilog;
 using Storage.Application.Common.Services;
 using Storage.Application.Interfaces;
 
@@ -22,8 +23,6 @@ namespace Storage.Tests.Common
 
         public readonly string PathToTestFiles;
 
-        public readonly IVideoFilesService VideoFilesService;
-
         public TestServicesFixture()
         {
             var ioCModule = new IoCModule();
@@ -31,7 +30,6 @@ namespace Storage.Tests.Common
             Kernel = new StandardKernel(ioCModule);
 
             StorageDataServiceMock = ioCModule.StorageDataServiceMock;
-            FileServiceMock = ioCModule.FileServiceMock;
 
             if (!Directory.Exists(TestConstants.TestFilesDirectory))
                 Directory.CreateDirectory(TestConstants.TestFilesDirectory);
@@ -43,8 +41,11 @@ namespace Storage.Tests.Common
             Mapper = Kernel.Get<IMapper>();
 
             PathToTestFiles = Path.Combine(Directory.GetCurrentDirectory(), "TestData");
+        }
 
-            VideoFilesService = Kernel.Get<IVideoFilesService>();
+        public IVideoFilesService GetVideoService(Mock<IFileService> fileServiceMock)
+        {
+            return new VideoFilesService(TestConstants.StorageDirectory, new Mock<ILogger>().Object, fileServiceMock.Object, Kernel.Get<IStorageDataService>());
         }
 
         public void Dispose()
