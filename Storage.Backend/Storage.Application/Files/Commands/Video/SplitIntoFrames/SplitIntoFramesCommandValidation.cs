@@ -12,6 +12,8 @@ namespace Storage.Application.Files.Commands.Video.SplitIntoFrames
             //    .NotEqual(Guid.Empty);
             RuleFor(split => split.VideoFileId)
                .NotEqual(Guid.Empty);
+            RuleFor(split => split.FramesStep)
+               .GreaterThanOrEqualTo(0);
         }
     }
 }

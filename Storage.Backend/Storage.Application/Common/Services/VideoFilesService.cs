@@ -64,6 +64,11 @@ namespace Storage.Application.Common.Services
                     throw new ArgumentNullException("Video id");
                 }
 
+                if(step < 0)
+                {
+                    throw new VideoFilesServiceException(ErrorMessages.FRAMES_STEP_LESS_THAN_ZERO_ERROR_MESSAGE);
+                }
+
                 var fileInfo = await _storageDataService.GetFileInfoAsync<ExtendedFileInfoModel>(videoFileId);
 
                 if(fileInfo == null)

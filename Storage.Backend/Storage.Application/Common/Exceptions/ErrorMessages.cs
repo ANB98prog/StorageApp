@@ -208,7 +208,10 @@ namespace Storage.Application.Common.Exceptions
         /// <returns>Error message</returns>
         public static string NotVideoFileErrorMessage(string mimeType) => $"File is not video file. Passed file with `{mimeType}` mimetype!";
 
-
+        /// <summary>
+        /// Error message when frames step are less than zero
+        /// </summary>
+        public const string FRAMES_STEP_LESS_THAN_ZERO_ERROR_MESSAGE = "Frames step are less than zero";
         #endregion
 
     }
