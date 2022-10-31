@@ -1,6 +1,4 @@
-﻿using Mapper;
-using Nest;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Elasticsearch.Models
 {
@@ -24,5 +22,10 @@ namespace Elasticsearch.Models
         /// Documents
         /// </summary>
         public IEnumerable<HitModel<T>> Documents { get; set; }
+
+        /// <summary>
+        /// Aggregations values
+        /// </summary>
+        public Dictionary<string, List<string>> Aggregations { get; set; } = new Dictionary<string, List<string>>();
     }
 }

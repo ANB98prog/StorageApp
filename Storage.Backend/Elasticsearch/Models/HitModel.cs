@@ -1,4 +1,6 @@
-﻿namespace Elasticsearch.Models
+﻿using System.Collections.Generic;
+
+namespace Elasticsearch.Models
 {
     /// <summary>
     /// Elastic hit model
@@ -16,5 +18,10 @@
         /// Document data
         /// </summary>
         public T Document { get; set; }
+
+        /// <summary>
+        /// Search highlights
+        /// </summary>
+        public List<string> Highlight { get; set; }
     }
 }

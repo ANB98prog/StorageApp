@@ -164,7 +164,7 @@ namespace Elasticsearch
                     return null;
                 }
 
-                return result.MapHits();
+                return result.MapHits(request.Aggregations.Select(a => a.Key).ToList());
             }
             catch (ArgumentNullException ex)
             {

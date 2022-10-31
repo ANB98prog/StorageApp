@@ -122,6 +122,13 @@ namespace Storage.Application.Common.Exceptions
 
         #endregion
 
+        #region Search attributes
+        /// <summary>
+        /// Unexpected error while get attributes list
+        /// </summary>
+        public const string UNEXPECTED_ERROR_WHILE_GET_LIST_OF_ATTRIBUTES = "Unexpected error occured while get list of attributes";
+        #endregion
+
         #region Archives
         /// <summary>
         /// Error message if passed unsupported archive type
