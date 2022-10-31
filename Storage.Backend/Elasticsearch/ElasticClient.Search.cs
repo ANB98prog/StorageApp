@@ -164,7 +164,14 @@ namespace Elasticsearch
                     return null;
                 }
 
-                return result.MapHits(request.Aggregations.Select(a => a.Key).ToList());
+                var aggsKeys = new List<string>();
+
+                if(request.Aggregations != null)
+                {
+                    aggsKeys = request.Aggregations.Select(a => a.Key).ToList();
+                }
+
+                return result.MapHits(aggsKeys);
             }
             catch (ArgumentNullException ex)
             {
