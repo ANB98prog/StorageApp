@@ -15,6 +15,11 @@ namespace Storage.Application.Files.Queries.Attributes
         public string? Query { get; set; }
 
         /// <summary>
+        /// If set it will search only annotated or not if not set will get all
+        /// </summary>
+        public bool? IsAnnotated { get; set; }
+
+        /// <summary>
         /// Page number
         /// </summary>
         private int _pageNumber = Constants.DEFAULT_PAGE_NUMBER;

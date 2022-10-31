@@ -49,12 +49,25 @@ namespace Elasticsearch.Common
             {
                 foreach(var agg_key in aggregations)
                 {
-                    var termsAggs = response.Aggregations.Terms(agg_key);
+                    var compositeAggs = response.Aggregations.Composite(agg_key);
 
-                    if(termsAggs != null)
+                    if(compositeAggs != null)
                     {
-                        var items = termsAggs.Buckets.Select(x => x.Key).ToList();
-                        mapped.Aggregations.Add(agg_key, items);
+                        var buckets = compositeAggs.Buckets.Select(x => x.Key).ToList();
+
+                        foreach(var bucket in buckets)
+                        {
+                            var attrs = bucket.Values.Select(o => o.ToString()).ToList();
+
+                            if (mapped.Aggregations.ContainsKey(agg_key))
+                            {
+                                mapped.Aggregations[agg_key].AddRange(attrs);
+                            }
+                            else
+                            {
+                                mapped.Aggregations.Add(agg_key, new List<string>(attrs));
+                            }                            
+                        }
                     }
                 }
             }

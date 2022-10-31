@@ -19,6 +19,11 @@ namespace Elasticsearch
         public static int MAX_ITEMS_PER_REQUEST = 1000;
 
         /// <summary>
+        /// Maximum aggregations items count per request
+        /// </summary>
+        public static int MAX_AGGREGATION_ITEMS_PER_REQUEST = 1000;
+
+        /// <summary>
         /// Index not found server message
         /// </summary>
         public const string INDEX_NOT_EXISTS_SERVER_MESSAGE = "no such index";

@@ -27,11 +27,12 @@ namespace Storage.WebApi.Controllers.Attributes
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(UserfriendlyException), StatusCodes.Status400BadRequest)]
-        public async Task<AttributesListVm> GetAttributesListAsync([FromQuery] string? attr, [FromQuery] int? pageSize, [FromQuery] int? pageNumber)
+        public async Task<AttributesListVm> GetAttributesListAsync([FromQuery] string? attr, [FromQuery] bool? isAnnotated, [FromQuery] int? pageSize, [FromQuery] int? pageNumber)
         {
             var query = new GetAttributesListQuery
             {
-                Query = attr
+                Query = attr,
+                IsAnnotated = isAnnotated
             };
 
             if (pageSize != null)

@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using Elasticsearch;
 using Elasticsearch.Exceptions;
 using Elasticsearch.Interfaces;
 using MediatR;
 using Nest;
+using Storage.Application.Common;
 using Storage.Application.Common.Exceptions;
 using Storage.Application.Common.Helpers;
 using Storage.Domain;
@@ -129,9 +131,13 @@ namespace Storage.Application.Files.Queries.Attributes
         private SearchRequest<BaseFile> CreateSearchQuery(GetAttributesListQuery request)
         {
             var shouldQueries = new List<QueryContainer>();
+            var mustQueries = new List<QueryContainer>();
+
             var queryContainer = new QueryContainer();
 
             AggregationDictionary aggs = null;
+            BoolQuery boolQuery = new BoolQuery();
+
 
             if (request.Query != null 
                 && !string.IsNullOrWhiteSpace(request.Query))
@@ -144,30 +150,51 @@ namespace Storage.Application.Files.Queries.Attributes
                 shouldQueries.Add(new FuzzyQuery
                 {
                     Field = new Field(ElasticHelper.GetFormattedPropertyName(nameof(BaseFile.Attributes))),
-                    Value = request.Query
+                    Value = request.Query,
+                    Boost = 1,
+                    Fuzziness = Fuzziness.EditDistance(2)
                 });
 
-                queryContainer = new QueryContainer(new BoolQuery()
-                {
-                    Should = shouldQueries
-                });
+                boolQuery.Should = shouldQueries;
             }
             else
             {
                 queryContainer = new QueryContainer(new MatchAllQuery());
+
                 aggs = new AggregationDictionary
                 {
                     {
-                        "uniq_attrs", new AggregationContainer
+                        "uniq_attrs", new CompositeAggregation("uniq_attrs")
                         {
-                            Terms = new TermsAggregation(ElasticHelper.GetFormattedPropertyName(nameof(BaseFile.Attributes)))
+                            Size = ElasticConstants.MAX_AGGREGATION_ITEMS_PER_REQUEST,
+                            Sources = new List<ICompositeAggregationSource>
                             {
-                                Field = new Field(ElasticHelper.GetFormattedPropertyName(nameof(BaseFile.Attributes)).Keyword())
+                                new TermsCompositeAggregationSource(ElasticHelper.GetFormattedPropertyName(nameof(BaseFile.Attributes)))
+                                {
+                                    Field = new Field(ElasticHelper.GetFormattedPropertyName(nameof(BaseFile.Attributes)).Keyword())
+                                }
                             }
                         }
                     }
                 };
             }
+
+            if (request.IsAnnotated.HasValue)
+            {
+                mustQueries.Add(new MatchQuery
+                {
+                    Field = new Field(ElasticHelper.GetFormattedPropertyName(nameof(BaseFile.IsAnnotated))),
+                    Query = request.IsAnnotated.Value.ToString().ToLower()
+                });
+
+                boolQuery.Must = mustQueries;
+            }
+
+            if(boolQuery.Must != null
+                || boolQuery.Should != null)
+            {
+                queryContainer = new QueryContainer(boolQuery);
+            }            
 
             return new SearchRequest<BaseFile>(ElasticIndices.FILES_INDEX)
             {
