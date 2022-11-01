@@ -22,6 +22,7 @@
     <PackageReference Include="OpenCvSharp4.runtime.ubuntu.18.04-x64" Version="4.6.0.20220608" />
     <PackageReference Include="OpenCvSharp4.Windows" Version="4.6.0.20220608" />
     <PackageReference Include="Serilog" Version="2.12.0" />
+    <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="8.4.1" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageReference Include="SharpCompress" Version="0.32.2" />
   </ItemGroup>

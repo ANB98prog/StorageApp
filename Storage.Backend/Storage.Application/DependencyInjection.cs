@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Elasticsearch;
 using Elasticsearch.Interfaces;
 using FluentValidation;
 using MediatR;
@@ -71,7 +70,6 @@ namespace Storage.Application
                 ?? throw new ArgumentNullException("Elastic password");
 
             var settings = new ConnectionSettings(new Uri(elasticUrl))
-                        .EnableDebugMode()
                                 .BasicAuthentication(elasticUser, elasticPassword)
                                 .EnableApiVersioningHeader();
 

@@ -6,6 +6,16 @@
     public static class EnvironmentVariables
     {
         /// <summary>
+        /// Environment variable name that stores environment name
+        /// </summary>
+        public const string ASPNETCORE_ENVIRONMENT = "ASPNETCORE_ENVIRONMENT";
+
+        /// <summary>
+        /// Environment variable name that stores application name
+        /// </summary>
+        public const string APPLICATION_NAME = "APPLICATION_NAME";
+
+        /// <summary>
         /// Environment variable name that stores local storage directory path
         /// </summary>
         public const string LOCAL_STORAGE_DIR = "LOCAL_STORAGE_DIR";
