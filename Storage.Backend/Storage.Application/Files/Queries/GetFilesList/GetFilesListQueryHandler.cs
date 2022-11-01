@@ -9,6 +9,7 @@ using Storage.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using ErrorMessages = Storage.Application.Common.Exceptions.ErrorMessages;
@@ -167,6 +168,19 @@ namespace Storage.Application.Files.Queries.GetFilesList
                     Field = new Field(ElasticHelper.GetFormattedPropertyName(nameof(BaseFile.IsAnnotated))),
                     Value = request.IsAnnotated.Value
                 });
+            }
+            #endregion
+
+            #region Mimetypes
+            if (request.MimeTypes != null 
+                && request.MimeTypes.Any())
+            {
+                request.MimeTypes.ForEach(m => matchQueries.Add(new MatchQuery
+                {
+                    Field = new Field(ElasticHelper.GetFormattedPropertyName(nameof(BaseFile.MimeType))),
+                    Query = Regex.Replace(m, @"/", @"//"),
+                    Operator = Operator.Or
+                }));
             }
             #endregion
 

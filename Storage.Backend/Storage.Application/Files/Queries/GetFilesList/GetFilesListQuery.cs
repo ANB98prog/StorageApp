@@ -33,6 +33,11 @@ namespace Storage.Application.Files.Queries.GetFilesList
         public DateTime? CreatedTo { get; set; }
 
         /// <summary>
+        /// Files mimetypes
+        /// </summary>
+        public List<string>? MimeTypes { get; set; }
+
+        /// <summary>
         /// Is data annotated
         /// </summary>
         public bool? IsAnnotated { get; set; }
