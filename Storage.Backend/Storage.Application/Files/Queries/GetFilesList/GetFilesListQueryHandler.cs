@@ -198,7 +198,15 @@ namespace Storage.Application.Files.Queries.GetFilesList
                 TrackTotalHits = true,
                 Query = queryContainer,
                 From = from,
-                Size = take
+                Size = take,
+                Sort = new List<ISort>
+                {
+                    new FieldSort
+                    {
+                        Field = new Field(ElasticHelper.GetFormattedPropertyName(nameof(BaseFile.Id)).Keyword()),
+                        Order = SortOrder.Ascending
+                    }
+                }
             };
         }
     }
