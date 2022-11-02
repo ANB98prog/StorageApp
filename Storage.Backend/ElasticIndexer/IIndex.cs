@@ -2,7 +2,7 @@
 {
     public interface IIndex
     {
-        public void Index();
-        public void ReIndex();
+        public void Index(string indexName);
+        public void Reindex(string source, string dest);
     }
 }

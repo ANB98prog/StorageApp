@@ -1,4 +1,5 @@
 ﻿using Nest;
+using Storage.Domain;
 
 namespace ElasticIndexer
 {
@@ -12,9 +13,10 @@ namespace ElasticIndexer
              */
             var elasticUrl = "http://localhost:9200";
             var elasticUser = "elastic";
-            var elasticPassword = "";
+            var elasticPassword = "TsrxH2l62Q90Dfdyi0Nd";
 
             var settings = new ConnectionSettings(new Uri(elasticUrl))
+                .EnableDebugMode()
                                 .BasicAuthentication(elasticUser, elasticPassword);
 
             var nestClient = new Nest.ElasticClient(settings);
@@ -23,8 +25,9 @@ namespace ElasticIndexer
 
             var indexBaseFiles = new IndexBaseFile(client);
 
-            indexBaseFiles.Index();
-            
+            indexBaseFiles.Index("temp");
+
+            indexBaseFiles.Reindex(ElasticIndices.FILES_INDEX, "temp");
         }
 
 
