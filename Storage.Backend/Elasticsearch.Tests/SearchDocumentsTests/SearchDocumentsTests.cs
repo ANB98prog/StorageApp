@@ -208,7 +208,7 @@ namespace Elasticsearch.Tests.SearchDocumentsTests
 
             var result = await Assert.ThrowsAsync<UnexpectedElasticException>(async () => await client.SearchAsync(request));
 
-            Assert.Equal(ErrorMessages.UNEXPECTED_ERROR_SEARCHING_DOCUMENTS(), result.Message);
+            Assert.Equal(ErrorMessages.UNEXPECTED_ERROR_SEARCHING_DOCUMENTS, result.Message);
 
             responseMock.Verify(v => v.GetResponseData(It.Is<string>(m => m.StartsWith($"{_fixture.ElasticBasePath}/{indexName}/_search")), Net.HttpMethod.POST), Times.Once);
         }
