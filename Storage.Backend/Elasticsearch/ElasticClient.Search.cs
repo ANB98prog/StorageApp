@@ -183,7 +183,7 @@ namespace Elasticsearch
             }
             catch (Exception ex)
             {
-                throw new UnexpectedElasticException(ErrorMessages.UNEXPECTED_ERROR_SEARCHING_DOCUMENTS(), ex);
+                throw new UnexpectedElasticException(ErrorMessages.UNEXPECTED_ERROR_SEARCHING_DOCUMENTS, ex);
             }
         }
 
@@ -233,7 +233,7 @@ namespace Elasticsearch
             }
             catch (Exception ex)
             {
-                throw new UnexpectedElasticException(ErrorMessages.UNEXPECTED_ERROR_SEARCHING_DOCUMENTS(), ex);
+                throw new UnexpectedElasticException(ErrorMessages.UNEXPECTED_ERROR_SEARCHING_DOCUMENTS, ex);
             }
         }
 
@@ -277,7 +277,7 @@ namespace Elasticsearch
             }
             catch (Exception ex)
             {
-                throw new UnexpectedElasticException(ErrorMessages.UNEXPECTED_ERROR_COUNTING_DOCUMENTS(), ex);
+                throw new UnexpectedElasticException(ErrorMessages.UNEXPECTED_ERROR_COUNTING_DOCUMENTS, ex);
             }
         }
 
@@ -324,7 +324,7 @@ namespace Elasticsearch
             }
             catch (Exception ex)
             {
-                throw new UnexpectedElasticException(ErrorMessages.UNEXPECTED_ERROR_COUNTING_DOCUMENTS(), ex);
+                throw new UnexpectedElasticException(ErrorMessages.UNEXPECTED_ERROR_COUNTING_DOCUMENTS, ex);
             }
         }
     }

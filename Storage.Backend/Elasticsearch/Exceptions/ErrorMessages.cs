@@ -21,9 +21,10 @@ namespace Elasticsearch.Exceptions
         public static string ERROR_DELETE_BY_ID_DOCUMENT(string indexName, string id) => $"Error occured while remove document {id} from {indexName} index.";
         public static string ERROR_DELETE_BULK_DOCUMENTS(string indexName, string ids) => $"Error occured while remove bulk of documents {ids} from {indexName} index.";
         public static string UNEXPECTED_ERROR_REMOVING_BULK_DOCUMENTS(string indexName) => $"Unexpected error occured while remove bulk of documents from {indexName} index.";
-        public static string UNEXPECTED_ERROR_REMOVING_BULK_DOCUMENTS_BY_QUERY() => $"Unexpected error occured while remove bulk of documents by query.";
-        public static string UNEXPECTED_ERROR_SEARCHING_DOCUMENTS() => $"Unexpected error occured while search documents by query.";
-        public static string UNEXPECTED_ERROR_COUNTING_DOCUMENTS() => $"Unexpected error occured while count documents.";
+        public const string UNEXPECTED_ERROR_REMOVING_BULK_DOCUMENTS_BY_QUERY = "Unexpected error occured while remove bulk of documents by query.";
+        public const string UNEXPECTED_ERROR_SEARCHING_DOCUMENTS = "Unexpected error occured while search documents by query.";
+        public const string UNEXPECTED_ERROR_COUNTING_DOCUMENTS = "Unexpected error occured while count documents.";
+        public const string UNEXPECTED_ERROR_WHILE_REINDEX_DOCUMENTS = "Unexpected error while reindex documents.";
 
         public static string ERROR_UPDATE_BY_ID_DOCUMENT(string indexName, string id) => $"Error occured while update document {id} from {indexName} index.";
         public const string ERROR_BULK_UPDATE_DOCUMENTS = "Error occured while bulk update.";

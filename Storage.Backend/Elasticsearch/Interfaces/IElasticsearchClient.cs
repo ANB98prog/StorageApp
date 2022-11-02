@@ -28,6 +28,15 @@ namespace Elasticsearch.Interfaces
         public Task CreateIndexAsync(string indexName, CancellationToken cancellationToken = default);
 
         /// <summary>
+        /// Reindexes documents
+        /// </summary>
+        /// <param name="sourceIndex">Source index</param>
+        /// <param name="destinationIndex">Destination index</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns></returns>
+        public Task ReindexAsync(string sourceIndex, string destinationIndex, CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// Deletes index
         /// </summary>
         /// <param name="indexName">Index to delete</param>

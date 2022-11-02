@@ -119,6 +119,48 @@ namespace Elasticsearch
         }
 
         /// <summary>
+        /// Reindexes documents
+        /// </summary>
+        /// <param name="sourceIndex">Source index</param>
+        /// <param name="destinationIndex">Destination index</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <exception cref="UnexpectedElasticException"></exception>
+        public async Task ReindexAsync(string sourceIndex, string destinationIndex, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(sourceIndex))
+                    throw new ArgumentNullException(nameof(sourceIndex));
+                else if (string.IsNullOrWhiteSpace(destinationIndex))
+                    throw new ArgumentNullException(nameof(destinationIndex));
+
+                var reindexResponse = await _client.ReindexOnServerAsync(r => r
+                                    .Source(s => s
+                                        .Index(sourceIndex))
+                                    .Destination(d => d
+                                        .Index(destinationIndex))
+                                    .WaitForCompletion());
+
+                if (!reindexResponse.IsValid)
+                {
+                    throw new UnexpectedElasticException(ErrorMessages.UNEXPECTED_ERROR_WHILE_REINDEX_DOCUMENTS);
+                }
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw ex;
+            }
+            catch (IndexCreationException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {                
+                throw new UnexpectedElasticException(ErrorMessages.UNEXPECTED_ERROR_WHILE_REINDEX_DOCUMENTS, ex);
+            }
+        }
+
+        /// <summary>
         /// Deletes index
         /// </summary>
         /// <param name="indexName">Index to delete</param>

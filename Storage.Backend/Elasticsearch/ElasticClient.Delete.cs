@@ -224,7 +224,7 @@ namespace Elasticsearch
             }
             catch (Exception ex)
             {
-                throw new UnexpectedElasticException(ErrorMessages.UNEXPECTED_ERROR_REMOVING_BULK_DOCUMENTS_BY_QUERY(), ex);
+                throw new UnexpectedElasticException(ErrorMessages.UNEXPECTED_ERROR_REMOVING_BULK_DOCUMENTS_BY_QUERY, ex);
             }
         }
     }
