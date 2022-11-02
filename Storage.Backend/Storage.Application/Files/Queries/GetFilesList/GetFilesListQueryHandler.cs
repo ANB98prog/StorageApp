@@ -175,11 +175,34 @@ namespace Storage.Application.Files.Queries.GetFilesList
             if (request.MimeTypes != null 
                 && request.MimeTypes.Any())
             {
-                mustQueries.Add(new TermsQuery()
+                /*
+                 * Если есть подстановочный знак (wildcard *)
+                 */
+                if(request.MimeTypes.Any(m => m.Contains("*")))
                 {
-                    Field = new Field(ElasticHelper.GetFormattedPropertyName(nameof(BaseFile.MimeType))),
-                    Terms = request.MimeTypes
-                });
+                    var wildcards = new List<QueryContainer>();
+
+                    request.MimeTypes.ForEach(m => wildcards.Add(new WildcardQuery
+                    {
+                        Field = new Field(ElasticHelper.GetFormattedPropertyName(nameof(BaseFile.MimeType))),
+                        Value = m
+                    }));
+
+                    mustQueries.Add(new DisMaxQuery
+                    {
+                        TieBreaker = 0.7,
+                        Boost = 1.2,
+                        Queries = wildcards
+                    });
+                }
+                else
+                {
+                    mustQueries.Add(new TermsQuery()
+                    {
+                        Field = new Field(ElasticHelper.GetFormattedPropertyName(nameof(BaseFile.MimeType))),
+                        Terms = request.MimeTypes
+                    });
+                }                
             }
             #endregion
 
