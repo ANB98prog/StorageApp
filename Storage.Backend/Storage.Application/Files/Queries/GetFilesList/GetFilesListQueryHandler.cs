@@ -99,14 +99,14 @@ namespace Storage.Application.Files.Queries.GetFilesList
         /// <exception cref="InvalidSearchRequestException"></exception>
         private SearchRequest<BaseFile> CreateSearchQuery(GetFilesListQuery request)
         {
-            var matchQueries = new List<QueryContainer>();
+            var mustQueries = new List<QueryContainer>();
             var filterQueries = new List<QueryContainer>();
 
             #region Attributes region
             if (request.Attributes != null
                 && request.Attributes.Any())
             {
-                matchQueries.Add(new MatchQuery
+                mustQueries.Add(new MatchQuery
                 {
                     Field = new Field(ElasticHelper.GetFormattedPropertyName(nameof(BaseFile.Attributes))),
                     Query = string.Join(" ", request.Attributes),
@@ -144,7 +144,7 @@ namespace Storage.Application.Files.Queries.GetFilesList
             {
                 filterQueries.Add(new TermQuery
                 {
-                    Field = new Field(ElasticHelper.GetFormattedPropertyName(nameof(BaseFile.OwnerId)).Keyword()),
+                    Field = new Field(ElasticHelper.GetFormattedPropertyName(nameof(BaseFile.OwnerId))),
                     Value = request.OwnerId
                 });
             }
@@ -154,7 +154,7 @@ namespace Storage.Application.Files.Queries.GetFilesList
             {
                 filterQueries.Add(new TermQuery
                 {
-                    Field = new Field(ElasticHelper.GetFormattedPropertyName(nameof(BaseFile.DepartmentOwnerId)).Keyword()),
+                    Field = new Field(ElasticHelper.GetFormattedPropertyName(nameof(BaseFile.DepartmentOwnerId))),
                     Value = request.DepartmentOwnerId
                 });
             }
@@ -175,12 +175,11 @@ namespace Storage.Application.Files.Queries.GetFilesList
             if (request.MimeTypes != null 
                 && request.MimeTypes.Any())
             {
-                request.MimeTypes.ForEach(m => matchQueries.Add(new MatchQuery
+                mustQueries.Add(new TermsQuery()
                 {
                     Field = new Field(ElasticHelper.GetFormattedPropertyName(nameof(BaseFile.MimeType))),
-                    Query = Regex.Replace(m, @"/", @"//"),
-                    Operator = Operator.Or
-                }));
+                    Terms = request.MimeTypes
+                });
             }
             #endregion
 
@@ -189,7 +188,7 @@ namespace Storage.Application.Files.Queries.GetFilesList
 
             var queryContainer = new QueryContainer(new BoolQuery()
             {
-                Must = matchQueries,
+                Must = mustQueries,
                 Filter = filterQueries
             });
 
@@ -203,7 +202,7 @@ namespace Storage.Application.Files.Queries.GetFilesList
                 {
                     new FieldSort
                     {
-                        Field = new Field(ElasticHelper.GetFormattedPropertyName(nameof(BaseFile.Id)).Keyword()),
+                        Field = new Field(ElasticHelper.GetFormattedPropertyName(nameof(BaseFile.Id))),
                         Order = SortOrder.Ascending
                     }
                 }
