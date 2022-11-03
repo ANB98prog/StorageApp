@@ -3,7 +3,6 @@ using Storage.Application.Common.Exceptions;
 using Storage.Application.Common.Helpers;
 using Storage.Application.Common.Models;
 using Storage.Application.Interfaces;
-using Storage.Domain;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -263,6 +262,9 @@ namespace Storage.Application.Common.Services
                 var absolutePath = Path.Combine(_localStorageDir, filePath);
 
                 FileHelper.RemoveFile(absolutePath);
+
+                /*Необходимо удалить директорию если она остается пустой*/
+                RemoveDirectoryIfEmpty(absolutePath);
             }
             catch (ArgumentNullException ex)
             {
@@ -275,6 +277,32 @@ namespace Storage.Application.Common.Services
             catch (Exception ex)
             {
                 throw new LocalStorageException("Unexpected error occured while file removing.", ex.InnerException);
+            }
+        }
+
+        /// <summary>
+        /// Removes directory if it empty
+        /// </summary>
+        /// <param name="path">Directory path</param>
+        private void RemoveDirectoryIfEmpty(string path)
+        {
+            try
+            {
+                var directory = Path.GetDirectoryName(path);
+
+                while (!Directory.GetFiles(directory).Any()
+                        && !directory.Equals(_localStorageDir))
+                {
+                    if (!Directory.GetFiles(directory).Any())
+                    {
+                        Directory.Delete(directory);
+                    }
+
+                    directory = Directory.GetParent(directory).FullName; 
+                }
+            }
+            catch (Exception)
+            {
             }
         }
 
