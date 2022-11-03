@@ -56,7 +56,5 @@ namespace Storage.Tests.Common
 
         [CollectionDefinition("TestServicesCollection")]
         public class TestServicesCollection : ICollectionFixture<TestServicesFixture> { }
-
-
     }
 }
