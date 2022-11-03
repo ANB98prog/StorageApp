@@ -290,12 +290,12 @@ namespace Storage.Application.Common.Services
             {
                 var directory = Path.GetDirectoryName(path);
 
-                while (!Directory.GetFiles(directory).Any()
+                while (!Directory.GetFiles(directory, "*.*", SearchOption.AllDirectories).Any()
                         && !directory.Equals(_localStorageDir))
                 {
-                    if (!Directory.GetFiles(directory).Any())
+                    if (!Directory.GetFiles(directory, "*.*", SearchOption.AllDirectories).Any())
                     {
-                        Directory.Delete(directory);
+                        Directory.Delete(directory, true);
                     }
 
                     directory = Directory.GetParent(directory).FullName; 
