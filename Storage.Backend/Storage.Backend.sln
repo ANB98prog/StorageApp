@@ -23,9 +23,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elasticsearch", "Elasticsea
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elasticsearch.Tests", "Elasticsearch.Tests\Elasticsearch.Tests.csproj", "{A9133844-761A-487F-A1BD-7D0F0D9DC0FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mapper", "Mapper\Mapper.csproj", "{D5C8589E-75AF-41F1-8480-F595CF444FD4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mapper", "Mapper\Mapper.csproj", "{D5C8589E-75AF-41F1-8480-F595CF444FD4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElasticIndexer", "ElasticIndexer\ElasticIndexer.csproj", "{6A6E24DD-A712-41B4-93A0-EA260CFB9A0A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElasticIndexer", "ElasticIndexer\ElasticIndexer.csproj", "{6A6E24DD-A712-41B4-93A0-EA260CFB9A0A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TemporaryFilesScheduler", "TemporaryFilesScheduler\TemporaryFilesScheduler.csproj", "{E4429048-F291-474D-A874-BBA2ECBD591B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,6 +67,10 @@ Global
 		{6A6E24DD-A712-41B4-93A0-EA260CFB9A0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A6E24DD-A712-41B4-93A0-EA260CFB9A0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A6E24DD-A712-41B4-93A0-EA260CFB9A0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4429048-F291-474D-A874-BBA2ECBD591B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4429048-F291-474D-A874-BBA2ECBD591B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4429048-F291-474D-A874-BBA2ECBD591B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4429048-F291-474D-A874-BBA2ECBD591B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -78,6 +84,7 @@ Global
 		{A9133844-761A-487F-A1BD-7D0F0D9DC0FE} = {10D3AC0C-E5D8-46B6-BC08-37E8BCA28F97}
 		{D5C8589E-75AF-41F1-8480-F595CF444FD4} = {04B99D36-B01C-45E8-A018-C6DF5177EBBB}
 		{6A6E24DD-A712-41B4-93A0-EA260CFB9A0A} = {EE5CB35B-EA35-4972-8034-F90DA2D8E374}
+		{E4429048-F291-474D-A874-BBA2ECBD591B} = {EE5CB35B-EA35-4972-8034-F90DA2D8E374}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3887AB32-6DFA-42F6-B84F-B95C97B879BE}
