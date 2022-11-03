@@ -21,6 +21,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Storage.Application\Storage.Application.csproj" />
+		<ProjectReference Include="..\TemporaryFilesScheduler\TemporaryFilesScheduler.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

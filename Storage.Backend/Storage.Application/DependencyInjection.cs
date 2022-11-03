@@ -2,6 +2,7 @@
 using Elasticsearch.Interfaces;
 using FluentValidation;
 using MediatR;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nest;
 using Serilog;
@@ -27,27 +28,27 @@ namespace Storage.Application
         /// <param name="services">Services collection</param>
         /// <returns>Services collection</returns>
         public static IServiceCollection AddApplication(
-            this IServiceCollection services)
+            this IServiceCollection services, IConfiguration configuration)
         {
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddValidatorsFromAssemblies(new[] { Assembly.GetExecutingAssembly() });
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehaviour<,>));
-
-            services.AddServices();
+            
+            services.AddServices(configuration);
 
             return services;
         }
 
         private static IServiceCollection AddServices(
-            this IServiceCollection services)
+            this IServiceCollection services, IConfiguration configuration)
         {
-            var localStorageDir = Environment.GetEnvironmentVariable(EnvironmentVariables.LOCAL_STORAGE_DIR)
+            var localStorageDir = configuration[EnvironmentVariables.LOCAL_STORAGE_DIR]
                 ?? throw new ArgumentNullException("Local storage directory!");
 
             string temporaryFilesDir = "";
 
-            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            var env = configuration["ASPNETCORE_ENVIRONMENT"];
 
             if(env != null
                 && env.Equals("Development"))
@@ -56,17 +57,17 @@ namespace Storage.Application
             }
             else
             {
-                temporaryFilesDir = Environment.GetEnvironmentVariable(EnvironmentVariables.TEMPORARY_FILES_DIR)
+                temporaryFilesDir = configuration[EnvironmentVariables.TEMPORARY_FILES_DIR]
                 ?? throw new ArgumentNullException("Temporary files directory!");
             }
 
             services.AddTransient<IFileService>(s => new LocalFileStorageService(localStorageDir, s.GetService<ILogger>()));
 
-            var elasticUrl = Environment.GetEnvironmentVariable(EnvironmentVariables.ELASTIC_URL)
+            var elasticUrl = configuration[EnvironmentVariables.ELASTIC_URL]
                 ?? throw new ArgumentNullException("Elastic url");
-            var elasticUser = Environment.GetEnvironmentVariable(EnvironmentVariables.ELASTIC_USER)
+            var elasticUser = configuration[EnvironmentVariables.ELASTIC_USER]
                 ?? throw new ArgumentNullException("Elastic user");
-            var elasticPassword = Environment.GetEnvironmentVariable(EnvironmentVariables.ELASTIC_PASSWORD)
+            var elasticPassword = configuration[EnvironmentVariables.ELASTIC_PASSWORD]
                 ?? throw new ArgumentNullException("Elastic password");
 
             var settings = new ConnectionSettings(new Uri(elasticUrl))

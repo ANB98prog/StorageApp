@@ -12,7 +12,10 @@ using Storage.WebApi.Middleware;
 using Storage.WebApi.Services;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using TemporaryFilesScheduler.Schedulers;
+using TemporaryFilesScheduler.Scheduling;
 using Constants = Storage.WebApi.Common.Constants;
+using ILogger = Serilog.ILogger;
 
 namespace Storage.WebApi
 {
@@ -20,17 +23,11 @@ namespace Storage.WebApi
     {
         public static void Main(string[] args)
         {
-            var environment = Environment.GetEnvironmentVariable(EnvironmentVariables.ASPNETCORE_ENVIRONMENT);
-            var configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", optional: false,
-                reloadOnChange: true)
-                .AddJsonFile($"appsettings.{environment}.json", optional: true)
-                .Build();
-
             var builder = WebApplication.CreateBuilder(args);
 
-            ConfigureLogging(environment, configuration);
+            ConfigureLogging(builder.Configuration);
             ConfigureAppServices(builder.Services, builder.Configuration);
+            ConfigureScheduledTasks(builder.Services, builder.Configuration);
 
             try
             {
@@ -60,12 +57,14 @@ namespace Storage.WebApi
             }
         }
 
-        private static void ConfigureLogging(string environment, IConfigurationRoot configuration)
+        private static void ConfigureLogging(IConfigurationRoot configuration)
         {
-            var elasticUrl = Environment.GetEnvironmentVariable(EnvironmentVariables.ELASTIC_URL);
-            var elasticUser = Environment.GetEnvironmentVariable(EnvironmentVariables.ELASTIC_USER);
-            var elasticPass = Environment.GetEnvironmentVariable(EnvironmentVariables.ELASTIC_PASSWORD);
-            var appName = Environment.GetEnvironmentVariable(EnvironmentVariables.APPLICATION_NAME) ?? configuration["AppName"];
+            var environment = configuration[EnvironmentVariables.ASPNETCORE_ENVIRONMENT] 
+                ?? throw new ArgumentNullException("ASPNETCORE_ENVIRONMENT");
+            var elasticUrl = configuration[EnvironmentVariables.ELASTIC_URL];
+            var elasticUser = configuration[EnvironmentVariables.ELASTIC_USER];
+            var elasticPass = configuration[EnvironmentVariables.ELASTIC_PASSWORD];
+            var appName = configuration[EnvironmentVariables.APPLICATION_NAME] ?? configuration["AppName"];
 
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
@@ -98,7 +97,7 @@ namespace Storage.WebApi
                     opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
 
-            services.AddApplication();
+            services.AddApplication(configuration);
 
             var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => a.GetName().Name.StartsWith("Storage."));
 
@@ -144,5 +143,15 @@ namespace Storage.WebApi
             services.AddHttpContextAccessor();
         }
 
+        private static void ConfigureScheduledTasks(IServiceCollection services, IConfiguration configuration)
+        {
+            // Add scheduled tasks & scheduler
+            services.AddSingleton<IScheduledTask>(s => new TempFilesRemoveScheduler(Log.Logger, new TimeSpan(0, 1, 0), new TimeSpan(0, 0, 30), "E:\\≈загрузки\\Temp"));
+            services.AddScheduler((sender, args) =>
+            {
+                Log.Logger.Error($"Scheduler error: {args.Exception.Message}", args.Exception);
+                args.SetObserved();
+            });
+        }
     }
 }
