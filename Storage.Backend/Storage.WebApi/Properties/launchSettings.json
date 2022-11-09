@@ -8,7 +8,7 @@
         "LOCAL_STORAGE_DIR": "E:\\Programs\\nginx\\html\\media",
         "ELASTIC_URL": "http://localhost:9200",
         "ELASTIC_USER": "elastic",
-        "ELASTIC_PASSWORD": "TsrxH2l62Q90Dfdyi0Nd"
+        "ELASTIC_PASSWORD": ""
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5011"
