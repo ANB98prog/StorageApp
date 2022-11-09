@@ -44,8 +44,11 @@ namespace TemporaryFilesScheduler.Schedulers
         {
             try
             {
-                RemoveTemporaryFiles();
-                RemoveEmptyDirectories();
+                if (Directory.Exists(_tempFilesPath))
+                {
+                    RemoveTemporaryFiles();
+                    RemoveEmptyDirectories(); 
+                }
             }
             catch (Exception ex)
             {
@@ -90,7 +93,7 @@ namespace TemporaryFilesScheduler.Schedulers
             {
                 throw new ArgumentNullException("Temp files path");
             }
-
+            
             return Directory.GetFiles(_tempFilesPath, "*.*", SearchOption.AllDirectories);
         }
 

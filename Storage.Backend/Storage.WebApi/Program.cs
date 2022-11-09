@@ -145,8 +145,23 @@ namespace Storage.WebApi
 
         private static void ConfigureScheduledTasks(IServiceCollection services, IConfiguration configuration)
         {
+            string temporaryFilesDir = "";
+
+            var env = configuration["ASPNETCORE_ENVIRONMENT"];
+
+            if (env != null
+                && env.Equals("Development"))
+            {
+                temporaryFilesDir = Path.Combine(Directory.GetCurrentDirectory(), "temp");
+            }
+            else
+            {
+                temporaryFilesDir = configuration[EnvironmentVariables.TEMPORARY_FILES_DIR]
+                ?? throw new ArgumentNullException("Temporary files directory!");
+            }
+
             // Add scheduled tasks & scheduler
-            services.AddSingleton<IScheduledTask>(s => new TempFilesRemoveScheduler(Log.Logger, new TimeSpan(0, 1, 0), new TimeSpan(0, 0, 30), "E:\\≈загрузки\\Temp"));
+            services.AddSingleton<IScheduledTask>(s => new TempFilesRemoveScheduler(Log.Logger, new TimeSpan(0, 1, 0), new TimeSpan(0, 0, 30), temporaryFilesDir));
             services.AddScheduler((sender, args) =>
             {
                 Log.Logger.Error($"Scheduler error: {args.Exception.Message}", args.Exception);
