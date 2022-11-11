@@ -1,9 +1,9 @@
 ﻿using Storage.Application.Common.Exceptions;
 using Storage.WebApi.Common.Exceptions;
 using System.Net;
-using System.Runtime.InteropServices;
 using System.Text.Json;
 using ValidationException = FluentValidation.ValidationException;
+using ILogger = Serilog.ILogger;
 
 namespace Storage.WebApi.Middleware
 {
@@ -14,8 +14,13 @@ namespace Storage.WebApi.Middleware
     {
         private readonly RequestDelegate _next;
 
-        public CustomExceptionHandlerMiddleware(RequestDelegate next) => 
+        private readonly ILogger _logger;
+
+        public CustomExceptionHandlerMiddleware(Serilog.ILogger logger, RequestDelegate next)
+         {
+            _logger = logger;
             _next = next;
+        }
 
         /// <summary>
         /// Invokes next request in middleware
@@ -30,7 +35,7 @@ namespace Storage.WebApi.Middleware
             }
             catch (Exception ex)
             {
-
+                _logger.Error(ex, "Error occured while request processing");
                 await HandleExceptionAsync(context, ex);
             }
         }
@@ -44,6 +49,7 @@ namespace Storage.WebApi.Middleware
         {
             var code = HttpStatusCode.InternalServerError;
             var result = string.Empty;
+
             switch (exception)
             {
                 case ValidationException validationException:
@@ -71,7 +77,6 @@ namespace Storage.WebApi.Middleware
                     code = HttpStatusCode.InternalServerError;
                     result = JsonSerializer.Serialize(new UserfriendlyException(commandExecutionException.UserFriendlyMessage));
                     break;
-
             }
 
             context.Response.ContentType = "application/json";

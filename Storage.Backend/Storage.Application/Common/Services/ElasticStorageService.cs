@@ -3,7 +3,6 @@ using Elasticsearch.Exceptions;
 using Elasticsearch.Interfaces;
 using Serilog;
 using Storage.Application.Common.Exceptions;
-using Storage.Application.Common.Models;
 using Storage.Application.Interfaces;
 using Storage.Domain;
 using System;
@@ -67,12 +66,23 @@ namespace Storage.Application.Common.Services
             {
                 _logger.Information($"Try to add data to elastic. Data type: {typeof(T)}");
 
-                if(data == null)
+                if (data == null)
                 {
                     throw new ArgumentNullException(nameof(data));
                 }
 
-                var result = await _elasticClient.AddDocumentAsync<T>(_index, data);                               
+                if (!await _elasticClient.IndexExistsAsync(_index))
+                {
+                    await _elasticClient
+                            .CreateIndexAsync(_index, d => d
+                                .Map<BaseFile>(m => m
+                                    .Properties(ps => ps
+                                        .Keyword(k => k
+                                            .Name(n => n.MimeType)))
+                                            .AutoMap()));
+                }
+
+                var result = await _elasticClient.AddDocumentAsync<T>(_index, data);
 
                 _logger.Information("Data added to elastic successfully.");
 
@@ -107,15 +117,15 @@ namespace Storage.Application.Common.Services
                 }
 
                 var result = await _elasticClient.GetByIdAsync<T>(_index, id.ToString());
-                
-                if(result == null)
+
+                if (result == null)
                 {
                     _logger.Information($"Info for file with id: '{id}' not found!");
                 }
                 else
                 {
                     _logger.Information("Info successfully got.");
-                }                
+                }
 
                 return result;
             }
@@ -242,7 +252,7 @@ namespace Storage.Application.Common.Services
                 if (ids != null
                     && ids.Any())
                 {
-                    await _elasticClient.DeleteBulkByIdAsync(_index, ids.Select(i => i.ToString()));                    
+                    await _elasticClient.DeleteBulkByIdAsync(_index, ids.Select(i => i.ToString()));
                 }
 
                 return true;

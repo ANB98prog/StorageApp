@@ -13,7 +13,7 @@ namespace ElasticIndexer
              */
             var elasticUrl = "http://localhost:9200";
             var elasticUser = "elastic";
-            var elasticPassword = "";
+            var elasticPassword = "elastic";
 
             var settings = new ConnectionSettings(new Uri(elasticUrl))
                 .EnableDebugMode()
@@ -25,9 +25,9 @@ namespace ElasticIndexer
 
             var indexBaseFiles = new IndexBaseFile(client);
 
-            indexBaseFiles.Index("temp");
+            indexBaseFiles.Index(ElasticIndices.FILES_INDEX);
 
-            indexBaseFiles.Reindex(ElasticIndices.FILES_INDEX, "temp");
+            //indexBaseFiles.Reindex(ElasticIndices.FILES_INDEX, "temp");
         }
 
 

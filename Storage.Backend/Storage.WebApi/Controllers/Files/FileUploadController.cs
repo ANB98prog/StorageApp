@@ -34,7 +34,7 @@ namespace Storage.WebApi.Controllers.Files
 
             var fileId = await Mediator.Send(command);
 
-            return Created("", fileId);
+            return Created("", fileId);                       
         }
 
         /// <summary>
