@@ -25,7 +25,7 @@ namespace Elasticsearch.Exceptions
         public const string UNEXPECTED_ERROR_SEARCHING_DOCUMENTS = "Unexpected error occured while search documents by query.";
         public const string UNEXPECTED_ERROR_COUNTING_DOCUMENTS = "Unexpected error occured while count documents.";
         public const string UNEXPECTED_ERROR_WHILE_REINDEX_DOCUMENTS = "Unexpected error while reindex documents.";
-
+        public const string UNEXPECTED_ERROR_WHILE_CHECK_INDEX_EXISTENCE = "Unexpected error while check index existence.";
         public static string ERROR_UPDATE_BY_ID_DOCUMENT(string indexName, string id) => $"Error occured while update document {id} from {indexName} index.";
         public const string ERROR_BULK_UPDATE_DOCUMENTS = "Error occured while bulk update.";
     }

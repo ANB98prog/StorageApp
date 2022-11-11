@@ -28,6 +28,15 @@ namespace Elasticsearch.Interfaces
         public Task CreateIndexAsync(string indexName, CancellationToken cancellationToken = default);
 
         /// <summary>
+        /// Checks index existence
+        /// </summary>
+        /// <param name="index">Index</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="UnexpectedElasticException"></exception>
+        /// <returns>Index existence</returns>
+        public Task<bool> IndexExistsAsync(string index);
+
+        /// <summary>
         /// Reindexes documents
         /// </summary>
         /// <param name="sourceIndex">Source index</param>

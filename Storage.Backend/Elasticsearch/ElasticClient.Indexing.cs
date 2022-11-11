@@ -12,6 +12,34 @@ namespace Elasticsearch
     public partial class ElasticClient
     {
         /// <summary>
+        /// Checks index existence
+        /// </summary>
+        /// <param name="index">Index</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="UnexpectedElasticException"></exception>
+        /// <returns>Index existence</returns>
+        public async Task<bool> IndexExistsAsync(string index)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(index))
+                    throw new ArgumentNullException(nameof(index));
+
+                var exists = await _client.Indices.ExistsAsync(index);
+
+                return exists.Exists;
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new UnexpectedElasticException(ErrorMessages.UNEXPECTED_ERROR_WHILE_CHECK_INDEX_EXISTENCE, ex);
+            }
+        }
+
+        /// <summary>
         /// Adds document to index
         /// </summary>
         /// <typeparam name="TDocument">Document type</typeparam>

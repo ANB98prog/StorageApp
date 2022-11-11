@@ -117,7 +117,7 @@ namespace Elasticsearch
                 throw new UnexpectedElasticException(ErrorMessages.ERROR_CREATING_INDEX(index), ex);
             }
         }
-
+        
         /// <summary>
         /// Reindexes documents
         /// </summary>

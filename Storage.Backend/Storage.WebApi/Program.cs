@@ -73,6 +73,7 @@ namespace Storage.WebApi
                 .Enrich.WithMachineName()
                 .WriteTo.Console()
                 .WriteTo.Debug()
+                .WriteTo.File("StorageWebApi-.txt", rollingInterval: RollingInterval.Day)
                 .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elasticUrl))
                 {
                     ModifyConnectionSettings = x => x.BasicAuthentication(elasticUser, elasticPass),
