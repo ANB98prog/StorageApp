@@ -143,6 +143,16 @@ namespace Storage.Application.Common.Services
         {
             try
             {
+                try
+                {
+                    var capture2 = new VideoCapture(filePath);
+                    var image2 = new Mat();
+                }
+                catch (System.Exception ex)
+                {                    
+                    _logger.Fatal("###########", ex);
+                }
+
                 var capture = new VideoCapture(filePath);
                 var image = new Mat();
 
@@ -174,6 +184,7 @@ namespace Storage.Application.Common.Services
             }
             catch (Exception ex)
             {
+                _logger.Error(ErrorMessages.UNEXPECTED_ERROR_OCCURED_WHILE_VIDEO_SPLITTING, ex);
                 throw new VideoFilesServiceException(ErrorMessages.UNEXPECTED_ERROR_OCCURED_WHILE_VIDEO_SPLITTING, ex);
             }
         }
