@@ -70,6 +70,9 @@ namespace Storage.Application
             var elasticPassword = configuration[EnvironmentVariables.ELASTIC_PASSWORD]
                 ?? throw new ArgumentNullException("Elastic password");
 
+            var ffmpegExecutablePath = configuration[EnvironmentVariables.FFMPEG_EXECUTABLE_PATH]
+                ?? Constants.FFMPEG_EXECUTABLE_DEFAULT_PATH;
+
             var settings = new ConnectionSettings(new Uri(elasticUrl))
                                 .BasicAuthentication(elasticUser, elasticPassword)
                                 .EnableApiVersioningHeader();
@@ -85,7 +88,7 @@ namespace Storage.Application
 
             services.AddTransient<IFileHandlerService>(s => new FileHandlerService(temporaryFilesDir, s.GetService<ILogger>(), s.GetService<IMapper>(), s.GetService<IFileService>(), s.GetService<IStorageDataService>()));
 
-            services.AddTransient<IVideoFilesService>(s => new VideoFilesService(temporaryFilesDir, s.GetService<ILogger>(), s.GetService<IFileService>(), s.GetService<IStorageDataService>()));
+            services.AddTransient<IVideoFilesService>(s => new VideoFilesService(temporaryFilesDir, s.GetService<ILogger>(), s.GetService<IFileService>(), s.GetService<IStorageDataService>(), ffmpegExecutablePath));
 
             return services;
         }

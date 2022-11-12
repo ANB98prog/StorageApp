@@ -6,8 +6,10 @@ using Storage.Application.Common.Models;
 using Storage.Application.Interfaces;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Xabe.FFmpeg;
 
 namespace Storage.Application.Common.Services
 {
@@ -39,11 +41,23 @@ namespace Storage.Application.Common.Services
         /// <param name="logger">Logger</param>
         /// <param name="fileService">File service</param>
         /// <param name="storageDataService">Elastic storage service</param>
-        public VideoFilesService(string tempDir, ILogger logger, IFileService fileService, IStorageDataService storageDataService)
+        public VideoFilesService(string tempDir, ILogger logger, IFileService fileService, IStorageDataService storageDataService, string ffmpegExecutablePath)
         {
             _logger = logger;
             _fileService = fileService;
             _storageDataService = storageDataService;
+
+            if(string.IsNullOrWhiteSpace(ffmpegExecutablePath))
+            {
+                throw new ArgumentNullException(nameof(ffmpegExecutablePath));
+            }    
+            else if(!Directory.Exists(ffmpegExecutablePath))
+            {
+                throw new ArgumentException("FFmpeg executables path are not exists!");
+            }
+
+            // Необходимо указать путь к исполняемым файлам ffmpeg
+            FFmpeg.SetExecutablesPath(ffmpegExecutablePath);
 
             _tempDir = tempDir;
 
@@ -68,6 +82,10 @@ namespace Storage.Application.Common.Services
                 {
                     throw new VideoFilesServiceException(ErrorMessages.FRAMES_STEP_LESS_THAN_ZERO_ERROR_MESSAGE);
                 }
+                else if(step == 0)
+                {
+                    step = 1;
+                }
 
                 var fileInfo = await _storageDataService.GetFileInfoAsync<ExtendedFileInfoModel>(videoFileId);
 
@@ -85,7 +103,7 @@ namespace Storage.Application.Common.Services
                 /*Необходимо получить путь к файлу*/
                 var filePath = _fileService.GetFileAbsolutePath(fileInfo.FilePath);
 
-                var cutted = CutVideo(filePath, step);
+                var cutted = await CutVideoAsync(filePath, step);
                 var cuttedArchive = Directory.GetParent(cutted).FullName;
 
                 try
@@ -139,46 +157,25 @@ namespace Storage.Application.Common.Services
         /// <param name="step">Frame step</param>
         /// <returns>Path to frames</returns>
         /// <exception cref="VideoFilesServiceException"></exception>
-        private string CutVideo(string filePath, int step)
+        private async Task<string> CutVideoAsync(string filePath, int step)
         {
             try
             {
-                try
-                {
-                    var capture2 = new VideoCapture(filePath);
-                    var image2 = new Mat();
-                }
-                catch (System.Exception ex)
-                {                    
-                    _logger.Fatal("###########", ex);
-                }
-
-                var capture = new VideoCapture(filePath);
-                var image = new Mat();
-
                 var pathToSave = Path.Combine(_tempDir, Path.GetRandomFileName().Replace(".", string.Empty));
 
                 if (!Directory.Exists(pathToSave))
                     Directory.CreateDirectory(pathToSave);
 
-                var i = 0;
-                var imageCounter = 0;
-                var currentStep = i;
-                while (capture.IsOpened())
-                {
-                    capture.Read(image);
-                    if (image.Empty()) break;
+                Func<string, string> outputFileNameBuilder = (number) => { return $"\"{Path.Combine(pathToSave, $"file_{number}.png")}\""; };
+                IMediaInfo info = await FFmpeg.GetMediaInfo(filePath);
+                IVideoStream? videoStream = info.VideoStreams.First()?.SetCodec(VideoCodec.png);
 
-                    if (currentStep == 0 
-                        || currentStep == i)
-                    {
-                        image.SaveImage(Path.Combine(pathToSave, $"img_{imageCounter}.jpg"));
-                        imageCounter++;
-                        currentStep += step;
-                    }
+                var splitQuery = FFmpeg.Conversions.New()
+                                    .AddStream(videoStream)
+                                        .ExtractEveryNthFrame(step, outputFileNameBuilder)
+                                            .Build();
 
-                    i++;
-                }
+                await FFmpeg.Conversions.New().Start(splitQuery);
 
                 return pathToSave;
             }

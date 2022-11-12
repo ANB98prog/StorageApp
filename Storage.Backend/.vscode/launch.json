@@ -1,6 +1,6 @@
 {
     "version": "0.2.0",
-    "configurations": [    
+    "configurations": [
         {
             "name": "Storage.WebApi",
             "type": "coreclr",
@@ -35,11 +35,5 @@
             "cwd": "${workspaceFolder}/ElasticIndexer",
             "stopAtEntry": false
         }
-        /*,
-        {
-            "name": ".NET Core Attach",
-            "type": "coreclr",
-            "request": "attach"
-        }*/
     ]
 }

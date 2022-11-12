@@ -57,5 +57,10 @@ namespace Storage.Application.Common
             "image/svg+xml",
             "image/webp"
         };
+
+        /// <summary>
+        /// Ffmpeg default executable path
+        /// </summary>
+        public const string FFMPEG_EXECUTABLE_DEFAULT_PATH = "/usr/bin";
     }
 }

@@ -39,5 +39,10 @@
         /// Environment variable name that stores elastic password
         /// </summary>
         public const string ELASTIC_PASSWORD = "ELASTIC_PASSWORD";
+
+        /// <summary>
+        /// Environment variable name that stores path to ffmpeg executable
+        /// </summary>
+        public const string FFMPEG_EXECUTABLE_PATH = "FFMPEG_EXECUTABLE_PATH";
     }
 }
