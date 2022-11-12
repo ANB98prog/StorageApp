@@ -51,7 +51,7 @@ namespace Storage.Tests.VideoFilesServiceTests
                 .UploadTemporaryFileAsync(It.IsAny<FileStream>(), CancellationToken.None))
                 .ReturnsAsync(expectedResult);
 
-            var result = await videoService.SplitIntoFramesAsync(fileId, 0, CancellationToken.None);
+            var result = await videoService.SplitIntoFramesAsync(fileId, 15, CancellationToken.None);
 
             Assert.NotNull(result);
             Assert.Equal(expectedResult.RelativePath, result);

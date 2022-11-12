@@ -45,7 +45,7 @@ namespace Storage.Tests.Common
 
         public IVideoFilesService GetVideoService(Mock<IFileService> fileServiceMock)
         {
-            return new VideoFilesService(TestConstants.StorageDirectory, new Mock<ILogger>().Object, fileServiceMock.Object, Kernel.Get<IStorageDataService>());
+            return new VideoFilesService(TestConstants.StorageDirectory, new Mock<ILogger>().Object, fileServiceMock.Object, Kernel.Get<IStorageDataService>(), "/usr/bin");
         }
 
         public void Dispose()
