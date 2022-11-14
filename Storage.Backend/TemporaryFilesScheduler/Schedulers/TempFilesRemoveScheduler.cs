@@ -46,6 +46,8 @@ namespace TemporaryFilesScheduler.Schedulers
             {
                 if (Directory.Exists(_tempFilesPath))
                 {
+                    _logger.Information($"Try to remove temp files in {_tempFilesPath}");
+
                     RemoveTemporaryFiles();
                     RemoveEmptyDirectories(); 
                 }
@@ -63,12 +65,16 @@ namespace TemporaryFilesScheduler.Schedulers
         {
             var files = GetTempFiles();
 
+            _logger.Information($"Temporary files count: {files.Count()}");
+
             foreach (var file in files)
             {
                 try
                 {
                     var fileInfo = new FileInfo(file);
                     var fileAge = DateTime.UtcNow - fileInfo.CreationTimeUtc;
+
+                    _logger.Information($"File age: `{fileAge}`");
 
                     if (fileAge >= _fileMaxAge)
                     {

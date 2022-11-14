@@ -36,13 +36,24 @@ services:
     image: storage:ubuntu20.04
     build: .
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - LOCAL_STORAGE_DIR=/app/Temp
+      - ASPNETCORE_ENVIRONMENT=Production
+      - LOCAL_STORAGE_DIR=/app/data/media
       - ELASTIC_URL=http://elasticsearch:9200
       - ELASTIC_USER=${ELASTIC_USER}
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - TEMPORARY_FILES_DIR=${TEMPORARY_FILES_DIR}
     ports:
       - "5011:80"
+    volumes:
+      - ${LOCAL_STORAGE_DIR}:/app/data
     depends_on:
       - elasticsearch
-    #nginx
+  nginx:
+    container_name: nginx-storage
+    image: nginx:alpine
+    ports:
+      - "5080:80"
+    volumes:
+      - ${LOCAL_STORAGE_DIR}:/usr/share/nginx/html
+    depends_on:
+      - storage
