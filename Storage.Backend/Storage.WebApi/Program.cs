@@ -148,7 +148,7 @@ namespace Storage.WebApi
         {
             string temporaryFilesDir = "";
 
-            var env = configuration["ASPNETCORE_ENVIRONMENT"];
+            var env = configuration[EnvironmentVariables.ASPNETCORE_ENVIRONMENT];
 
             if (env != null
                 && env.Equals("Development"))
@@ -161,8 +161,26 @@ namespace Storage.WebApi
                 ?? throw new ArgumentNullException("Temporary files directory!");
             }
 
+            Log.Information("Create Scheduled tasks");
+
+            var schedule = Constants.REMOVE_DEFAULT_TIME;
+
+            if(!string.IsNullOrWhiteSpace(EnvironmentVariables.TEMPORARY_FILES_REMOVE_SCHEDULE_TIME) 
+                    && TimeSpan.TryParse(configuration[EnvironmentVariables.TEMPORARY_FILES_REMOVE_SCHEDULE_TIME], out var parsedSchedule))
+            {
+                schedule = parsedSchedule;
+            }
+
+            var maxFileAge = Constants.REMOVE_DEFAULT_MAX_FILE_AGE;
+
+            if(!string.IsNullOrWhiteSpace(EnvironmentVariables.TEMPORARY_FILE_MAX_AGE) 
+                    && TimeSpan.TryParse(configuration[EnvironmentVariables.TEMPORARY_FILE_MAX_AGE], out var parsedMaxAge))
+            {
+                maxFileAge = parsedMaxAge;
+            }
+
             // Add scheduled tasks & scheduler
-            services.AddSingleton<IScheduledTask>(s => new TempFilesRemoveScheduler(Log.Logger, new TimeSpan(0, 1, 0), new TimeSpan(0, 0, 30), temporaryFilesDir));
+            services.AddSingleton<IScheduledTask>(s => new TempFilesRemoveScheduler(Log.Logger, schedule, maxFileAge, temporaryFilesDir));
             services.AddScheduler((sender, args) =>
             {
                 Log.Logger.Error($"Scheduler error: {args.Exception.Message}", args.Exception);

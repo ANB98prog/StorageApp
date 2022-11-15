@@ -44,10 +44,10 @@ namespace TemporaryFilesScheduler.Schedulers
         {
             try
             {
+                _logger.Information($"Try to remove temp files in {_tempFilesPath}.");
+
                 if (Directory.Exists(_tempFilesPath))
                 {
-                    _logger.Information($"Try to remove temp files in {_tempFilesPath}");
-
                     RemoveTemporaryFiles();
                     RemoveEmptyDirectories(); 
                 }

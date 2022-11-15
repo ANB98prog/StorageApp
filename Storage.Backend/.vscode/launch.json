@@ -15,11 +15,14 @@
                 "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
             },
             "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_ENVIRONMENT": "Production",
+                "TEMPORARY_FILES_DIR":"/home/proger/Рабочий стол/Bakaev/Projects/LocalStorage/media/temp",
                 "LOCAL_STORAGE_DIR": "/home/proger/Рабочий стол/Bakaev/Projects/LocalStorage",
                 "ELASTIC_URL":"http://localhost:9200",
                 "ELASTIC_USER":"elastic",
-                "ELASTIC_PASSWORD":"elastic"
+                "ELASTIC_PASSWORD":"elastic",
+                "TEMPORARY_FILES_REMOVE_SCHEDULE_TIME":"1:00:00",
+                "TEMPORARY_FILE_MAX_AGE":"23:59:00"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"

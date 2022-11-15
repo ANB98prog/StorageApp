@@ -26,6 +26,16 @@
         public const string TEMPORARY_FILES_DIR = "TEMPORARY_FILES_DIR";
 
         /// <summary>
+        /// Environment variable name that stores temporary files remove schedule time 
+        /// </summary>
+        public const string TEMPORARY_FILES_REMOVE_SCHEDULE_TIME = "TEMPORARY_FILES_REMOVE_SCHEDULE_TIME";
+
+        /// <summary>
+        /// Environment variable name that stores temporary file max age 
+        /// </summary>
+        public const string TEMPORARY_FILE_MAX_AGE = "TEMPORARY_FILE_MAX_AGE";
+
+        /// <summary>
         /// Environment variable name that stores elastic url
         /// </summary>
         public const string ELASTIC_URL = "ELASTIC_URL";

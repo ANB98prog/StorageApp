@@ -4,7 +4,6 @@ WORKDIR /source
 COPY . .
 
 #build
-RUN dotnet build Storage.Backend.sln
 RUN dotnet build Storage.WebApi/Storage.WebApi.csproj /property:GenerateFullPaths=true -o /app --no-self-contained
 
 FROM ubuntu-focal
