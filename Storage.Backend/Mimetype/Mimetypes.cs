@@ -44,6 +44,9 @@ namespace Mimetype
 
             {"video/mp4", new List<string>{ ".mp4" }},
             {"video/mpeg", new List<string>{ ".mpeg" }},
+            {"video/x-msvideo", new List<string>{ ".avi" }},
+            {"video/x-ms-wmv", new List<string>{ ".wmv" }},
+            {"video/webm", new List<string>{ ".webm" }},
 
             {"audio/wav", new List<string>{ ".wav" }},
             {"audio/mpeg", new List<string>{ ".mp3" }},
