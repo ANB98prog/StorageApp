@@ -39,7 +39,7 @@ namespace Storage.Application.Common.Services
 
             if (!Directory.Exists(localStorageDir))
             {
-                throw new DirectoryNotFoundException("Storage directory should exist!");
+                Directory.CreateDirectory(localStorageDir);
             }
 
             _logger = logger;
