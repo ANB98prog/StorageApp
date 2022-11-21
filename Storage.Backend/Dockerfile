@@ -1,4 +1,4 @@
-FROM ubuntu-focal-sdk AS builder
+FROM mcr.microsoft.com/dotnet/sdk:6.0-focal AS builder
 
 WORKDIR /source
 COPY . .
@@ -6,11 +6,7 @@ COPY . .
 #build
 RUN dotnet build Storage.WebApi/Storage.WebApi.csproj /property:GenerateFullPaths=true -o /app --no-self-contained
 
-FROM ubuntu-focal
-
-#Need to install ffmpeg
-RUN apt update && apt upgrade
-RUN apt install -y ffmpeg
+FROM dotnet/runtime/ffmpeg:6.0-focal
 
 WORKDIR /app
 COPY --from=builder /app ./
