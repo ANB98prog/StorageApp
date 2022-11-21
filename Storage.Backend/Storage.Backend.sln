@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32825.248
@@ -6,6 +6,8 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{04B99D36-B01C-45E8-A018-C6DF5177EBBB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{EE5CB35B-EA35-4972-8034-F90DA2D8E374}"
+	ProjectSection(SolutionItems) = preProject
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{5CFF1647-AE5A-40D9-A83A-B4F5BECB0050}"
 EndProject
@@ -28,6 +30,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElasticIndexer", "ElasticIndexer\ElasticIndexer.csproj", "{6A6E24DD-A712-41B4-93A0-EA260CFB9A0A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TemporaryFilesScheduler", "TemporaryFilesScheduler\TemporaryFilesScheduler.csproj", "{E4429048-F291-474D-A874-BBA2ECBD591B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mimetypes", "Mimetypes\Mimetypes.csproj", "{DDFBF462-ECC8-47C8-8513-A589AE8437C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mimetypes", "Mimetypes1\Mimetypes.csproj", "{3EB575B9-61C0-4B8B-B2F0-6C0F594E9B3E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,11 +77,21 @@ Global
 		{E4429048-F291-474D-A874-BBA2ECBD591B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4429048-F291-474D-A874-BBA2ECBD591B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4429048-F291-474D-A874-BBA2ECBD591B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDFBF462-ECC8-47C8-8513-A589AE8437C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDFBF462-ECC8-47C8-8513-A589AE8437C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDFBF462-ECC8-47C8-8513-A589AE8437C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDFBF462-ECC8-47C8-8513-A589AE8437C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EB575B9-61C0-4B8B-B2F0-6C0F594E9B3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EB575B9-61C0-4B8B-B2F0-6C0F594E9B3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EB575B9-61C0-4B8B-B2F0-6C0F594E9B3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EB575B9-61C0-4B8B-B2F0-6C0F594E9B3E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{3EB575B9-61C0-4B8B-B2F0-6C0F594E9B3E} = {EE5CB35B-EA35-4972-8034-F90DA2D8E374}
+		{DDFBF462-ECC8-47C8-8513-A589AE8437C0} = {EE5CB35B-EA35-4972-8034-F90DA2D8E374}
 		{AD8BC758-D0FB-4900-8CD6-6233AEC4EA3D} = {04B99D36-B01C-45E8-A018-C6DF5177EBBB}
 		{2C1B0BDF-D20C-4459-936D-61BD8BBD426B} = {04B99D36-B01C-45E8-A018-C6DF5177EBBB}
 		{A80AA89D-2DA3-4446-9509-F39D067DE103} = {5CFF1647-AE5A-40D9-A83A-B4F5BECB0050}
