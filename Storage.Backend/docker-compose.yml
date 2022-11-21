@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.4.2
+    image: elasticsearch:8.4.2
     container_name: elasticsearch-storage
     restart: always
     environment:
@@ -23,7 +23,7 @@ services:
       - 9200:9200
   kibana:
     container_name: kibana-storage
-    image: docker.elastic.co/kibana/kibana:8.4.3
+    image: kibana:8.4.3
     restart: always
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
@@ -36,7 +36,7 @@ services:
     image: storage:ubuntu20.04
     build: .
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_ENVIRONMENT=Development
       - LOCAL_STORAGE_DIR=/app/data/media
       - ELASTIC_URL=http://elasticsearch:9200
       - ELASTIC_USER=${ELASTIC_USER}
@@ -48,11 +48,18 @@ services:
       - "5011:80"
     volumes:
       - ${LOCAL_STORAGE_DIR}:/app/data
+      - ${LOGS_DIR}:/app/logs
     depends_on:
       - elasticsearch
+  storage-front:
+    container_name: storage-front
+    image: storage-front:latest
+    ports:
+      - 3000:3000  
   nginx:
     container_name: nginx-storage
-    image: nginx:alpine
+    #image: nginx:alpine
+    image: nginx-storage:latest
     ports:
       - "5080:80"
     volumes:
