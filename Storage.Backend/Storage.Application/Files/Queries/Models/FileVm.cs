@@ -50,7 +50,7 @@ namespace Storage.Application.Files.Queries.Models
             get
             {
                 if (!string.IsNullOrWhiteSpace(OriginalFileName)
-                    && MimeTypes.TryGetMimeType(OriginalFileName, out var mimeType))
+                    && Mimetype.Mimetype.TryGetMimeType(OriginalFileName, out var mimeType))
                 {
                     return mimeType;
                 }

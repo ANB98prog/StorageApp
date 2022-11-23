@@ -369,7 +369,7 @@ namespace Storage.Application.Common.Helpers
         public static string GetFileMimeType(string fileName)
         {
             if (!string.IsNullOrWhiteSpace(fileName)
-                && MimeTypes.TryGetMimeType(fileName, out var mimeType))
+                && Mimetype.Mimetype.TryGetMimeType(fileName, out var mimeType))
             {
                 return mimeType;
             }

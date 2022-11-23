@@ -23,7 +23,7 @@ namespace Storage.Application.Files.Commands.UploadFile
             {
                 if (File != null
                     && !string.IsNullOrEmpty(File.FileName)
-                        && MimeTypes.TryGetMimeType(File.FileName, out var mimeType))
+                        && Mimetype.Mimetype.TryGetMimeType(File.FileName, out var mimeType))
                 {
                     return mimeType;
                 }

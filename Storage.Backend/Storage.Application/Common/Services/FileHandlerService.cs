@@ -233,12 +233,12 @@ namespace Storage.Application.Common.Services
 
                 foreach (var mimetype in mimeTypes)
                 {
-                    supportedExtensions.AddRange(MimeTypes.GetMimeTypeExtensions(mimetype)); 
+                    supportedExtensions.AddRange(Mimetype.Mimetype.GetMimeTypeExtensions(mimetype)); 
                 }
 
                 foreach (var file in files)
                 {
-                    var extension = Path.GetExtension(file).TrimStart('.');
+                    var extension = Path.GetExtension(file);
 
                     if (supportedExtensions.Contains(extension))
                     {
