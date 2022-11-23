@@ -8,17 +8,18 @@ services:
       - xpack.security.enabled=false
       - discovery.type=single-node
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-      nofile:
-        soft: 65536
-        hard: 65536
+      # Limit 8 Gb
+      - MEM_LIMIT=819200000  
+    deploy:
+      resources:
+        limits:
+          memory: 8000M
+        reservations:
+          memory: 2000M
     cap_add:
       - IPC_LOCK
     volumes:
-      - ./elasticsearch-data:/media/sf_Shared/Бакаев/Elasticsearch/volume/data
+      - ${ELASTIC_DATA_VOLUME}:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
   kibana:
@@ -34,7 +35,8 @@ services:
   storage:    
     container_name: storage
     image: storage:ubuntu20.04
-    build: .
+    #build: .
+    restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - LOCAL_STORAGE_DIR=/app/data/media
@@ -53,16 +55,18 @@ services:
       - elasticsearch
   storage-front:
     container_name: storage-front
-    image: storage-front:latest
+    image: storage-front:alpine
+    restart: always
     ports:
       - 3000:3000  
   nginx:
     container_name: nginx-storage
-    #image: nginx:alpine
     image: nginx-storage:latest
+    restart: always
     ports:
       - "5080:80"
     volumes:
       - ${LOCAL_STORAGE_DIR}:/usr/share/nginx/html
+      - ${NGINX_LOGS_DIR}:/var/log/nginx
     depends_on:
       - storage
