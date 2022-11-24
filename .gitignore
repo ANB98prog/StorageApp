@@ -8,3 +8,5 @@ wwwroot/
 /launchSettings.json
 /Storage.Backend/Storage.WebApi/Properties
 *.log
+Storage.Backend/.nuget
+Storage.Backend/Dockerfiles/dotnet-sdk/.nuget/

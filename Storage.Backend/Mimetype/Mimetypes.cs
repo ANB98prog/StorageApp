@@ -66,6 +66,8 @@ namespace Mimetype
                 if (string.IsNullOrWhiteSpace(mimetype))
                     return extensions;
 
+                mimetype = mimetype.ToLowerInvariant();
+
                 if (mimetype.Contains("*"))
                 {
                     extensions = GetExtensionsByAsteriskPattern(mimetype);
@@ -126,7 +128,7 @@ namespace Mimetype
                     return false;
                 }
 
-                var extension = Path.GetExtension(fileName);
+                var extension = Path.GetExtension(fileName).ToLowerInvariant();
 
                 mimetype = _mimetypes.FirstOrDefault(e => e.Value.Contains(extension)).Key ?? null;
 

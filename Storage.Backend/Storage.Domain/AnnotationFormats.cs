@@ -11,12 +11,6 @@ namespace Storage.Domain
         /// Yolo format
         /// </summary>
         [Description("yolo")]
-        yolo,
-
-        /// <summary>
-        /// Cvat format
-        /// </summary>
-        [Description("cvat")]
-        cvat
+        yolo
     }
 }
